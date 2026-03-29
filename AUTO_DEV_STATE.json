@@ -1,5 +1,5 @@
 {
-  "apps_completed": 50,
+  "apps_completed": 51,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -303,6 +303,12 @@
       "persona": 4,
       "platform": 19,
       "wildcard": 47
+    },
+    {
+      "source": 35,
+      "persona": 31,
+      "platform": 7,
+      "wildcard": 2
     }
   ],
   "history": [
@@ -455,6 +461,9 @@
     },
     {
       "name": "madorimystery"
+    },
+    {
+      "name": "wasurenote"
     }
   ]
 }

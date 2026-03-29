@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-30 09:15 | Total apps: 50 🎉 | Total tests: 8,325
+> Last updated: 2026-03-30 10:00 | Total apps: 51 | Total tests: 8,363
 
 ## Quick Overview
 
@@ -56,6 +56,7 @@
 | 48 | [kuizunote](#kuizunote) | Brain training puzzle notebook | Python/Jupyter/matplotlib | 57 | complete | `jupyter notebook kuizunote.ipynb` |
 | 49 | [oshimap](#oshimap) | Oshi tour map tracker | Rust+WASM/Canvas | 11 | complete | `wasm-pack build --target web` |
 | **50** | [**madorimystery**](#madorimystery) | **Floor plan mystery generator** | **Vanilla JS/Canvas/Vite** | **40** | **complete** | `npm run dev` |
+| 51 | [wasurenote](#wasurenote) | Anti-diary worry destroyer | Vanilla JS/Canvas/Vite | 38 | complete | `npm run dev` |
 
 ---
 
@@ -2254,3 +2255,47 @@ None — clean milestone build. Seeded RNG ensures reproducible mysteries for co
 - Multiple mystery scenarios per floor plan
 - Timer mode for speed investigation
 - Export as shareable mystery image
+
+---
+
+### <a id="wasurenote"></a>51. wasurenote - 2026-03-30 10:00
+
+**What is this?**
+The anti-diary. Write down worries, regrets, or things you want to let go of, then the app ceremonially destroys them with particle animations. 3 destruction modes (燃やす🔥, 溶かす💧, 風に飛ばす🌬️). Each character becomes an independent particle. Farewell messages include dev humor ("ガベージコレクション完了"). **Intentionally stores nothing** — tests verify zero persistence.
+
+**Discovery Roll**
+Source: 35 (DevTools) | Persona: 31 (日記が続かない人) | Platform: 7 (UE→Web) | Wildcard: 2 (人気アプリの逆)
+
+**Features Built**
+- 3 destruction modes with unique particle physics per mode
+- Character-level particle decomposition with Canvas 2D
+- Randomized therapeutic prompts and farewell messages
+- Zero data persistence (verified: no localStorage/sessionStorage/IndexedDB/cookies)
+- Session-only destruction counter (resets on reload)
+- Glassmorphism dark UI with gradient accents
+
+**Tech Stack**
+Vanilla JS / Canvas 2D / Vite / No storage (by design)
+
+**Key Files**
+```
+src/destroy.js  — DestroyEngine, TextParticle, MODES, prompts, farewells
+src/main.js     — App controller, animation loop, UI management
+src/style.css   — Glassmorphism dark therapeutic theme
+tests/run.js    — 38 tests (modes, prompts, anti-persistence, Japanese text)
+```
+
+**How to Run**
+```bash
+cd wasurenote && npm install && npm run dev
+```
+
+**Tests**: 38 passing | **Files**: 8 | **LOC**: ~700 | **Build**: 238ms (5KB — lightest app!)
+
+**Challenges & Fixes**
+None — the conceptual opposite of most apps: designed to NOT save data.
+
+**Potential Next Steps**
+- Audio: crackling fire, rain drops, wind sounds per mode
+- Haptic feedback on mobile
+- Ceremonial "closing" animation after destruction

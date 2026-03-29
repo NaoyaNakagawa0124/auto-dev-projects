@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>忘れノート — 心のガベージコレクション</title>
+  <link rel="stylesheet" href="/src/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <canvas id="fx-canvas"></canvas>
+  <div id="ui">
+    <div id="card">
+      <h1>忘れノート</h1>
+      <p class="tagline">心のガベージコレクション</p>
+      <p id="prompt"></p>
+      <textarea id="worry-input" placeholder="ここに悩み、後悔、手放したいことを書いてください..."></textarea>
+      <div class="mode-selector" id="mode-selector"></div>
+      <button class="destroy-btn" id="destroy-btn" disabled>✦ 手放す</button>
+      <p class="counter" id="counter">このセッションで手放したもの: 0</p>
+    </div>
+  </div>
+  <div id="farewell"></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
