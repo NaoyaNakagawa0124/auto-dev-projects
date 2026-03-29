@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClapBoard</title>
+  <style>
+    :root{--bg:#0f0f1a;--card:#1a1a2e;--text:#e8e8f0;--dim:#8888aa;--muted:#555;--accent:#e94560;--gold:#feca57;--green:#55efc4;--radius:12px;}
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{width:380px;min-height:500px;background:var(--bg);color:var(--text);font-family:Georgia,serif;font-size:13px;padding:14px;}
+    h1{text-align:center;font-size:22px;color:var(--accent);margin-bottom:2px;}
+    .sub{text-align:center;font-size:11px;color:var(--dim);margin-bottom:12px;}
+    nav{display:flex;gap:3px;margin-bottom:14px;}
+    .nav-btn{flex:1;background:none;border:1px solid #2a2a4a;color:var(--dim);font-family:inherit;font-size:11px;padding:7px 4px;border-radius:8px;cursor:pointer;}
+    .nav-btn:hover{border-color:var(--accent);}
+    .nav-btn.active{color:var(--accent);border-color:var(--accent);background:rgba(233,69,96,0.1);}
+    .view{display:none;}.view.active{display:block;}.hidden{display:none!important;}
+    .card{background:var(--card);border-radius:var(--radius);padding:14px;margin-bottom:10px;border:1px solid #2a2a4a;}
+    .clap{text-align:center;font-size:64px;margin:10px 0;}
+    .scene-title{text-align:center;font-size:18px;font-weight:700;margin-bottom:4px;}
+    .scene-time{text-align:center;font-size:28px;font-weight:700;color:var(--gold);font-family:monospace;}
+    .scene-genre{text-align:center;font-size:12px;color:var(--dim);}
+    .btn{width:100%;padding:12px;border:none;border-radius:var(--radius);font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:6px;}
+    .btn-action{background:var(--accent);color:white;}
+    .btn-cut{background:#2d3436;color:var(--gold);border:2px solid var(--gold);}
+    .btn-wrap{background:#2d3436;color:var(--green);border:2px solid var(--green);}
+    .btn-sm{font-size:12px;padding:8px;width:auto;}
+    input,select{width:100%;background:#0f0f1a;border:1px solid #2a2a4a;border-radius:8px;color:var(--text);padding:8px;font-family:inherit;font-size:13px;margin-bottom:8px;}
+    input:focus,select:focus{border-color:var(--accent);outline:none;}
+    label{font-size:11px;color:var(--dim);display:block;margin-bottom:3px;}
+    .scene-log{font-size:12px;padding:8px;background:var(--card);border-radius:8px;margin-bottom:4px;display:flex;justify-content:space-between;}
+    .scene-log .sl-name{color:var(--text);}
+    .scene-log .sl-time{color:var(--gold);font-family:monospace;}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px;}
+    .stat{background:var(--card);border-radius:8px;padding:10px 6px;text-align:center;}
+    .stat-val{font-size:18px;font-weight:700;color:var(--accent);}
+    .stat-label{font-size:9px;color:var(--dim);text-transform:uppercase;}
+    .rank{text-align:center;font-size:14px;color:var(--gold);margin-bottom:10px;}
+    .quote{font-style:italic;font-size:12px;color:var(--dim);text-align:center;margin-top:10px;}
+    .genre-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;}
+    .genre-btn{background:var(--card);border:1px solid #2a2a4a;color:var(--dim);font-size:11px;padding:5px 8px;border-radius:6px;cursor:pointer;}
+    .genre-btn.selected{border-color:var(--accent);color:var(--text);}
+  </style>
+</head>
+<body>
+  <h1>🎬 ClapBoard</h1>
+  <p class="sub">Your workday is a movie production</p>
+  <nav>
+    <button class="nav-btn active" data-view="studio">Studio</button>
+    <button class="nav-btn" data-view="dailies">Dailies</button>
+    <button class="nav-btn" data-view="career">Career</button>
+  </nav>
+
+  <section id="view-studio" class="view active">
+    <div id="idle-state">
+      <div class="clap">🎬</div>
+      <label>Scene Title</label>
+      <input id="scene-title" placeholder="e.g. Fix login bug, Sprint planning...">
+      <label>Genre</label>
+      <div class="genre-row" id="genre-row"></div>
+      <button class="btn btn-action" id="btn-action">ACTION! 🎬</button>
+    </div>
+    <div id="active-state" class="hidden">
+      <div class="card">
+        <div class="scene-genre" id="active-genre"></div>
+        <div class="scene-title" id="active-title"></div>
+        <div class="scene-time" id="active-time">00:00</div>
+        <div class="scene-genre" id="active-take"></div>
+      </div>
+      <button class="btn btn-cut" id="btn-cut">CUT! ✂️</button>
+      <button class="btn btn-sm" id="btn-retake" style="background:none;color:var(--dim);border:1px solid #2a2a4a;width:100%;">Retake 🔄</button>
+    </div>
+    <button class="btn btn-wrap" id="btn-wrap">THAT'S A WRAP! 🌙</button>
+    <div class="quote" id="studio-quote"></div>
+  </section>
+
+  <section id="view-dailies" class="view">
+    <h3 style="color:var(--gold);margin-bottom:10px;">📽️ Today's Dailies</h3>
+    <div id="dailies-content"></div>
+  </section>
+
+  <section id="view-career" class="view">
+    <div id="career-rank" class="rank"></div>
+    <div class="stats" id="career-stats"></div>
+    <h3 style="color:var(--gold);margin-bottom:8px;font-size:13px;">Productions</h3>
+    <div id="prod-list"></div>
+    <input id="new-prod" placeholder="New production name...">
+    <button class="btn btn-sm btn-action" id="btn-new-prod" style="width:100%;">Greenlight 🎬</button>
+  </section>
+
+  <script src="js/engine.js"></script>
+  <script>
+    let state = null; let selectedGenre = 'dev'; let timer = null;
+    const sto = {
+      get(k,cb){if(typeof chrome!=='undefined'&&chrome.storage){chrome.storage.local.get([k],r=>cb(r[k]));}else{try{cb(JSON.parse(localStorage.getItem(k)));}catch(e){cb(undefined);}}},
+      set(k,v){if(typeof chrome!=='undefined'&&chrome.storage){const o={};o[k]=v;chrome.storage.local.set(o);}else{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}}
+    };
+    function init(){sto.get('clapboard_state',s=>{state=s||createDefaultState();setupNav();setupGenres();setupButtons();render();});}
+    function save(){sto.set('clapboard_state',state);}
+    function setupNav(){document.querySelectorAll('.nav-btn').forEach(b=>{b.onclick=()=>{document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('view-'+b.dataset.view).classList.add('active');render();};});}
+    function setupGenres(){const row=document.getElementById('genre-row');GENRES.forEach(g=>{const b=document.createElement('button');b.className='genre-btn'+(g.id===selectedGenre?' selected':'');b.textContent=g.icon+' '+g.name;b.onclick=()=>{selectedGenre=g.id;row.querySelectorAll('.genre-btn').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');};row.appendChild(b);});}
+    function setupButtons(){
+      document.getElementById('btn-action').onclick=()=>{const t=document.getElementById('scene-title').value;const r=startScene(state,t,selectedGenre);if(r.success){save();document.getElementById('scene-title').value='';startTimer();render();}else{alert(r.message);}};
+      document.getElementById('btn-cut').onclick=()=>{const r=cutScene(state);if(r.success){save();stopTimer();render();}};
+      document.getElementById('btn-retake').onclick=()=>{retakeScene(state);save();render();};
+      document.getElementById('btn-wrap').onclick=()=>{if(state.activeScene){alert('Cut the current scene first!');return;}const r=wrapDay(state);save();alert(r.message);render();};
+      document.getElementById('btn-new-prod').onclick=()=>{const n=document.getElementById('new-prod').value;const r=createProduction(state,n);if(r.success){save();document.getElementById('new-prod').value='';render();}else{alert(r.message);}};
+    }
+    function startTimer(){stopTimer();timer=setInterval(()=>{if(state.activeScene){const d=getActiveSceneDuration(state);const m=Math.floor(d);const s=Math.round((d-m)*60);document.getElementById('active-time').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}},1000);}
+    function stopTimer(){if(timer){clearInterval(timer);timer=null;}}
+    function render(){
+      const idle=document.getElementById('idle-state');const active=document.getElementById('active-state');
+      if(state.activeScene){idle.classList.add('hidden');active.classList.remove('hidden');const g=GENRES.find(x=>x.id===state.activeScene.genre);document.getElementById('active-title').textContent=state.activeScene.title;document.getElementById('active-genre').textContent=(g?g.icon+' '+g.name:'');document.getElementById('active-take').textContent='Take '+state.activeScene.take;if(!timer)startTimer();}
+      else{idle.classList.remove('hidden');active.classList.add('hidden');stopTimer();}
+      document.getElementById('studio-quote').textContent=getRandomQuote(state.totalScenes);
+      // Dailies
+      document.getElementById('dailies-content').innerHTML='';const d=getDailies(state);const pre=document.createElement('pre');pre.style.cssText='font-family:Georgia;font-size:12px;color:var(--dim);white-space:pre-wrap;';pre.textContent=d;document.getElementById('dailies-content').appendChild(pre);
+      state.todayScenes.forEach(s=>{const div=document.createElement('div');div.className='scene-log';const g=GENRES.find(x=>x.id===s.genre);div.innerHTML='<span class="sl-name">'+(g?g.icon:'')+' '+s.title+'</span><span class="sl-time">'+s.durationMin+'min T'+s.take+'</span>';document.getElementById('dailies-content').appendChild(div);});
+      // Career
+      const stats=getCareerStats(state);const rank=getDirectorRank(stats.totalScenes);document.getElementById('career-rank').textContent=rank.icon+' '+rank.rank;
+      document.getElementById('career-stats').innerHTML=['<div class="stat"><div class="stat-val">'+stats.totalScenes+'</div><div class="stat-label">Scenes</div></div>','<div class="stat"><div class="stat-val">'+stats.totalHours+'h</div><div class="stat-label">Hours</div></div>','<div class="stat"><div class="stat-val">'+stats.productions+'</div><div class="stat-label">Productions</div></div>','<div class="stat"><div class="stat-val">'+stats.streak+'</div><div class="stat-label">Streak</div></div>','<div class="stat"><div class="stat-val">'+stats.avgTakesPerScene+'</div><div class="stat-label">Avg Takes</div></div>','<div class="stat"><div class="stat-val">'+stats.daysWorked+'</div><div class="stat-label">Days</div></div>'].join('');
+      const pl=document.getElementById('prod-list');pl.innerHTML='';state.productions.forEach(p=>{const d=document.createElement('div');d.className='scene-log';d.innerHTML='<span class="sl-name">🎬 '+p.name+'</span><span class="sl-time">'+p.scenes+' scenes</span>';d.style.cursor='pointer';d.onclick=()=>{state.currentProduction=p.id;save();render();};if(state.currentProduction===p.id)d.style.borderLeft='3px solid var(--accent)';pl.appendChild(d);});
+    }
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+  </script>
+</body>
+</html>

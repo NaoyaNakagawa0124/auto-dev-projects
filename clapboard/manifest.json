@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "ClapBoard 🎬 — Movie-Style Time Tracker",
+  "version": "1.0.0",
+  "description": "Turn your workday into a movie production. Action! Cut! That's a Wrap!",
+  "permissions": ["storage"],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

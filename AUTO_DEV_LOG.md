@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-29 | Total apps: 30 | Total tests: 6,566
+> Last updated: 2026-03-29 | Total apps: 31 | Total tests: 6,729
 
 ## Quick Overview
 
@@ -36,6 +36,7 @@
 | 28 | [foodtrend](#foodtrend) | Food TikTok content strategy | Python/Jupyter/Plotly | 639 | complete | `jupyter notebook foodtrend.ipynb` |
 | 29 | [blindbite](#blindbite) | Anti-DoorDash mystery restaurant | Chrome Extension/JS | 381 | complete | Load unpacked in `chrome://extensions` |
 | 30 | [duetplan](#duetplan) | Collab topic matcher for creators | Rust+WASM | 24 | complete | `wasm-pack build --target web && python3 -m http.server` |
+| 31 | [clapboard](#clapboard) | Movie-style work time tracker | Chrome Extension/JS | 163 | complete | Load unpacked in `chrome://extensions` |
 
 ---
 
@@ -1300,3 +1301,50 @@ None — clean build. Second Rust+WASM project (after afterhours).
 - Custom topic submission
 - TikTok/YouTube trending API integration
 - Match history across sessions
+
+---
+
+### <a id="clapboard"></a>31. clapboard - 2026-03-29
+
+**What is this?**
+A Chrome extension that turns your workday into a movie production, inspired by the 🎬 clapperboard emoji. "Action!" starts timing a scene (task), "Cut!" stops it, "Retake" restarts with incremented take number. Track productions (projects), view daily "Dailies" review, and rank up from Intern to Legendary Director. 8 genre categories from Development to Coffee Break.
+
+**Discovery Roll**
+Source: 18 (B2B enterprise) | Persona: 13 (Movie nerd) | Platform: 5 (Browser extension) | Wildcard: 8 (Emoji: 🎬)
+
+**Features Built**
+- Scene timer with Action/Cut/Retake controls and take counting
+- 8 work genres (dev, meeting, design, writing, review, admin, research, break)
+- Productions (projects) with aggregate scene/minute stats
+- Dailies: daily review showing all scenes by genre
+- Career stats: total scenes, hours, takes, avg takes/scene, streak
+- Director rank: 7 tiers from Intern to Legendary Director
+- Director quotes for motivation
+
+**Tech Stack**
+Chrome Extension (Manifest V3) / Vanilla JS / Chrome Storage API
+
+**Key Files**
+```
+clapboard/
+  manifest.json        # Extension config
+  popup.html           # Self-contained popup with embedded app
+  js/engine.js         # All logic: scenes, productions, stats, ranks
+  tests/test.js        # 163 tests
+```
+
+**How to Run**
+```bash
+# Load as unpacked extension or open popup.html
+```
+
+**Tests**: 163 passing | **Files**: 5 | **LOC**: ~750 | **Build time**: ~1 min
+
+**Challenges & Fixes**
+None — clean build.
+
+**Potential Next Steps**
+- CSV export for invoicing
+- Keyboard shortcuts (Ctrl+Shift+A/C)
+- Background timer persistence
+- Team "cast" mode
