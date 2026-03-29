@@ -1,0 +1,20 @@
+{
+  "name": "cineconquest",
+  "version": "1.0.0",
+  "description": "A competitive 3D globe visualization where movie lovers \"conquer\" countries by logging films from around the world.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node tests/run.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "three": "^0.183.2",
+    "vite": "^8.0.3"
+  }
+}

@@ -38,5 +38,6 @@
 | 32 | shotlist2035 | AI photography shot list generator | Electron/HTML/JS | 516 |
 | 33 | commutestory | Infrastructure narrative notebook | Python/Jupyter/Plotly | 305 |
 | 34 | dormescape | First apartment text adventure | Rust+WASM | 19 |
+| 35 | cineconquest | 3D globe movie conquest game | Three.js/Vite/Vanilla JS | 39 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

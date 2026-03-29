@@ -1,5 +1,5 @@
 {
-  "apps_completed": 34,
+  "apps_completed": 35,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -207,6 +207,12 @@
       "persona": 8,
       "platform": 10,
       "wildcard": 14
+    },
+    {
+      "source": 1,
+      "persona": 13,
+      "platform": 19,
+      "wildcard": 10
     }
   ],
   "history": [
@@ -311,6 +317,9 @@
     },
     {
       "name": "dormescape"
+    },
+    {
+      "name": "cineconquest"
     }
   ]
 }

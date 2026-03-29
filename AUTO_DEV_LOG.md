@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-29 | Total apps: 34 | Total tests: 7,569
+> Last updated: 2026-03-29 18:30 | Total apps: 35 | Total tests: 7,608
 
 ## Quick Overview
 
@@ -40,6 +40,7 @@
 | 32 | [shotlist2035](#shotlist2035) | AI photography shot list generator | Electron/HTML/JS | 516 | complete | `open src/index.html` |
 | 33 | [commutestory](#commutestory) | Infrastructure narrative notebook | Python/Jupyter/Plotly | 305 | complete | `jupyter notebook commutestory.ipynb` |
 | 34 | [dormescape](#dormescape) | First apartment text adventure | Rust+WASM | 19 | complete | `wasm-pack build --target web && python3 -m http.server` |
+| 35 | [cineconquest](#cineconquest) | 3D globe movie conquest game | Three.js/Vite/Vanilla JS | 39 | complete | `npm run dev` |
 
 ---
 
@@ -1490,3 +1491,58 @@ None — clean build. Third Rust+WASM project.
 - Shareable results card for social media
 - Branching paths with more choices per chapter
 - Real apartment listing API integration
+
+---
+
+### <a id="cineconquest"></a>35. cineconquest - 2026-03-29 18:30
+
+**What is this?**
+A competitive 3D globe visualization where movie lovers "conquer" countries by logging films from around the world. Features a Three.js interactive Earth with glowing markers, a 5-level conquest system, simulated global leaderboard, weekly challenges, and 17 unlockable achievements. All UI is in Japanese.
+
+**Discovery Roll**
+Source: 1 (Today's top world news) | Persona: 13 (全作品を記録する映画オタク) | Platform: 19 (p5.js/Three.js creative coding) | Wildcard: 10 (Everything is a competition/leaderboard)
+
+**Features Built**
+- 3D interactive globe with orbit controls, atmosphere shader, star field, and particle burst effects
+- Movie logging form with country, genre, star rating, and date
+- 5-level conquest system per country with progressive glow intensity
+- Simulated global leaderboard with 9 AI opponents and diversity scoring
+- 3 rotating weekly challenges (region-specific, genre variety, streaks)
+- Statistics dashboard with genre/country/continent distribution charts
+- 17 achievements from first film to continent explorers and 30-day streaks
+
+**Tech Stack**
+JavaScript / Three.js / Vite / localStorage / Noto Sans JP / Glassmorphism CSS
+
+**Key Files**
+```
+src/main.js          — App entry point & UI orchestration
+src/globe.js         — Three.js 3D globe, markers, particle effects
+src/store.js         — State management with localStorage persistence
+src/ui.js            — Panel rendering (form, log, rankings, stats)
+src/achievements.js  — 17 achievement definitions and checker
+src/leaderboard.js   — Simulated global rankings with AI opponents
+src/challenges.js    — Weekly rotating challenge system
+src/data/countries.js — 83 countries with Japanese names, lat/lng, continents
+src/style.css        — Glassmorphism design, responsive layout
+tests/run.js         — 39 tests covering all modules
+```
+
+**How to Run**
+```bash
+cd cineconquest
+npm install
+npm run dev
+```
+
+**Tests**: 39 passing | **Files**: 18 | **LOC**: ~3,670 | **Build time**: ~350ms
+
+**Challenges & Fixes**
+None — clean build. Three.js globe rendering with custom atmosphere shader worked on first attempt.
+
+**Potential Next Steps**
+- TMDb API integration for movie autocomplete and poster images
+- Real multiplayer leaderboard with Firebase/Supabase
+- News API for dynamic country challenges based on current events
+- PWA manifest for installable mobile experience
+- Share conquest map as image on social media

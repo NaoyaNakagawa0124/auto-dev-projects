@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CineConquest - 映画で世界を征服せよ！</title>
+  <link rel="stylesheet" href="/src/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div id="globe-container"></div>
+
+  <!-- Header -->
+  <header id="header">
+    <h1>🎬 CineConquest</h1>
+    <p class="subtitle">映画で世界を征服せよ！</p>
+  </header>
+
+  <!-- Stats Bar -->
+  <div id="stats-bar">
+    <div class="stat">
+      <span class="stat-value" id="stat-countries">0</span>
+      <span class="stat-label">征服国</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value" id="stat-films">0</span>
+      <span class="stat-label">視聴作品</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value" id="stat-score">0</span>
+      <span class="stat-label">スコア</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value" id="stat-streak">0</span>
+      <span class="stat-label">連続日数</span>
+    </div>
+  </div>
+
+  <!-- Movie Log Button -->
+  <button id="add-movie-btn" title="映画を記録する">＋</button>
+
+  <!-- Side Panel -->
+  <div id="side-panel" class="hidden">
+    <div class="panel-header">
+      <h2 id="panel-title">映画を記録</h2>
+      <button id="panel-close" class="icon-btn">✕</button>
+    </div>
+    <div id="panel-content">
+      <!-- Dynamic content loaded here -->
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav id="bottom-nav">
+    <button class="nav-btn active" data-view="globe" title="地球儀">🌍</button>
+    <button class="nav-btn" data-view="log" title="記録">📝</button>
+    <button class="nav-btn" data-view="ranking" title="ランキング">🏆</button>
+    <button class="nav-btn" data-view="challenge" title="チャレンジ">⚡</button>
+    <button class="nav-btn" data-view="stats" title="統計">📊</button>
+  </nav>
+
+  <!-- Country Tooltip -->
+  <div id="country-tooltip" class="hidden">
+    <div id="tooltip-name"></div>
+    <div id="tooltip-films"></div>
+    <div id="tooltip-level"></div>
+  </div>
+
+  <!-- Achievement Toast -->
+  <div id="achievement-toast" class="hidden">
+    <span id="achievement-icon">🏅</span>
+    <span id="achievement-text"></span>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
