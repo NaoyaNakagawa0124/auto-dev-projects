@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-29 | Total apps: 19 | Total tests: 2,628
+> Last updated: 2026-03-29 | Total apps: 20 | Total tests: 2,795
 
 ## Quick Overview
 
@@ -25,6 +25,7 @@
 | 17 | [chromadrip](#chromadrip) | 2035 fashion palette generator | Bun/TypeScript | 20 | complete | `bun run src/server.ts` |
 | 18 | [anivote](#anivote) | Collaborative anime voting | Web app/Vanilla JS | 182 | complete | `open index.html` |
 | 19 | [cramclock](#cramclock) | Late-night study timer | Deno/TypeScript CLI | 17 | complete | `deno run src/cli.ts start` |
+| 20 | [wreckhouse](#wreckhouse) | Anti-House Flipper disaster game | C#/Mono | 167 | complete | `mcs -out:wreckhouse.exe src/*.cs && mono wreckhouse.exe` |
 
 ---
 
@@ -748,3 +749,57 @@ None — clean build. First Deno project. Deno's built-in test runner and TypeSc
 - Real-time countdown with terminal animation
 - Subject-tagged sessions for per-topic analytics
 - Notification sounds at session end
+
+---
+
+### <a id="wreckhouse"></a>20. wreckhouse - 2026-03-29
+
+**What is this?**
+The anti-House Flipper. A terminal-based C# game where you're a bored teenager forced to help with home renovation — and everything goes catastrophically wrong. Pick a room, grab a tool, aim at an object, and watch chain-reaction disasters unfold. Score points for creative destruction while your parent's patience drains.
+
+**Discovery Roll**
+Source: 26 (Home improvement/DIY/maker community) | Persona: 1 (Bored teenager) | Platform: 6 (Unity game/C#) | Wildcard: 2 (Opposite of a popular app — anti-House Flipper)
+
+**Features Built**
+- 5 rooms with 30 destructible objects, each with vulnerabilities and chain effects
+- 8 tools from Duct Tape (low chaos, 3x score) to Sledgehammer (max chaos)
+- Chain reaction engine with depth-limited propagation and cross-room spread
+- Parent patience meter with escalating reactions (Calm → Volcanic → Gone)
+- Fake social media feed (WreckTok, Instagroan, FailTube) with viral posts
+- Scoring with combos, streaks, depth bonuses, and rank system
+
+**Tech Stack**
+C# / Mono (mcs compiler + mono runtime) / ANSI terminal
+
+**Key Files**
+```
+wreckhouse/
+  src/
+    Room.cs       # 5 room factories, object model, ASCII rendering
+    Tool.cs       # 8 tools with effects and disaster chances
+    Chain.cs      # Chain reaction engine with cross-room propagation
+    Score.cs      # Combos, streaks, ranks (Helpful Teen → Legendary Wrecker)
+    Patience.cs   # Parent patience meter with 18 reactions
+    Social.cs     # Fake social media post generator
+    Game.cs       # Game state machine
+    Program.cs    # Terminal UI
+  tests/
+    TestRunner.cs # Lightweight test framework
+    Tests.cs      # 167 unit + integration tests
+```
+
+**How to Run**
+```bash
+cd wreckhouse && mcs -out:wreckhouse.exe src/*.cs && mono wreckhouse.exe
+```
+
+**Tests**: 167 passing | **Files**: 10 | **LOC**: ~1,350 | **Build time**: ~1 sec
+
+**Challenges & Fixes**
+String substring calculation in SocialFeed.RenderPost caused ArgumentOutOfRangeException — replaced complex inline calculation with simple PadRight.
+
+**Potential Next Steps**
+- ANSI color output for damage types (red fire, blue water, yellow electric)
+- Achievement system (flood the house, duct tape mastery, etc.)
+- Multiple parent personalities with different patience curves
+- High score persistence to file
