@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ピクセルホーム</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="newtab.css" />
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>🏠 ピクセルホーム</h1>
+      <div id="progress-bar">
+        <div id="progress-fill"></div>
+        <span id="progress-text">0/15</span>
+      </div>
+    </header>
+
+    <div id="main">
+      <canvas id="room-canvas" width="1100" height="600"></canvas>
+
+      <div id="task-panel">
+        <h2>📋 引っ越しタスク</h2>
+        <div id="task-list"></div>
+        <div id="secrets-section" class="hidden">
+          <h3>🎮 シークレット</h3>
+          <div id="secret-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="newtab.js"></script>
+</body>
+</html>

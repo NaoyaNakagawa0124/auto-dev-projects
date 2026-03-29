@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-30 03:15 | Total apps: 42 | Total tests: 7,978
+> Last updated: 2026-03-30 04:00 | Total apps: 43 | Total tests: 8,027
 
 ## Quick Overview
 
@@ -48,6 +48,7 @@
 | 40 | [meitantei](#meitantei) | Detective photo evidence game | Vanilla JS/Canvas/Vite | 48 | complete | `npm run dev` |
 | 41 | [tsundoku](#tsundoku) | Book-stacking Tetris puzzle | C/Raylib | 57 | complete | `make && ./tsundoku` |
 | 42 | [midnightbento](#midnightbento) | Bento box spatial puzzle | Godot 4/GDScript | 52 | complete | `godot project.godot` |
+| 43 | [pixelhome](#pixelhome) | Pixel art moving task extension | Chrome Extension/JS | 49 | complete | Load unpacked in `chrome://extensions` |
 
 ---
 
@@ -1883,3 +1884,47 @@ None — clean implementation. Level design verified by test ensuring food cells
 - Drag-and-drop piece placement
 - Randomized levels for infinite replay
 - Time-based scoring leaderboard
+
+---
+
+### <a id="pixelhome"></a>43. pixelhome - 2026-03-30 04:00
+
+**What is this?**
+A Chrome extension that replaces your new tab with a pixel art room you build by completing moving tasks. 15 tasks (住所変更, ネット開通, カーテン購入, etc.) each unlock a piece of pixel furniture. 4 meme-inspired secret items (にゃんキャット, 柴犬ミーム, This is Fine, ピクセル猫) as easter eggs.
+
+**Discovery Roll**
+Source: 5 (Viral memes) | Persona: 28 (引っ越ししたばかりの人) | Platform: 5 (Chrome extension) | Wildcard: 19 (ピクセルアート)
+
+**Features Built**
+- Pixel art room rendered on Canvas with walls, floor, window, moon, stars
+- 15 moving tasks across 3 categories (手続き/買い物/生活準備)
+- 19 furniture items with pixel art rendering (highlight + shadow)
+- 4 secret meme items unlocked at milestones (1/5/10/all tasks)
+- Progress bar, chrome.storage persistence, Manifest V3
+
+**Tech Stack**
+Chrome Extension Manifest V3 / Vanilla JS / Canvas API / ES Modules
+
+**Key Files**
+```
+manifest.json       — Manifest V3 config with newtab override
+src/newtab.html     — New tab page layout
+src/newtab.js       — Controller: task toggling, room rendering, storage
+src/data.js         — 15 tasks, 19 furniture items, 4 secrets, 3 categories
+src/renderer.js     — Canvas pixel art drawing (room, furniture, effects)
+src/newtab.css      — Dark theme with pixel font
+tests/run.js        — 49 tests (data, secrets, manifest, structure, Japanese text)
+```
+
+**How to Run**
+Load unpacked in `chrome://extensions` (enable Developer Mode first)
+
+**Tests**: 49 passing | **Files**: 10 | **LOC**: ~900
+
+**Challenges & Fixes**
+None — clean implementation. Storage abstraction allows testing with localStorage outside Chrome.
+
+**Potential Next Steps**
+- Animated furniture (walking pixel cat, flickering lamp)
+- Custom task creation
+- Day/night room themes based on time
