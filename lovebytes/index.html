@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LoveBytes ~ Our Homepage ~</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ff00ff">
+  <link rel="stylesheet" href="css/retro.css">
+</head>
+<body>
+  <div class="marquee"><div class="marquee-inner">&#10084;&#65039; Welcome to LoveBytes ~ Your Digital Love Nest Since 1999 ~ Best viewed in 800x600 ~ Sign our Guestbook!! &#10084;&#65039;</div></div>
+
+  <div class="header">
+    <h1>&#10024; LoveBytes &#10024;</h1>
+    <div class="subtitle">~ a digital scrapbook for two ~</div>
+  </div>
+
+  <div class="visitor-counter">
+    You are visitor #<span class="counter-num" id="visitor-count">000000</span> to our love page!
+  </div>
+
+  <div class="under-construction">&#9888;&#65039; UNDER CONSTRUCTION &#9888;&#65039; (but so is our love, and that's beautiful)</div>
+
+  <div class="nav">
+    <button class="active" data-section="today">Today's Prompt</button>
+    <button data-section="scrapbook">Scrapbook</button>
+    <button data-section="guestbook">Guestbook</button>
+  </div>
+
+  <div class="content">
+    <!-- Today's Prompt -->
+    <div id="section-today" class="section active">
+      <div class="prompt-card">
+        <div class="prompt-headline" id="prompt-headline"></div>
+        <div class="prompt-question" id="prompt-question"></div>
+        <textarea class="prompt-input" id="prompt-input" placeholder="Type your response here..."></textarea>
+        <button class="prompt-submit" id="prompt-submit">&#10084; Submit Response</button>
+        <div id="prompt-saved" style="display:none;color:#0f0;font-size:12px;margin-top:8px;">Saved!</div>
+      </div>
+    </div>
+
+    <!-- Scrapbook -->
+    <div id="section-scrapbook" class="section">
+      <div id="scrapbook-entries"></div>
+      <div id="scrapbook-empty" style="text-align:center;color:#666;padding:40px;font-style:italic;">
+        No entries yet. Answer today's prompt to start your scrapbook!
+      </div>
+    </div>
+
+    <!-- Guestbook -->
+    <div id="section-guestbook" class="section">
+      <div class="guestbook">
+        <h2>&#128221; Sign Our Guestbook!</h2>
+        <div class="gb-form">
+          <input type="text" id="gb-name" placeholder="Your name" maxlength="30">
+          <select id="gb-color">
+            <option value="#00ff00">Green</option>
+            <option value="#ff00ff">Pink</option>
+            <option value="#00ffff">Cyan</option>
+            <option value="#ffff00">Yellow</option>
+            <option value="#ff6600">Orange</option>
+          </select>
+          <textarea id="gb-text" placeholder="Leave us a message!" maxlength="200"></textarea>
+          <button class="prompt-submit" id="gb-submit">Sign Guestbook</button>
+        </div>
+        <div id="gb-messages"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="webring">
+    &#9668; prev | <b>LoveBytes WebRing</b> | next &#9658;<br>
+    <i>This site is part of the LoveBytes WebRing, connecting 90s lovers worldwide.</i>
+  </div>
+
+  <script src="js/prompts.js"></script>
+  <script src="js/scrapbook.js"></script>
+  <script src="js/guestbook.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

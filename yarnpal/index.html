@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>YarnPal</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#c0392b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header><h1>&#129526; YarnPal</h1></header>
+
+  <nav>
+    <button class="active" data-screen="counter">&#129526; Counter</button>
+    <button data-screen="projects">&#128221; Projects</button>
+    <button data-screen="timer">&#9200; Timer</button>
+  </nav>
+
+  <!-- Counter Screen -->
+  <div id="screen-counter" class="screen active">
+    <div class="counter-display">
+      <div class="counter-label">Rows</div>
+      <div class="counter-value" id="row-count">0</div>
+      <div class="counter-buttons">
+        <button class="btn-big btn-minus" id="row-minus">-</button>
+        <button class="btn-big btn-plus" id="row-plus">+</button>
+      </div>
+    </div>
+    <div class="counter-display">
+      <div class="counter-label">Stitches</div>
+      <div class="counter-value" id="stitch-count">0</div>
+      <div class="counter-buttons">
+        <button class="btn-big btn-minus" id="stitch-minus">-</button>
+        <button class="btn-big btn-plus" id="stitch-plus">+</button>
+      </div>
+    </div>
+    <div class="progress-container"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="progress-label" id="progress-label">Set a row target in settings</div>
+    <button class="btn-action btn-undo" id="btn-undo">&#8630; Undo</button>
+    <button class="btn-action btn-reset" id="btn-reset">Reset Counter</button>
+  </div>
+
+  <!-- Projects Screen -->
+  <div id="screen-projects" class="screen">
+    <div id="project-list"></div>
+    <button class="btn-add-project" id="btn-add-project">+ New Project</button>
+  </div>
+
+  <!-- Timer Screen -->
+  <div id="screen-timer" class="screen">
+    <span class="yarn-emoji">&#129526;</span>
+    <div class="timer-display">
+      <div class="timer-value" id="timer-display">0:00</div>
+      <div class="timer-sessions" id="timer-sessions">No sessions yet</div>
+    </div>
+    <button class="btn-timer btn-start" id="btn-timer">Start</button>
+    <button class="btn-action btn-reset" id="btn-timer-reset" style="margin-top:20px;">Reset Timer</button>
+  </div>
+
+  <!-- Add Project Form -->
+  <div class="form-overlay" id="project-form">
+    <div class="form-sheet">
+      <h2>&#129526; New Project</h2>
+      <label>Project Name</label>
+      <input type="text" id="form-name" placeholder="e.g., Baby blanket">
+      <label>Yarn Color</label>
+      <select id="form-color"></select>
+      <label>Needle Size</label>
+      <select id="form-needle"></select>
+      <label>Notes</label>
+      <textarea id="form-notes" placeholder="Pattern notes..."></textarea>
+      <button class="btn-action" style="background:var(--red);color:#fff;" id="form-save">Save Project</button>
+      <button class="btn-action btn-undo" id="form-cancel">Cancel</button>
+    </div>
+  </div>
+
+  <script src="js/counter.js"></script>
+  <script src="js/projects.js"></script>
+  <script src="js/timer.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

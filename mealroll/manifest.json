@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "MealRoll",
+  "version": "0.1.0",
+  "description": "Spin to discover your next meal. Recipe roulette on every new tab.",
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "permissions": ["storage"],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

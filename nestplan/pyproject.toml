@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "nestplan"
+version = "0.1.0"
+description = "Plan your future home together — a beautiful terminal app for couples"
+requires-python = ">=3.10"
+dependencies = [
+    "textual>=0.47.0",
+    "rich>=13.0.0",
+]
+
+[project.scripts]
+nestplan = "nestplan.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["nestplan*"]

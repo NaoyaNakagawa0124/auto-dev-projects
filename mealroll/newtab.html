@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MealRoll</title>
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1 id="title">MealRoll</h1>
+      <button id="favs-btn" aria-label="Favorites">&#9829; Favorites</button>
+    </header>
+
+    <div id="spin-area">
+      <div id="wheel-container">
+        <div id="wheel">&#127860;</div>
+      </div>
+      <button id="spin-btn">SPIN</button>
+    </div>
+
+    <div id="recipe-card" class="hidden">
+      <span id="card-emoji"></span>
+      <h2 id="card-name"></h2>
+      <div id="card-time"></div>
+      <div id="card-tags"></div>
+      <div id="card-ingredients"></div>
+      <button id="card-fav" aria-label="Favorite">&#9825;</button>
+      <button id="spin-again">Spin Again</button>
+    </div>
+
+    <div id="filters">
+      <button class="filter-chip" data-tag="vegetarian">&#127793; Vegetarian</button>
+      <button class="filter-chip" data-tag="vegan">&#127807; Vegan</button>
+      <button class="filter-chip" data-tag="quick">&#9889; Quick</button>
+      <button class="filter-chip" data-tag="comfort">&#10084;&#65039; Comfort</button>
+    </div>
+
+    <div id="favs-panel" class="hidden">
+      <div id="favs-header">
+        <h2>&#9829; Favorites</h2>
+        <button id="favs-close">&times;</button>
+      </div>
+      <div id="favs-list"></div>
+    </div>
+  </div>
+
+  <script src="js/recipes.js"></script>
+  <script src="js/favorites.js"></script>
+  <script src="js/spin.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

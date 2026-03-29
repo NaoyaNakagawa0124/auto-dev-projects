@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AfterHours</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Locked State -->
+    <div id="locked" class="screen">
+      <div class="locked-content">
+        <h1>AfterHours</h1>
+        <div class="subtitle">The doors are closed.</div>
+        <div id="countdown" class="countdown"></div>
+        <div class="hint">Come back between midnight and 6am.</div>
+        <button id="override-btn" class="override">I know what I'm doing (override)</button>
+      </div>
+    </div>
+
+    <!-- Open State -->
+    <div id="open" class="screen hidden">
+      <header>
+        <h1>AfterHours</h1>
+        <div id="clock" class="clock"></div>
+      </header>
+
+      <div id="theme-banner" class="theme-banner">
+        <div id="theme-name" class="theme-name"></div>
+        <div id="theme-desc" class="theme-desc"></div>
+      </div>
+
+      <div id="movie-card" class="movie-card">
+        <div id="movie-genre" class="movie-genre"></div>
+        <h2 id="movie-title" class="movie-title"></h2>
+        <div id="movie-year" class="movie-year"></div>
+        <div id="movie-tagline" class="movie-tagline"></div>
+        <div id="movie-themes" class="movie-themes"></div>
+        <button id="watched-btn" class="watched-btn">Mark as Watched</button>
+      </div>
+
+      <div id="watch-log" class="watch-log">
+        <h3>Midnight Viewing Log</h3>
+        <div id="log-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import init, {
+      is_after_hours,
+      minutes_until_open,
+      get_tonight_theme,
+      get_tonight_movie,
+      movie_count
+    } from './pkg/afterhours.js';
+
+    async function main() {
+      await init();
+
+      const now = new Date();
+      const hour = now.getHours();
+      const minute = now.getMinutes();
+      const month = now.getMonth() + 1;
+      const day = now.getDate();
+      let overridden = false;
+
+      function showOpen() {
+        document.getElementById('locked').classList.add('hidden');
+        document.getElementById('open').classList.remove('hidden');
+
+        // Clock
+        const clock = document.getElementById('clock');
+        function updateClock() {
+          const n = new Date();
+          clock.textContent = n.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // Theme
+        const themeJson = JSON.parse(get_tonight_theme(month, day));
+        document.getElementById('theme-name').textContent = themeJson.name;
+        document.getElementById('theme-desc').textContent = themeJson.description;
+
+        // Movie
+        const movie = JSON.parse(get_tonight_movie(month, day));
+        document.getElementById('movie-genre').textContent = movie.genre;
+        document.getElementById('movie-title').textContent = movie.title;
+        document.getElementById('movie-year').textContent = movie.year;
+        document.getElementById('movie-tagline').textContent = `"${movie.tagline}"`;
+
+        const themesEl = document.getElementById('movie-themes');
+        themesEl.innerHTML = movie.themes.map(t =>
+          `<span class="theme-tag">${t}</span>`
+        ).join('');
+
+        // Watched button
+        const watchedBtn = document.getElementById('watched-btn');
+        const logKey = 'afterhours_log';
+        const log = JSON.parse(localStorage.getItem(logKey) || '[]');
+
+        const alreadyWatched = log.some(e => e.movieId === movie.id && e.date === `${month}-${day}`);
+        if (alreadyWatched) {
+          watchedBtn.textContent = 'Watched!';
+          watchedBtn.classList.add('done');
+        }
+
+        watchedBtn.addEventListener('click', () => {
+          if (!alreadyWatched) {
+            log.push({
+              movieId: movie.id,
+              title: movie.title,
+              date: `${month}-${day}`,
+              theme: themeJson.name,
+              timestamp: new Date().toISOString()
+            });
+            localStorage.setItem(logKey, JSON.stringify(log));
+            watchedBtn.textContent = 'Watched!';
+            watchedBtn.classList.add('done');
+            renderLog(log);
+          }
+        });
+
+        renderLog(log);
+      }
+
+      function renderLog(log) {
+        const list = document.getElementById('log-list');
+        if (log.length === 0) {
+          list.innerHTML = '<div class="log-empty">No movies watched yet. Start tonight!</div>';
+          return;
+        }
+        list.innerHTML = log.slice().reverse().slice(0, 10).map(e =>
+          `<div class="log-entry">
+            <span class="log-title">${e.title}</span>
+            <span class="log-theme">${e.theme}</span>
+          </div>`
+        ).join('');
+      }
+
+      // Time gate check
+      if (is_after_hours(hour)) {
+        showOpen();
+      } else {
+        // Show locked with countdown
+        const mins = minutes_until_open(hour, minute);
+        const h = Math.floor(mins / 60);
+        const m = mins % 60;
+        document.getElementById('countdown').textContent =
+          `Doors open in ${h}h ${m}m`;
+
+        // Override button
+        document.getElementById('override-btn').addEventListener('click', () => {
+          showOpen();
+        });
+      }
+    }
+
+    main();
+  </script>
+</body>
+</html>

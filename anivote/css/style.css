@@ -1,0 +1,86 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, sans-serif; background: #0f0f1a; color: #e0e0f0; min-height: 100vh; }
+#app { max-width: 520px; margin: 0 auto; }
+
+header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: #1a1a2e; border-bottom: 1px solid #2a2a3e; }
+header h1 { font-size: 22px; color: #ff6b9d; font-weight: 800; }
+.party-name { font-size: 13px; color: #666; flex: 1; }
+.header-actions { display: flex; gap: 6px; }
+.btn-small { background: #2a2a3e; color: #aaa; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; }
+
+/* Setup */
+.setup-card { padding: 40px 24px; text-align: center; }
+.setup-card h2 { font-size: 24px; margin-bottom: 20px; color: #ff6b9d; }
+.setup-card input { width: 100%; padding: 14px; background: #1a1a2e; border: 1px solid #333; color: #fff; border-radius: 10px; font-size: 16px; margin-bottom: 12px; }
+.divider { color: #444; margin: 16px 0; font-size: 13px; }
+.hidden { display: none !important; }
+
+/* Buttons */
+.btn-primary { width: 100%; padding: 14px; background: linear-gradient(135deg, #ff6b9d, #c44dff); color: #fff; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; }
+.btn-secondary { width: 100%; padding: 12px; background: #2a2a3e; color: #aaa; border: 1px solid #333; border-radius: 10px; font-size: 14px; cursor: pointer; }
+.btn-accent { background: #ff6b9d; color: #fff; border: none; width: 44px; height: 44px; border-radius: 10px; font-size: 20px; cursor: pointer; flex-shrink: 0; }
+
+/* Nav Tabs */
+nav { display: flex; background: #1a1a2e; border-bottom: 1px solid #2a2a3e; }
+.tab { flex: 1; padding: 12px 8px; border: none; background: none; color: #666; font-size: 14px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; }
+.tab.active { color: #ff6b9d; border-bottom-color: #ff6b9d; }
+
+.tab-content { display: none; padding: 12px; }
+.tab-content.active { display: block; }
+
+/* Add Bar */
+.add-bar { display: flex; gap: 8px; margin-bottom: 12px; }
+.add-bar input { flex: 1; padding: 12px; background: #1a1a2e; border: 1px solid #333; color: #fff; border-radius: 10px; font-size: 14px; }
+
+/* Suggestions */
+.suggestions { background: #1a1a2e; border: 1px solid #333; border-radius: 10px; margin: -8px 0 12px; overflow: hidden; }
+.suggestion { padding: 10px 14px; cursor: pointer; font-size: 14px; border-bottom: 1px solid #222; }
+.suggestion:hover { background: #2a2a3e; }
+.suggestion .sg-emoji { margin-right: 8px; }
+.suggestion .sg-meta { font-size: 11px; color: #666; margin-left: 8px; }
+
+/* Anime Cards */
+.anime-card { background: #1a1a2e; border-radius: 12px; padding: 14px; margin-bottom: 10px; border: 1px solid #2a2a3e; }
+.anime-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.anime-emoji { font-size: 28px; }
+.anime-title { font-size: 16px; font-weight: 700; flex: 1; }
+.anime-genre { font-size: 11px; color: #888; background: #2a2a3e; padding: 2px 8px; border-radius: 10px; }
+.anime-meta { font-size: 12px; color: #555; margin-bottom: 8px; }
+
+/* Vote Stars */
+.vote-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.vote-label { font-size: 12px; color: #888; width: 60px; }
+.vote-stars { display: flex; gap: 4px; }
+.star { font-size: 20px; cursor: pointer; color: #333; transition: color 0.15s; }
+.star.filled { color: #ffd700; }
+.star:hover { color: #ffed4a; }
+.vote-avg { font-size: 14px; color: #ff6b9d; font-weight: 700; margin-left: auto; }
+
+/* Actions */
+.anime-actions { display: flex; gap: 6px; margin-top: 8px; }
+.anime-actions button { padding: 6px 12px; border-radius: 6px; border: none; font-size: 12px; cursor: pointer; }
+.btn-watch { background: #27ae60; color: #fff; }
+.btn-drop { background: #333; color: #888; }
+.btn-done { background: #3498db; color: #fff; }
+
+/* Progress */
+.progress { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.progress-bar { flex: 1; height: 6px; background: #2a2a3e; border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; background: #ff6b9d; border-radius: 3px; transition: width 0.3s; }
+.progress-text { font-size: 12px; color: #888; }
+.btn-ep { background: #2a2a3e; color: #ff6b9d; border: 1px solid #ff6b9d; padding: 4px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; }
+
+/* Members */
+.member-card { display: flex; align-items: center; gap: 12px; padding: 12px; background: #1a1a2e; border-radius: 10px; margin-bottom: 8px; }
+.member-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #ff6b9d, #c44dff); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; }
+.member-name { font-size: 15px; font-weight: 600; flex: 1; }
+.member-since { font-size: 11px; color: #555; }
+
+/* Modal */
+.modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 100; }
+.modal-content { background: #1a1a2e; border-radius: 16px; padding: 24px; max-width: 400px; width: 90%; }
+.modal-content h2 { margin-bottom: 16px; color: #ff6b9d; }
+.stat-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #222; font-size: 14px; }
+.stat-value { color: #ff6b9d; font-weight: 700; }
+
+.empty-state { text-align: center; color: #444; padding: 40px 20px; font-size: 14px; }

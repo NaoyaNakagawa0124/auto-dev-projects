@@ -1,0 +1,9 @@
+{
+  "name": "chromadrip",
+  "version": "0.1.0",
+  "description": "2035 fashion palette generator for smart fabrics",
+  "scripts": {
+    "start": "bun run src/server.ts",
+    "test": "bun test"
+  }
+}

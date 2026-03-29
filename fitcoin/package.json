@@ -1,0 +1,15 @@
+{
+  "name": "fitcoin",
+  "version": "0.1.0",
+  "description": "Anti-Strava CLI. Your health portfolio in the terminal.",
+  "main": "src/cli.js",
+  "bin": {
+    "fitcoin": "./src/cli.js"
+  },
+  "scripts": {
+    "test": "node tests/run-all.js",
+    "start": "node src/cli.js"
+  },
+  "keywords": ["fitness", "cli", "health", "portfolio", "anti-strava"],
+  "license": "MIT"
+}

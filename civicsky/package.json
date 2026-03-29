@@ -1,0 +1,9 @@
+{
+  "name": "civicsky",
+  "version": "0.1.0",
+  "description": "Regulatory weather forecast Chrome extension",
+  "private": true,
+  "scripts": {
+    "test": "node tests/run-all.js"
+  }
+}

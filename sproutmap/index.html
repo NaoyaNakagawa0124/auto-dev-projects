@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SproutMap 🌱</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, sans-serif; background: #f0f7ed; overflow-x: hidden; }
+    #controls {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 10;
+      background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+      border-top: 1px solid #ddd; padding: 12px 16px;
+    }
+    .food-grid {
+      display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .food-btn {
+      flex: 0 0 auto; padding: 8px 14px; border: 1px solid #ddd;
+      border-radius: 20px; background: #fff; font-size: 14px;
+      cursor: pointer; white-space: nowrap; transition: all 0.15s;
+    }
+    .food-btn:active { background: #e8f5e9; transform: scale(0.95); }
+    .score-bar {
+      display: flex; align-items: center; gap: 12px; margin-top: 8px; font-size: 13px;
+    }
+    .score-badge {
+      padding: 4px 12px; border-radius: 12px; font-weight: 700; color: #fff;
+    }
+    .save-btn {
+      position: fixed; top: 12px; right: 12px; z-index: 10;
+      background: rgba(255,255,255,0.9); border: 1px solid #ccc;
+      padding: 8px 16px; border-radius: 20px; font-size: 13px; cursor: pointer;
+    }
+    #title-overlay {
+      position: fixed; top: 12px; left: 16px; z-index: 10;
+      font-size: 22px; font-weight: 800; color: #2d6a2e; text-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <div id="title-overlay">🌱 SproutMap</div>
+  <button class="save-btn" id="save-btn">📸 Save Garden</button>
+
+  <div id="controls">
+    <div class="food-grid" id="food-grid"></div>
+    <div class="score-bar">
+      <span>Sustainability:</span>
+      <span class="score-badge" id="score-badge">N/A</span>
+      <span id="score-detail"></span>
+      <span style="margin-left:auto" id="plant-count">0 plants</span>
+    </div>
+  </div>
+
+  <script src="js/foods.js"></script>
+  <script src="js/garden.js"></script>
+  <script>
+    const MEAL_KEY = 'sproutmap_meals';
+    let gardenState;
+    let mealLog = JSON.parse(localStorage.getItem(MEAL_KEY) || '[]');
+
+    // Build food buttons
+    const grid = document.getElementById('food-grid');
+    FOODS.forEach(food => {
+      const btn = document.createElement('button');
+      btn.className = 'food-btn';
+      btn.textContent = food.emoji + ' ' + food.name;
+      btn.addEventListener('click', () => logMeal(food));
+      grid.appendChild(btn);
+    });
+
+    function logMeal(food) {
+      mealLog.push({ ...food, loggedAt: new Date().toISOString() });
+      localStorage.setItem(MEAL_KEY, JSON.stringify(mealLog));
+      const plantInfo = getPlantType(food.category);
+      addPlant(gardenState, food, plantInfo);
+      updateScoreUI();
+    }
+
+    function updateScoreUI() {
+      const result = calculateSustainabilityScore(mealLog);
+      const badge = document.getElementById('score-badge');
+      badge.textContent = result.grade;
+      badge.style.background = result.color;
+      document.getElementById('score-detail').textContent =
+        result.grade !== 'N/A' ? `(${result.avg}/5 impact · ${getDiversityScore(mealLog)}% diverse)` : '';
+      document.getElementById('plant-count').textContent = gardenState.plants.length + ' plants';
+    }
+
+    // p5.js sketch
+    function setup() {
+      const canvas = createCanvas(windowWidth, windowHeight - 90);
+      gardenState = createGardenState();
+      gardenState.width = width;
+      gardenState.height = height;
+      gardenState.soilY = height * 0.75;
+
+      // Restore saved plants
+      mealLog.forEach(food => {
+        const plantInfo = getPlantType(food.category);
+        addPlant(gardenState, food, plantInfo);
+      });
+      updateScoreUI();
+    }
+
+    function draw() {
+      updateGarden(gardenState, 0.016);
+      drawGarden({ // p5 wrapper
+        stroke: (a,b,c) => typeof b !== 'undefined' ? stroke(a,b,c) : stroke(a),
+        noStroke: () => noStroke(),
+        strokeWeight: (w) => strokeWeight(w),
+        fill: (...args) => fill(...args),
+        noFill: () => noFill(),
+        line: (...a) => line(...a),
+        rect: (...a) => rect(...a),
+        ellipse: (...a) => ellipse(...a),
+        arc: (...a) => arc(...a),
+        bezier: (...a) => bezier(...a),
+        lerpColor: (...a) => lerpColor(...a),
+        color: (...a) => color(...a),
+        push: () => push(),
+        pop: () => pop(),
+      }, gardenState, frameCount);
+    }
+
+    function windowResized() {
+      resizeCanvas(windowWidth, windowHeight - 90);
+      gardenState.width = width;
+      gardenState.height = height;
+      gardenState.soilY = height * 0.75;
+    }
+
+    // Save
+    document.getElementById('save-btn').addEventListener('click', () => {
+      saveCanvas('my-sproutmap', 'png');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "name": "cramclock",
+  "version": "0.1.0",
+  "tasks": {
+    "start": "deno run src/cli.ts",
+    "test": "deno test tests/"
+  }
+}

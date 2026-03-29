@@ -1,0 +1,36 @@
+{
+  "apps_completed": 19,
+  "max_apps": 0,
+  "current_app": null,
+  "domain": null,
+  "discovery_rolls": [
+    {"source": 2, "persona": 13, "platform": 12, "wildcard": 11},
+    {"source": 3, "persona": 4, "platform": 19, "wildcard": 14},
+    {"source": 12, "persona": 10, "platform": 8, "wildcard": 7},
+    {"source": 4, "persona": 11, "platform": 1, "wildcard": 12},
+    {"source": 16, "persona": 19, "platform": 5, "wildcard": 1},
+    {"source": 26, "persona": 5, "platform": 3, "wildcard": 0},
+    {"source": 25, "persona": 8, "platform": 20, "wildcard": 12},
+    {"source": 20, "persona": 19, "platform": 20, "wildcard": 2},
+    {"source": 9, "persona": 19, "platform": 5, "wildcard": 6},
+    {"source": 27, "persona": 13, "platform": 10, "wildcard": 3},
+    {"source": 24, "persona": 10, "platform": 12, "wildcard": 10},
+    {"source": 15, "persona": 12, "platform": 2, "wildcard": 2},
+    {"source": 17, "persona": 20, "platform": 15, "wildcard": 7},
+    {"source": 1, "persona": 5, "platform": 4, "wildcard": 13},
+    {"source": 11, "persona": 3, "platform": 4, "wildcard": 8},
+    {"source": 21, "persona": 6, "platform": 19, "wildcard": 8},
+    {"source": 11, "persona": 20, "platform": 18, "wildcard": 4},
+    {"source": 1, "persona": 16, "platform": 1, "wildcard": 12},
+    {"source": 27, "persona": 8, "platform": 18, "wildcard": 8}
+  ],
+  "history": [
+    {"name": "cinewrapped"}, {"name": "chakraforge"}, {"name": "laikas-journey"},
+    {"name": "gigrank"}, {"name": "civicsky"}, {"name": "nestplan"},
+    {"name": "cramsleuths"}, {"name": "antiscroll"}, {"name": "mealroll"},
+    {"name": "afterhours"}, {"name": "pawrank"}, {"name": "fitcoin"},
+    {"name": "sleepcraft"}, {"name": "lovebytes"}, {"name": "yarnpal"},
+    {"name": "sproutmap"}, {"name": "chromadrip"}, {"name": "anivote"},
+    {"name": "cramclock"}
+  ]
+}

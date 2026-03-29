@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AniVote</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>AniVote</h1>
+      <div id="party-name" class="party-name"></div>
+      <div class="header-actions">
+        <button id="share-btn" class="btn-small">Share</button>
+        <button id="stats-btn" class="btn-small">Stats</button>
+      </div>
+    </header>
+
+    <!-- Setup Screen -->
+    <div id="setup" class="screen">
+      <div class="setup-card">
+        <h2>Start a Watch Party</h2>
+        <input id="setup-party-name" placeholder="Party name" value="Anime Night">
+        <input id="setup-your-name" placeholder="Your name">
+        <button id="setup-create" class="btn-primary">Create Party</button>
+        <div class="divider">or</div>
+        <button id="setup-import" class="btn-secondary">Join via Shared Link</button>
+      </div>
+    </div>
+
+    <!-- Main Screen -->
+    <div id="main" class="screen hidden">
+      <nav>
+        <button class="tab active" data-tab="candidates">Vote</button>
+        <button class="tab" data-tab="watching">Watching</button>
+        <button class="tab" data-tab="completed">Done</button>
+        <button class="tab" data-tab="members">Members</button>
+      </nav>
+
+      <!-- Candidates Tab -->
+      <div id="tab-candidates" class="tab-content active">
+        <div class="add-bar">
+          <input id="add-title" placeholder="Add anime..." autocomplete="off">
+          <button id="add-btn" class="btn-accent">+</button>
+        </div>
+        <div id="suggestions" class="suggestions hidden"></div>
+        <div id="candidate-list" class="anime-list"></div>
+      </div>
+
+      <!-- Watching Tab -->
+      <div id="tab-watching" class="tab-content">
+        <div id="watching-list" class="anime-list"></div>
+      </div>
+
+      <!-- Completed Tab -->
+      <div id="tab-completed" class="tab-content">
+        <div id="completed-list" class="anime-list"></div>
+      </div>
+
+      <!-- Members Tab -->
+      <div id="tab-members" class="tab-content">
+        <div id="member-list"></div>
+        <div class="add-bar">
+          <input id="add-member" placeholder="Add member name...">
+          <button id="add-member-btn" class="btn-accent">+</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Modal -->
+    <div id="stats-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Party Stats</h2>
+        <div id="stats-body"></div>
+        <button class="btn-secondary" id="close-stats">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/anime-db.js"></script>
+  <script src="js/party.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

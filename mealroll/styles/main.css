@@ -1,0 +1,246 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#app {
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+  padding: 24px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+#title {
+  font-size: 28px;
+  font-weight: 800;
+  background: linear-gradient(90deg, #ff6b35, #f7c948);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+#favs-btn {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #f7c948;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+#favs-btn:hover { background: rgba(255,255,255,0.2); }
+
+/* Spin Area */
+#spin-area { margin-bottom: 24px; }
+
+#wheel-container {
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  border: 3px solid rgba(255,107,53,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s;
+}
+
+#wheel {
+  font-size: 72px;
+  transition: transform 0.05s linear;
+}
+
+#wheel-container.spinning {
+  border-color: #ff6b35;
+  box-shadow: 0 0 30px rgba(255,107,53,0.3);
+}
+
+#spin-btn {
+  background: linear-gradient(135deg, #ff6b35, #e65100);
+  color: #fff;
+  border: none;
+  padding: 14px 48px;
+  border-radius: 30px;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 2px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 20px rgba(255,107,53,0.3);
+}
+#spin-btn:hover { transform: scale(1.05); box-shadow: 0 6px 30px rgba(255,107,53,0.4); }
+#spin-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* Recipe Card */
+#recipe-card {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 28px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(255,255,255,0.1);
+  animation: slideUp 0.4s ease;
+}
+
+#recipe-card.hidden { display: none; }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#card-emoji { font-size: 56px; display: block; margin-bottom: 8px; }
+#card-name { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+#card-time { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 12px; }
+
+#card-tags {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+#card-tags .tag {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+#card-ingredients {
+  font-size: 14px;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+#card-fav {
+  background: none;
+  border: 2px solid rgba(255,255,255,0.3);
+  color: #fff;
+  font-size: 24px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-right: 12px;
+}
+#card-fav:hover { border-color: #f7c948; color: #f7c948; }
+#card-fav.favorited { background: #f7c948; color: #1a1a2e; border-color: #f7c948; }
+
+#spin-again {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  padding: 10px 24px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+#spin-again:hover { background: rgba(255,255,255,0.2); }
+
+/* Filters */
+#filters {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.filter-chip {
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-chip:hover { background: rgba(255,255,255,0.1); }
+.filter-chip.active {
+  background: rgba(255,107,53,0.2);
+  border-color: #ff6b35;
+  color: #fff;
+}
+
+/* Favorites Panel */
+#favs-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 340px;
+  height: 100%;
+  background: rgba(16,21,40,0.97);
+  backdrop-filter: blur(20px);
+  border-left: 1px solid rgba(255,255,255,0.1);
+  z-index: 100;
+  padding: 24px;
+  overflow-y: auto;
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+}
+#favs-panel.hidden { transform: translateX(100%); }
+
+#favs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+#favs-header h2 { font-size: 20px; color: #f7c948; }
+#favs-close {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.fav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  cursor: default;
+}
+.fav-item .fav-emoji { font-size: 28px; }
+.fav-item .fav-name { font-size: 14px; font-weight: 600; flex: 1; text-align: left; }
+.fav-item .fav-remove {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.4);
+  font-size: 18px;
+  cursor: pointer;
+}
+.fav-item .fav-remove:hover { color: #ef5350; }
+
+.fav-empty {
+  color: rgba(255,255,255,0.4);
+  font-size: 14px;
+  padding: 40px 0;
+}

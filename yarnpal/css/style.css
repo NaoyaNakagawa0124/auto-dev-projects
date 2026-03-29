@@ -1,0 +1,250 @@
+/* YarnPal — Grandparent-friendly UI: BIG everything */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --red: #c0392b;
+  --warm-bg: #fdf6ec;
+  --text: #2c3e50;
+  --light-text: #7f8c8d;
+  --card-bg: #fff;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--warm-bg);
+  color: var(--text);
+  min-height: 100vh;
+  max-width: 480px;
+  margin: 0 auto;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* Header */
+header {
+  background: var(--red);
+  color: #fff;
+  text-align: center;
+  padding: 16px;
+}
+header h1 { font-size: 28px; font-weight: 800; }
+
+/* Navigation — BIG tabs */
+nav {
+  display: flex;
+  background: #fff;
+  border-bottom: 2px solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+nav button {
+  flex: 1;
+  padding: 16px 8px;
+  border: none;
+  background: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--light-text);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+}
+nav button.active {
+  color: var(--red);
+  border-bottom-color: var(--red);
+}
+
+/* Screens */
+.screen { display: none; padding: 20px; }
+.screen.active { display: block; }
+
+/* Counter Screen — THE BIG NUMBERS */
+.counter-display {
+  text-align: center;
+  margin: 20px 0;
+}
+.counter-label {
+  font-size: 20px;
+  color: var(--light-text);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+.counter-value {
+  font-size: 96px;
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 16px;
+}
+.counter-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+/* BIG tappable buttons */
+.btn-big {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: none;
+  font-size: 36px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.1s;
+  box-shadow: var(--shadow);
+}
+.btn-big:active { transform: scale(0.95); }
+.btn-plus { background: var(--red); color: #fff; }
+.btn-minus { background: #ecf0f1; color: var(--text); }
+
+.btn-action {
+  display: block;
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: 14px;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+  transition: transform 0.1s;
+}
+.btn-action:active { transform: scale(0.98); }
+.btn-undo { background: #f0f0f0; color: var(--text); }
+.btn-reset { background: #fff; color: var(--red); border: 2px solid var(--red); }
+
+/* Progress bar */
+.progress-container {
+  background: #ecf0f1;
+  border-radius: 10px;
+  height: 20px;
+  margin: 16px 0;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--red);
+  border-radius: 10px;
+  transition: width 0.3s;
+}
+.progress-label {
+  text-align: center;
+  font-size: 16px;
+  color: var(--light-text);
+}
+
+/* Projects */
+.project-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.project-color {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 3px solid #eee;
+}
+.project-info { flex: 1; }
+.project-name { font-size: 22px; font-weight: 700; }
+.project-meta { font-size: 16px; color: var(--light-text); }
+.project-status {
+  font-size: 14px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  font-weight: 600;
+}
+.project-status.done { background: #e3f2fd; color: #1565c0; }
+
+.btn-add-project {
+  background: var(--red);
+  color: #fff;
+  width: 100%;
+  padding: 20px;
+  border: none;
+  border-radius: 14px;
+  font-size: 22px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 12px;
+}
+
+/* Timer */
+.timer-display {
+  text-align: center;
+  margin: 40px 0;
+}
+.timer-value {
+  font-size: 72px;
+  font-weight: 900;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.timer-sessions {
+  font-size: 18px;
+  color: var(--light-text);
+  margin-top: 16px;
+}
+
+.btn-timer {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: none;
+  font-size: 24px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  margin: 0 auto;
+  display: block;
+}
+.btn-start { background: #27ae60; color: #fff; }
+.btn-stop { background: var(--red); color: #fff; }
+
+/* Form (modal-like) */
+.form-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 100;
+  align-items: flex-end;
+  justify-content: center;
+}
+.form-overlay.open { display: flex; }
+.form-sheet {
+  background: #fff;
+  width: 100%;
+  max-width: 480px;
+  border-radius: 20px 20px 0 0;
+  padding: 24px;
+}
+.form-sheet h2 { font-size: 24px; margin-bottom: 16px; }
+.form-sheet label { display: block; font-size: 18px; margin-bottom: 6px; color: var(--light-text); }
+.form-sheet input, .form-sheet select, .form-sheet textarea {
+  width: 100%;
+  padding: 14px;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  font-size: 20px;
+  margin-bottom: 12px;
+  font-family: inherit;
+}
+.form-sheet textarea { min-height: 80px; resize: vertical; }
+
+/* Yarn emoji */
+.yarn-emoji { font-size: 48px; text-align: center; display: block; margin: 20px 0; }
