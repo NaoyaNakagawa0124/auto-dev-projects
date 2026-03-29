@@ -1,5 +1,5 @@
 {
-  "apps_completed": 38,
+  "apps_completed": 39,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -231,6 +231,12 @@
       "persona": 24,
       "platform": 20,
       "wildcard": 30
+    },
+    {
+      "source": 33,
+      "persona": 2,
+      "platform": 3,
+      "wildcard": 44
     }
   ],
   "history": [
@@ -347,6 +353,9 @@
     },
     {
       "name": "ronriroom"
+    },
+    {
+      "name": "kidlog"
     }
   ]
 }

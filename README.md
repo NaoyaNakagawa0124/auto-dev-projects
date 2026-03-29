@@ -42,5 +42,6 @@
 | 36 | nijilog | Generative art mood diary | p5.js/Vite/Vanilla JS | 32 |
 | 37 | snapjudge | Speed photo-culling game (3 features) | Godot 4/GDScript | 64 |
 | 38 | ronriroom | Office escape logic puzzles | C/Raylib | 64 |
+| 39 | kidlog | SNS-style family milestone TUI | Python/Textual | 53 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

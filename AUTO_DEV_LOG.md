@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-30 00:30 | Total apps: 38 | Total tests: 7,768
+> Last updated: 2026-03-30 01:00 | Total apps: 39 | Total tests: 7,821
 
 ## Quick Overview
 
@@ -44,6 +44,7 @@
 | 36 | [nijilog](#nijilog) | Generative art mood diary | p5.js/Vite/Vanilla JS | 32 | complete | `npm run dev` |
 | 37 | [snapjudge](#snapjudge) | Speed photo-culling game (3 features) | Godot 4/GDScript | 64 | complete | `godot project.godot` |
 | 38 | [ronriroom](#ronriroom) | Office escape logic puzzles | C/Raylib | 64 | complete | `make && ./ronriroom` |
+| 39 | [kidlog](#kidlog) | SNS-style family milestone TUI | Python/Textual | 53 | complete | `python3 src/app.py` |
 
 ---
 
@@ -1694,3 +1695,48 @@ None — clean build with zero compiler warnings. Pure logic separation made tes
 - Randomized puzzle parameters for replayability
 - Japanese font rendering via Raylib font loading
 - More puzzle types (Sudoku, Tower of Hanoi, binary)
+
+---
+
+### <a id="kidlog"></a>39. kidlog - 2026-03-30 01:00
+
+**What is this?**
+A Textual TUI family milestone tracker styled like a social media feed. Busy parents log their children's milestones in under 30 seconds from the terminal. Features SNS-style timeline with emoji reactions, 9 categories, streak tracking, and statistics.
+
+**Discovery Roll**
+Source: 33 (Hacker News) | Persona: 2 (忙しすぎる親) | Platform: 3 (Python Textual TUI) | Wildcard: 44 (SNS風UI)
+
+**Features Built**
+- SNS-style scrollable timeline with category emoji, timestamps, and reactions
+- Quick modal entry form with 9 category buttons (運動/ことば/食事/睡眠/遊び/初めて/健康/社会性/その他)
+- Emoji reaction system (❤️😂😢🎉💪🌟) with deduplication
+- Statistics modal: category distribution bars, reaction counts, streak info
+- Text search across all entries
+- Streak tracking with longest streak record
+- JSON file persistence (~/.kidlog_data.json)
+
+**Tech Stack**
+Python 3 / Textual TUI / JSON / Rich text rendering
+
+**Key Files**
+```
+src/app.py           — Textual app with 4 screens (main, new entry, stats, reactions)
+src/store.py         — Data layer: CRUD, stats, search, streak tracking
+tests/test_store.py  — 53 tests covering all store operations
+```
+
+**How to Run**
+```bash
+pip install textual
+cd kidlog && python3 src/app.py
+```
+
+**Tests**: 53 passing | **Files**: 6 | **LOC**: ~740 (Python)
+
+**Challenges & Fixes**
+None — clean implementation. Textual's modal screens and CSS-like styling made the SNS-style UI natural.
+
+**Potential Next Steps**
+- Export timeline as shareable HTML/PDF for grandparents
+- Multi-child profiles with separate feeds
+- Weekly summary notifications
