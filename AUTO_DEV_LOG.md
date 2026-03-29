@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-30 02:30 | Total apps: 41 | Total tests: 7,926
+> Last updated: 2026-03-30 03:15 | Total apps: 42 | Total tests: 7,978
 
 ## Quick Overview
 
@@ -47,6 +47,7 @@
 | 39 | [kidlog](#kidlog) | SNS-style family milestone TUI | Python/Textual | 53 | complete | `python3 src/app.py` |
 | 40 | [meitantei](#meitantei) | Detective photo evidence game | Vanilla JS/Canvas/Vite | 48 | complete | `npm run dev` |
 | 41 | [tsundoku](#tsundoku) | Book-stacking Tetris puzzle | C/Raylib | 57 | complete | `make && ./tsundoku` |
+| 42 | [midnightbento](#midnightbento) | Bento box spatial puzzle | Godot 4/GDScript | 52 | complete | `godot project.godot` |
 
 ---
 
@@ -1836,3 +1837,49 @@ BOARD_H macro name collision with include guard — renamed to BOARD_ROWS.
 - Hold piece mechanic
 - Custom shelf layout designer (architecture twist)
 - Online leaderboard
+
+---
+
+### <a id="midnightbento"></a>42. midnightbento - 2026-03-30 03:15
+
+**What is this?**
+A Godot 4 spatial puzzle game where you pack Japanese food items into a bento box grid. 10 food types with unique shapes (umeboshi 1x1 to tonkatsu 2x3), 10 levels from tutorial to expert, and study-effect bonuses. Designed as a 2-minute study break for late-night crammers.
+
+**Discovery Roll**
+Source: 9 (Food/recipe culture) | Persona: 8 (深夜2時の詰め込み学生) | Platform: 14 (Godot game) | Wildcard: 0 (なし)
+
+**Features Built**
+- 10 food types: おにぎり, 卵焼き, 唐揚げ, ブロッコリー, 巻き寿司, 餃子, とんかつ, etc.
+- 10 levels (3x2 to 6x5) with curated food sets
+- Placement validation, rotation, undo
+- Scoring: filled cells + variety bonus + full board bonus + study effects
+- Study effect system (集中力, 記憶力, スタミナ, 健康, etc.)
+- S-F grading based on par scores
+
+**Tech Stack**
+GDScript / Godot 4 / Node.js test suite
+
+**Key Files**
+```
+scripts/food_data.gd    — 10 food items with shapes, colors, effects
+scripts/bento_board.gd  — Grid logic: placement, validation, scoring
+scripts/level_data.gd   — 10 level definitions with board sizes and food sets
+scripts/game_manager.gd — Game flow, selection, placement, grading
+scenes/main_ui.gd       — Drawing, input, screen management
+tests/run.js            — 52 tests (logic, levels, structure, Japanese text)
+```
+
+**How to Run**
+```bash
+godot project.godot
+```
+
+**Tests**: 52 passing (Node.js) | **Files**: 13 | **LOC**: ~1,300
+
+**Challenges & Fixes**
+None — clean implementation. Level design verified by test ensuring food cells never exceed board capacity.
+
+**Potential Next Steps**
+- Drag-and-drop piece placement
+- Randomized levels for infinite replay
+- Time-based scoring leaderboard

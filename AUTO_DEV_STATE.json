@@ -1,5 +1,5 @@
 {
-  "apps_completed": 41,
+  "apps_completed": 42,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -249,6 +249,12 @@
       "persona": 38,
       "platform": 20,
       "wildcard": 47
+    },
+    {
+      "source": 9,
+      "persona": 8,
+      "platform": 14,
+      "wildcard": 0
     }
   ],
   "history": [
@@ -374,6 +380,9 @@
     },
     {
       "name": "tsundoku"
+    },
+    {
+      "name": "midnightbento"
     }
   ]
 }
