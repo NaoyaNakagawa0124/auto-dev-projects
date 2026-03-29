@@ -1,5 +1,5 @@
 {
-  "apps_completed": 32,
+  "apps_completed": 33,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -35,7 +35,8 @@
     {"source": 23, "persona": 6, "platform": 5, "wildcard": 2},
     {"source": 2, "persona": 4, "platform": 10, "wildcard": 12},
     {"source": 18, "persona": 13, "platform": 5, "wildcard": 8},
-    {"source": 2, "persona": 15, "platform": 9, "wildcard": 4}
+    {"source": 2, "persona": 15, "platform": 9, "wildcard": 4},
+    {"source": 19, "persona": 19, "platform": 12, "wildcard": 14}
   ],
   "history": [
     {"name": "cinewrapped"}, {"name": "chakraforge"}, {"name": "laikas-journey"},
@@ -48,6 +49,6 @@
     {"name": "starlog"}, {"name": "lumilink"}, {"name": "nochecalma"},
     {"name": "kidstats2035"}, {"name": "shipwatch"}, {"name": "shopkeeper"},
     {"name": "foodtrend"}, {"name": "blindbite"}, {"name": "duetplan"},
-    {"name": "clapboard"}, {"name": "shotlist2035"}
+    {"name": "clapboard"}, {"name": "shotlist2035"}, {"name": "commutestory"}
   ]
 }

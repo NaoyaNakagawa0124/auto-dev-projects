@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-29 | Total apps: 32 | Total tests: 7,245
+> Last updated: 2026-03-29 | Total apps: 33 | Total tests: 7,550
 
 ## Quick Overview
 
@@ -38,6 +38,7 @@
 | 30 | [duetplan](#duetplan) | Collab topic matcher for creators | Rust+WASM | 24 | complete | `wasm-pack build --target web && python3 -m http.server` |
 | 31 | [clapboard](#clapboard) | Movie-style work time tracker | Chrome Extension/JS | 163 | complete | Load unpacked in `chrome://extensions` |
 | 32 | [shotlist2035](#shotlist2035) | AI photography shot list generator | Electron/HTML/JS | 516 | complete | `open src/index.html` |
+| 33 | [commutestory](#commutestory) | Infrastructure narrative notebook | Python/Jupyter/Plotly | 305 | complete | `jupyter notebook commutestory.ipynb` |
 
 ---
 
@@ -1396,3 +1397,49 @@ Count=0 defaults to 5 (not 1) since engine uses `count || 5` — adjusted test e
 - Location-based shot suggestions
 - Weekly trending style updates via API
 - Portfolio builder from completed shots
+
+---
+
+### <a id="commutestory"></a>33. commutestory - 2026-03-29
+
+**What is this?**
+A Jupyter notebook that tells the narrative story of a daily train commute through 8 stations of infrastructure engineering. Each station is a chapter: steel-truss terminal, TBM-bored granite tunnel, cable-stayed bridge, AI smart station, BRT interchange, concrete viaduct, living green station, and multi-modal hub. 7 Plotly visualizations with verified engineering data. Based on real 2026 US transit project trends.
+
+**Discovery Roll**
+Source: 19 (Infrastructure/urban planning) | Persona: 19 (Commuter, 1hr train) | Platform: 12 (Jupyter/data viz) | Wildcard: 14 (Storyline/narrative)
+
+**Features Built**
+- 8-station narrative with multi-line story text per chapter
+- Elevation profile chart (tunnel at -40m, bridge at +65m, viaduct at +22m)
+- Harbor Bridge deep dive (340m span, 72 cables, 120m towers)
+- BRT vs Rail cost comparison ($45M vs $400M — $355M redirected)
+- Passenger volume bar chart across stations
+- Sustainability metrics (solar, air filtration, rainwater, graywater)
+- Construction timeline scatter plot (2018-2026)
+
+**Tech Stack**
+Python / Jupyter / Plotly / pandas / dataclasses
+
+**Key Files**
+```
+commutestory/
+  commutestory.ipynb      # 12-cell narrative notebook
+  src/data_engine.py      # 8 stations with engineering data
+  tests/test_engine.py    # 305 tests
+```
+
+**How to Run**
+```bash
+pip install plotly pandas jupyter && jupyter notebook commutestory.ipynb
+```
+
+**Tests**: 305 passing | **Files**: 4 | **LOC**: ~850 | **Build time**: ~2 min
+
+**Challenges & Fixes**
+None — clean build.
+
+**Potential Next Steps**
+- Interactive station map (click to read chapter)
+- Real GTFS transit data integration
+- Audio narration for actual commuters
+- City-specific editions (NYC, London, Tokyo)
