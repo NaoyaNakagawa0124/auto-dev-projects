@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-29 20:00 | Total apps: 37 | Total tests: 7,704
+> Last updated: 2026-03-30 00:30 | Total apps: 38 | Total tests: 7,768
 
 ## Quick Overview
 
@@ -43,6 +43,7 @@
 | 35 | [cineconquest](#cineconquest) | 3D globe movie conquest game | Three.js/Vite/Vanilla JS | 39 | complete | `npm run dev` |
 | 36 | [nijilog](#nijilog) | Generative art mood diary | p5.js/Vite/Vanilla JS | 32 | complete | `npm run dev` |
 | 37 | [snapjudge](#snapjudge) | Speed photo-culling game (3 features) | Godot 4/GDScript | 64 | complete | `godot project.godot` |
+| 38 | [ronriroom](#ronriroom) | Office escape logic puzzles | C/Raylib | 64 | complete | `make && ./ronriroom` |
 
 ---
 
@@ -1647,3 +1648,49 @@ Godot not installed on build machine — wrote comprehensive Node.js tests that 
 - Real photo datasets for more realistic training
 - Difficulty levels (Easy/Hard)
 - Photo editing mini-game between rounds
+
+---
+
+### <a id="ronriroom"></a>38. ronriroom - 2026-03-30 00:30
+
+**What is this?**
+A Raylib C logic puzzle escape game where a new employee solves 5 different puzzle types to escape office rooms. Each room features a distinct mechanic: pattern recognition (Latin square), number sequences (Fibonacci), linked switches, maze navigation, and Caesar cipher decryption.
+
+**Discovery Roll**
+Source: 20 (Academic papers/ArXiv) | Persona: 24 (新社会人/入社1年目) | Platform: 20 (Raylib/C) | Wildcard: 30 (パズル/謎解きが中心)
+
+**Features Built**
+- 5 puzzle types: pattern grid, number sequence, linked switches, pathfinding maze, Caesar cipher
+- State machine game flow: Title → Story → Playing → Solved → Complete
+- Scoring with time tracking, mistake counting, and S/A/B/C grading
+- Hint system (press H) and wrong-answer visual feedback
+
+**Tech Stack**
+C99 / Raylib / Makefile / Pure logic separated from rendering
+
+**Key Files**
+```
+src/main.c          — Game loop, input handling per puzzle type
+src/game.c          — State machine, room transitions
+src/puzzles.c       — All 5 puzzle types (logic only, no Raylib deps)
+src/puzzles.h       — Puzzle data structures and API
+src/ui.c            — All Raylib drawing code
+src/ui.h            — Colors and UI constants
+tests/test_puzzles.c — 64 tests covering all puzzle logic
+Makefile            — Build game + test target
+```
+
+**How to Run**
+```bash
+make && ./ronriroom
+```
+
+**Tests**: 64 passing (C) | **Files**: 12 | **LOC**: ~1,300 (C/H) | **Build time**: <1s
+
+**Challenges & Fixes**
+None — clean build with zero compiler warnings. Pure logic separation made testing trivial.
+
+**Potential Next Steps**
+- Randomized puzzle parameters for replayability
+- Japanese font rendering via Raylib font loading
+- More puzzle types (Sudoku, Tower of Hanoi, binary)

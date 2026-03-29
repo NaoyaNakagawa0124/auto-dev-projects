@@ -41,5 +41,6 @@
 | 35 | cineconquest | 3D globe movie conquest game | Three.js/Vite/Vanilla JS | 39 |
 | 36 | nijilog | Generative art mood diary | p5.js/Vite/Vanilla JS | 32 |
 | 37 | snapjudge | Speed photo-culling game (3 features) | Godot 4/GDScript | 64 |
+| 38 | ronriroom | Office escape logic puzzles | C/Raylib | 64 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.
