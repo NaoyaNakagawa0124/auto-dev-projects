@@ -1,0 +1,14 @@
+{
+  "name": "nochecalma",
+  "version": "1.0.0",
+  "description": "Your midnight sanctuary. A calming ritual app for overworked parents, only available midnight-6am.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "serve": "node src/server.js",
+    "test": "node tests/test.js"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0"
+  }
+}

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NocheCalma — Your Midnight Sanctuary</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Time Gate (shown when sanctuary is closed) -->
+    <div id="gate" class="screen">
+      <div class="gate-content">
+        <div class="gate-moon">🌙</div>
+        <h1>NocheCalma</h1>
+        <p class="gate-subtitle">Your Midnight Sanctuary</p>
+        <div class="gate-divider"></div>
+        <p class="gate-message">The sanctuary sleeps.</p>
+        <p class="gate-time">It opens at <strong>midnight</strong> and closes at <strong>6am</strong>.</p>
+        <p class="gate-hint">Come back when the world is quiet.<br>This space is yours alone.</p>
+        <p id="gate-countdown" class="gate-countdown"></p>
+      </div>
+    </div>
+
+    <!-- Main Sanctuary (shown midnight-6am) -->
+    <div id="sanctuary" class="screen hidden">
+      <!-- Header -->
+      <header>
+        <h1>NocheCalma</h1>
+        <div id="energy-display">
+          <span id="energy-icon">🌑</span>
+          <div class="energy-bar-outer"><div id="energy-bar" class="energy-bar-inner"></div></div>
+          <span id="energy-text">0%</span>
+        </div>
+      </header>
+
+      <!-- Navigation -->
+      <nav>
+        <button class="nav-btn active" data-view="rituals">Rituals</button>
+        <button class="nav-btn" data-view="breathe">Breathe</button>
+        <button class="nav-btn" data-view="journal">Journal</button>
+        <button class="nav-btn" data-view="stats">Stats</button>
+      </nav>
+
+      <!-- Rituals View -->
+      <section id="view-rituals" class="view active">
+        <p class="view-hint">Choose a micro-ritual. Each takes 1-5 minutes.</p>
+        <div id="ritual-list"></div>
+      </section>
+
+      <!-- Breathe View -->
+      <section id="view-breathe" class="view">
+        <div id="breath-select">
+          <p class="view-hint">Choose a breathing pattern.</p>
+          <div id="breath-list"></div>
+        </div>
+        <div id="breath-active" class="hidden">
+          <div id="breath-circle" class="breath-circle"></div>
+          <p id="breath-instruction" class="breath-instruction">Ready</p>
+          <p id="breath-counter" class="breath-counter"></p>
+          <button id="breath-stop" class="btn btn-secondary">Stop</button>
+        </div>
+      </section>
+
+      <!-- Journal View -->
+      <section id="view-journal" class="view">
+        <div class="journal-prompt">
+          <p id="journal-prompt-text" class="prompt-text"></p>
+        </div>
+        <div class="journal-form">
+          <textarea id="journal-input" placeholder="Write your thoughts..." rows="4"></textarea>
+          <div class="journal-actions">
+            <button id="journal-gratitude" class="btn btn-primary">🙏 Save as Gratitude</button>
+            <button id="journal-release" class="btn btn-secondary">🍃 Save as Release</button>
+          </div>
+        </div>
+        <div id="journal-entries">
+          <h3>Tonight's entries</h3>
+          <div id="entries-list"></div>
+        </div>
+      </section>
+
+      <!-- Stats View -->
+      <section id="view-stats" class="view">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-val" id="stat-nights">0</div><div class="stat-label">Nights</div></div>
+          <div class="stat-card"><div class="stat-val" id="stat-streak">0</div><div class="stat-label">Streak</div></div>
+          <div class="stat-card"><div class="stat-val" id="stat-rituals">0</div><div class="stat-label">Rituals</div></div>
+          <div class="stat-card"><div class="stat-val" id="stat-entries">0</div><div class="stat-label">Journal</div></div>
+        </div>
+        <div id="milestone-info" class="milestone-info"></div>
+        <div id="closing-message" class="closing-message"></div>
+      </section>
+
+      <!-- Footer -->
+      <footer>
+        <span id="time-remaining"></span>
+        <span>Inspired by Teotihuacán 🏛️</span>
+      </footer>
+    </div>
+  </div>
+
+  <script src="engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

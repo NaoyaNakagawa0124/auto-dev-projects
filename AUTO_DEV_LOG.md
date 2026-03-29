@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-29 | Total apps: 23 | Total tests: 3,910
+> Last updated: 2026-03-29 | Total apps: 24 | Total tests: 4,561
 
 ## Quick Overview
 
@@ -29,6 +29,7 @@
 | 21 | [runwayrise](#runwayrise) | Fashion RPG fitness extension | Chrome Extension/Vanilla JS | 475 | complete | Load unpacked in `chrome://extensions` |
 | 22 | [starlog](#starlog) | Anime watchlist as space exploration | Swift 6.1/macOS CLI | 53 | complete | `swift build && .build/debug/starlog` |
 | 23 | [lumilink](#lumilink) | Co-op light puzzle for couples | Godot 4/GDScript | 587 | complete | Open in Godot 4.3+ |
+| 24 | [nochecalma](#nochecalma) | Midnight-only parent sanctuary | Electron/HTML/JS | 651 | complete | `open src/index.html` (midnight-6am) |
 
 ---
 
@@ -962,3 +963,55 @@ Integration test initially failed because play simulation moved players apart af
 - Particle effects and glow shaders for resonance visualization
 - Dynamic music that harmonizes when resonance is high
 - Custom level editor
+
+---
+
+### <a id="nochecalma"></a>24. nochecalma - 2026-03-29
+
+**What is this?**
+An Electron desktop app that only works between midnight and 6am — a sanctuary for overworked parents. Inspired by Mexico's Spring Equinox tradition of recharging energy at Teotihuacán. 5 micro-rituals (breathing, gratitude, release, soundscapes, intentions), energy recharge meter, night streak tracking. Beautiful dark UI with warm gold accents.
+
+**Discovery Roll**
+Source: 30 (Mexico news) | Persona: 2 (Overworked parent, 5 min free) | Platform: 9 (Electron desktop) | Wildcard: 3 (Only works midnight-6am)
+
+**Features Built**
+- Time gate: locked screen with moon animation outside midnight-6am, countdown to opening
+- 5 breathing patterns (4-7-8, Box, Moonlight, Equinox Reset, Quick Calm) with animated circle
+- Gratitude/Release journal with 20 rotating prompts and localStorage persistence
+- Energy meter (Dark → Radiant) that builds with rituals, decays 20pts between nights
+- Night streak tracking with milestones at 1/3/7/14/30/60/100/200/365
+
+**Tech Stack**
+Electron / HTML / CSS / Vanilla JS / localStorage
+
+**Key Files**
+```
+nochecalma/
+  package.json       # Electron wrapper config
+  main.js            # Electron main process
+  src/
+    index.html       # Main UI
+    style.css        # Midnight sanctuary palette
+    engine.js        # Core logic (time gate, rituals, state)
+    app.js           # UI controller
+  tests/
+    test.js          # 651 unit + integration tests
+```
+
+**How to Run**
+```bash
+# With Electron: npm install && npm start
+# Without Electron: open src/index.html (between midnight-6am)
+# Tests: node tests/test.js
+```
+
+**Tests**: 651 passing | **Files**: 7 | **LOC**: ~1,200 | **Build time**: ~2 min
+
+**Challenges & Fixes**
+None — clean build.
+
+**Potential Next Steps**
+- Ambient audio playback for soundscapes (Web Audio API)
+- Midnight push notification ("The sanctuary is open")
+- Export journal entries to markdown
+- Partner mode for couples
