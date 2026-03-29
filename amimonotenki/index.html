@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>あみもの天気 — 気温で編むマフラー</title>
+  <link rel="stylesheet" href="/src/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>🧶 あみもの天気</h1>
+      <p>あなたの街の気温から、世界にひとつだけのマフラーパターンを生成</p>
+    </header>
+
+    <div id="search-section">
+      <input type="text" id="city-input" placeholder="都市名を入力（例: 東京、大阪、New York）" />
+      <button id="search-btn">🔍 検索</button>
+    </div>
+
+    <div id="city-results"></div>
+
+    <div id="loading" class="info">🧶 天気データを取得中...</div>
+
+    <div id="stats-bar"></div>
+
+    <div id="scarf-container"></div>
+
+    <div id="status"></div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

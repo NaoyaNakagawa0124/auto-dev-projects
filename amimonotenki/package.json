@@ -1,0 +1,18 @@
+{
+  "name": "amimonotenki",
+  "version": "1.0.0",
+  "description": "あなたの街の1年間の気温データから、世界にひとつだけの編み物パターンを生成します。",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "node tests/run.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "p5": "^2.2.3",
+    "vite": "^8.0.3"
+  }
+}

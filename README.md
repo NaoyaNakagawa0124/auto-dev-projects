@@ -48,5 +48,6 @@
 | 42 | midnightbento | Bento box spatial puzzle | Godot 4/GDScript | 52 |
 | 43 | pixelhome | Pixel art moving task extension | Chrome Extension/JS | 49 |
 | 44 | eigasketch | Sketch-style movie quiz game | Godot 4/GDScript | 71 |
+| 45 | amimonotenki | Temperature scarf pattern generator | p5.js/Vite/OpenMeteo | 35 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

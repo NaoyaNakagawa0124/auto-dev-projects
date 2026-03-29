@@ -1,5 +1,5 @@
 {
-  "apps_completed": 44,
+  "apps_completed": 45,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -267,6 +267,12 @@
       "persona": 13,
       "platform": 14,
       "wildcard": 31
+    },
+    {
+      "source": 36,
+      "persona": 37,
+      "platform": 19,
+      "wildcard": 28
     }
   ],
   "history": [
@@ -401,6 +407,9 @@
     },
     {
       "name": "eigasketch"
+    },
+    {
+      "name": "amimonotenki"
     }
   ]
 }

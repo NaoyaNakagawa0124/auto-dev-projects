@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-30 04:45 | Total apps: 44 | Total tests: 8,098
+> Last updated: 2026-03-30 05:30 | Total apps: 45 | Total tests: 8,133
 
 ## Quick Overview
 
@@ -50,6 +50,7 @@
 | 42 | [midnightbento](#midnightbento) | Bento box spatial puzzle | Godot 4/GDScript | 52 | complete | `godot project.godot` |
 | 43 | [pixelhome](#pixelhome) | Pixel art moving task extension | Chrome Extension/JS | 49 | complete | Load unpacked in `chrome://extensions` |
 | 44 | [eigasketch](#eigasketch) | Sketch-style movie quiz game | Godot 4/GDScript | 71 | complete | `godot project.godot` |
+| 45 | [amimonotenki](#amimonotenki) | Temperature scarf pattern generator | p5.js/Vite/OpenMeteo API | 35 | complete | `npm run dev` |
 
 ---
 
@@ -1974,3 +1975,51 @@ None — clean implementation. 30-movie database with curated visual hints acros
 - User-contributed movie databases
 - Multiplayer who-guesses-faster mode
 - Freehand drawing mode (player draws, game guesses)
+
+---
+
+### <a id="amimonotenki"></a>45. amimonotenki - 2026-03-30 05:30
+
+**What is this?**
+A p5.js temperature scarf pattern generator using the OpenMeteo weather API. Enter any city worldwide, and it fetches 1 year of daily temperatures to generate a knitting pattern. Each day becomes a row colored by temperature (deep blue = freezing, red = scorching). Produces a printable pattern crafters can actually follow.
+
+**Discovery Roll**
+Source: 36 (デザインツール) | Persona: 37 (DIYクラフター) | Platform: 19 (p5.js) | Wildcard: 28 (実在のWeb API連携)
+
+**Features Built**
+- City search via OpenMeteo geocoding API (Japanese support)
+- 365-day temperature data fetch from archive API
+- p5.js scarf visualization with 11 color ranges and knit texture
+- Statistics dashboard (min/max/avg temp, range, day count)
+- Scrollable pattern with date labels every 30 days
+- Decorative fringe at scarf ends
+- Japanese yarn name legend with color swatches
+
+**Tech Stack**
+JavaScript / p5.js / Vite / OpenMeteo API / CSS3
+
+**Key Files**
+```
+src/colors.js   — 11 temperature ranges with hex colors, yarn names, HSL conversion
+src/weather.js  — OpenMeteo API: city search, temp data fetch, stats computation
+src/scarf.js    — p5.js scarf renderer with knit texture and fringe
+src/main.js     — UI controller, city search, data flow
+tests/run.js    — 35 tests (color mapping, temp ranges, date logic, stats)
+```
+
+**How to Run**
+```bash
+cd amimonotenki
+npm install
+npm run dev
+```
+
+**Tests**: 35 passing | **Files**: 10 | **LOC**: ~1,200 | **Build**: 394ms
+
+**Challenges & Fixes**
+Test had wrong temperature range name — fixed to match actual data (猛暑 not 酷暑 for 30-35°C).
+
+**Potential Next Steps**
+- Print/export as PDF with yarn shopping list
+- Compare two cities side-by-side
+- Monthly separator markers in the pattern
