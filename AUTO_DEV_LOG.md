@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-29 | Total apps: 26 | Total tests: 5,122
+> Last updated: 2026-03-29 | Total apps: 27 | Total tests: 5,522
 
 ## Quick Overview
 
@@ -32,6 +32,7 @@
 | 24 | [nochecalma](#nochecalma) | Midnight-only parent sanctuary | Electron/HTML/JS | 651 | complete | `open src/index.html` (midnight-6am) |
 | 25 | [kidstats2035](#kidstats2035) | Futuristic youth sports analytics | Python/Jupyter/Plotly | 270 | complete | `jupyter notebook kidstats2035.ipynb` |
 | 26 | [shipwatch](#shipwatch) | One-hand supply chain CLI | Node.js CLI | 291 | complete | `node src/cli.js` |
+| 27 | [shopkeeper](#shopkeeper) | Bakery game teaching biz skills | Web app/Vanilla JS | 400 | complete | `open index.html` |
 
 ---
 
@@ -1111,3 +1112,51 @@ Bar renderer crashed when route delay exceeded max width — fixed with Math.min
 - Custom package tracking
 - Alert mode with severity change notifications
 - Export to JSON/CSV
+
+---
+
+### <a id="shopkeeper"></a>27. shopkeeper - 2026-03-29
+
+**What is this?**
+A cozy virtual bakery web app for grandparents that secretly teaches real B2B business skills. Run your shop, serve 8 unique customers, set prices, manage inventory with expiry, create invoices, and track profit margins. It looks like a cute bakery game, but 7 business skills are "discovered" through play: pricing strategy, inventory management, cash flow, invoicing, profit margins, waste reduction, and customer relations.
+
+**Discovery Roll**
+Source: 18 (B2B enterprise pain points) | Persona: 3 (Grandparent, first smartphone) | Platform: 1 (Web app) | Wildcard: 7 (Secretly teaches a skill)
+
+**Features Built**
+- 8 bakery products with costs, prices, shelf life, and category
+- 8 customers with favorites, patience, tipping habits, and reputation impact
+- Inventory with expiry system (products expire after shelf life days)
+- Dynamic pricing with real-time margin calculation and warnings
+- Auto-generated invoices per customer sale
+- Reputation system (Unknown → Beloved) with 5 tiers
+- 7 discoverable business skills with celebration toasts
+
+**Tech Stack**
+Vanilla HTML/CSS/JS / localStorage / Zero dependencies
+
+**Key Files**
+```
+shopkeeper/
+  index.html        # Main UI with 5 views
+  style.css         # Warm bakery palette, grandparent-friendly
+  engine.js         # Game logic, products, customers, financials
+  app.js            # UI controller
+  tests/test.js     # 400 tests
+```
+
+**How to Run**
+```bash
+open index.html
+```
+
+**Tests**: 400 passing | **Files**: 6 | **LOC**: ~1,300 | **Build time**: ~2 min
+
+**Challenges & Fixes**
+Coffee shelf life expiry off-by-one: test expected expiry at day 2 but shelfLife=1 means expiry at end of day 1. Fixed test expectations.
+
+**Potential Next Steps**
+- Seasonal events and holiday specials
+- Supplier negotiation mini-game
+- Tax calculation (secretly teaching accounting)
+- Multi-language support

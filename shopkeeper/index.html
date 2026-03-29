@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShopKeeper — Your Little Bakery</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>🧁 <span id="shop-name">Grandma's Bakery</span></h1>
+      <div class="header-stats">
+        <span id="day-display">Day 1</span>
+        <span id="cash-display">💰 $50.00</span>
+        <span id="rep-display">😊 Known ⭐⭐⭐</span>
+      </div>
+    </header>
+
+    <nav>
+      <button class="nav-btn active" data-view="shop">🏪 Shop</button>
+      <button class="nav-btn" data-view="stock">📦 Stock</button>
+      <button class="nav-btn" data-view="prices">🏷️ Prices</button>
+      <button class="nav-btn" data-view="invoices">📋 Invoices</button>
+      <button class="nav-btn" data-view="report">📊 Report</button>
+    </nav>
+
+    <!-- Shop View -->
+    <section id="view-shop" class="view active">
+      <div id="customer-area">
+        <div id="no-customer">
+          <p class="big-text">No customers right now.</p>
+          <button id="btn-next-customer" class="btn btn-big">Ring the Bell 🔔</button>
+        </div>
+        <div id="customer-card" class="hidden">
+          <div class="customer-header">
+            <span id="cust-icon" class="cust-icon"></span>
+            <div>
+              <div id="cust-name" class="cust-name"></div>
+              <div id="cust-wants" class="cust-wants"></div>
+            </div>
+          </div>
+          <button id="btn-serve" class="btn btn-big btn-serve">Serve Customer ✅</button>
+          <div id="serve-result" class="hidden"></div>
+        </div>
+      </div>
+      <div id="end-day-area">
+        <button id="btn-end-day" class="btn btn-end">End the Day 🌙</button>
+        <div id="day-summary" class="hidden"></div>
+      </div>
+    </section>
+
+    <!-- Stock View -->
+    <section id="view-stock" class="view">
+      <h2>📦 Buy Stock</h2>
+      <p class="hint">Buy ingredients to fill your shelves!</p>
+      <div id="stock-grid"></div>
+    </section>
+
+    <!-- Prices View -->
+    <section id="view-prices" class="view">
+      <h2>🏷️ Set Your Prices</h2>
+      <p class="hint">How much should each item cost?</p>
+      <div id="price-grid"></div>
+    </section>
+
+    <!-- Invoices View -->
+    <section id="view-invoices" class="view">
+      <h2>📋 Invoices</h2>
+      <p class="hint">Records of what you've sold.</p>
+      <div id="invoice-list"></div>
+    </section>
+
+    <!-- Report View -->
+    <section id="view-report" class="view">
+      <h2>📊 Business Report</h2>
+      <div id="report-content"></div>
+      <h3>🎓 Skills You've Learned</h3>
+      <div id="skills-list"></div>
+    </section>
+
+    <!-- Skill Discovery Toast -->
+    <div id="skill-toast" class="skill-toast hidden">
+      <div class="toast-content">
+        <span class="toast-icon">🎓</span>
+        <div>
+          <div class="toast-title">New Skill Discovered!</div>
+          <div id="toast-skill-name"></div>
+          <div id="toast-skill-desc" class="toast-desc"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
