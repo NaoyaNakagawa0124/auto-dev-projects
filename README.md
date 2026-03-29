@@ -52,5 +52,6 @@
 | 46 | ikifuku | Breathing exercise generative art | Vanilla JS/Canvas/Vite | 38 |
 | 47 | oshishrine | Retro GeoCities fan shrine builder | Vanilla JS/Canvas/Vite | 46 |
 | 48 | kuizunote | Brain training puzzle notebook | Python/Jupyter/matplotlib | 57 |
+| 49 | oshimap | Oshi tour map tracker | Rust+WASM/Canvas | 11 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-30 07:45 | Total apps: 48 | Total tests: 8,274
+> Last updated: 2026-03-30 08:30 | Total apps: 49 | Total tests: 8,285
 
 ## Quick Overview
 
@@ -54,6 +54,7 @@
 | 46 | [ikifuku](#ikifuku) | Breathing exercise generative art | Vanilla JS/Canvas/Vite | 38 | complete | `npm run dev` |
 | 47 | [oshishrine](#oshishrine) | Retro GeoCities fan shrine builder | Vanilla JS/Canvas/Vite | 46 | complete | `npm run dev` |
 | 48 | [kuizunote](#kuizunote) | Brain training puzzle notebook | Python/Jupyter/matplotlib | 57 | complete | `jupyter notebook kuizunote.ipynb` |
+| 49 | [oshimap](#oshimap) | Oshi tour map tracker | Rust+WASM/Canvas | 11 | complete | `wasm-pack build --target web` |
 
 ---
 
@@ -2159,3 +2160,50 @@ None — clean implementation. Separated puzzle logic from notebook for full tes
 - More puzzle categories (memory, spatial, vocabulary)
 - Difficulty levels
 - Progress tracking across sessions
+
+---
+
+### <a id="oshimap"></a>49. oshimap - 2026-03-30 08:30
+
+**What is this?**
+A Rust+WASM web app where oshi fans map their idol's tour locations across Japan's 47 prefectures. Events are plotted as glowing dots on a canvas-rendered Japan map, connected by route lines with haversine distance calculation. Stats show coverage percentage, event count, and total distance.
+
+**Discovery Roll**
+Source: 23 (Supply chain) | Persona: 27 (推し活) | Platform: 10 (Rust+WASM) | Wildcard: 33 (地図中心)
+
+**Features Built**
+- 47 prefecture Japan map rendered on Canvas with lat/lng projection
+- Event CRUD: add concerts/events/pilgrimages with date, type, notes
+- Route visualization: chronological lines between event locations
+- Haversine distance calculation in Rust (Tokyo-Osaka ≈ 395km verified)
+- Coverage stats: visited count, %, total distance
+- localStorage persistence with JSON import/export
+
+**Tech Stack**
+Rust / wasm-bindgen / serde_json / wasm-pack / Canvas 2D / JavaScript
+
+**Key Files**
+```
+src/lib.rs       — Rust: OshiMapState, 47 prefectures, haversine, events, routing (11 tests)
+www/app.js       — JS: WASM init, map rendering, UI controller
+www/index.html   — HTML with form and event list
+www/style.css    — Dark pink-accent theme
+Cargo.toml       — Rust deps
+```
+
+**How to Run**
+```bash
+wasm-pack build --target web
+python3 -m http.server 8080
+# Open http://localhost:8080/www/
+```
+
+**Tests**: 11 passing (Rust) | **Files**: 8 | **LOC**: ~800
+
+**Challenges & Fixes**
+None — clean build. Haversine formula verified against known Tokyo-Osaka distance.
+
+**Potential Next Steps**
+- SVG map with prefecture boundaries
+- Photo attachment per event
+- Share map as image or URL
