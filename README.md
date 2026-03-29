@@ -44,5 +44,6 @@
 | 38 | ronriroom | Office escape logic puzzles | C/Raylib | 64 |
 | 39 | kidlog | SNS-style family milestone TUI | Python/Textual | 53 |
 | 40 | meitantei | Detective photo evidence game | Vanilla JS/Canvas/Vite | 48 |
+| 41 | tsundoku | Book-stacking Tetris puzzle | C/Raylib | 57 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

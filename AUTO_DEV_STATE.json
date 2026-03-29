@@ -1,5 +1,5 @@
 {
-  "apps_completed": 40,
+  "apps_completed": 41,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -243,6 +243,12 @@
       "persona": 23,
       "platform": 7,
       "wildcard": 36
+    },
+    {
+      "source": 4,
+      "persona": 38,
+      "platform": 20,
+      "wildcard": 47
     }
   ],
   "history": [
@@ -365,6 +371,9 @@
     },
     {
       "name": "meitantei"
+    },
+    {
+      "name": "tsundoku"
     }
   ]
 }

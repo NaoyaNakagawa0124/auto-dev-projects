@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-30 01:45 | Total apps: 40 | Total tests: 7,869
+> Last updated: 2026-03-30 02:30 | Total apps: 41 | Total tests: 7,926
 
 ## Quick Overview
 
@@ -46,6 +46,7 @@
 | 38 | [ronriroom](#ronriroom) | Office escape logic puzzles | C/Raylib | 64 | complete | `make && ./ronriroom` |
 | 39 | [kidlog](#kidlog) | SNS-style family milestone TUI | Python/Textual | 53 | complete | `python3 src/app.py` |
 | 40 | [meitantei](#meitantei) | Detective photo evidence game | Vanilla JS/Canvas/Vite | 48 | complete | `npm run dev` |
+| 41 | [tsundoku](#tsundoku) | Book-stacking Tetris puzzle | C/Raylib | 57 | complete | `make && ./tsundoku` |
 
 ---
 
@@ -1789,3 +1790,49 @@ UE not available — adapted to web Canvas for immersive investigation. Zero-ass
 - Evidence board with drag-and-connect clues
 - Timed investigation mode
 - Sound effects and ambient mystery music
+
+---
+
+### <a id="tsundoku"></a>41. tsundoku - 2026-03-30 02:30
+
+**What is this?**
+A Tetris-style book stacking puzzle game in C/Raylib. 7 book-shaped pieces (文庫本, 単行本, 漫画セット, 百科事典, 画集, 新書, BOXセット) in 7 genre colors fall and must be stacked on shelves. 3-round tournament with cumulative scoring and S-F grading.
+
+**Discovery Roll**
+Source: 4 (Sports/esports) | Persona: 38 (読書家/年100冊) | Platform: 20 (Raylib/C) | Wildcard: 47 (建築・設計・間取り)
+
+**Features Built**
+- 7 unique book-shaped pieces with rotation and wall-kick
+- 7 genre colors (Fiction, Science, History, Fantasy, Mystery, Romance, Philosophy)
+- Line clearing with combo multiplier scoring
+- 3-round tournament mode with per-round and total scoring
+- Level progression (speed increases every 10 lines)
+- Ghost piece drop preview, next piece display, sidebar stats
+
+**Tech Stack**
+C99 / Raylib / Makefile / Pure logic separated from rendering
+
+**Key Files**
+```
+src/piece.c   — 7 piece types with rotation, genre colors
+src/board.c   — 10x20 grid, collision, line clearing, scoring
+src/game.c    — Game loop, round management, drop timing
+src/ui.c      — Raylib drawing (board, pieces, sidebar, screens)
+src/main.c    — Input handling, state machine
+tests/test_game.c — 57 tests (pieces, board, scoring, game logic)
+```
+
+**How to Run**
+```bash
+make && ./tsundoku
+```
+
+**Tests**: 57 passing (C) | **Files**: 14 | **LOC**: ~1,400 | **Build**: <1s | Zero warnings
+
+**Challenges & Fixes**
+BOARD_H macro name collision with include guard — renamed to BOARD_ROWS.
+
+**Potential Next Steps**
+- Hold piece mechanic
+- Custom shelf layout designer (architecture twist)
+- Online leaderboard
