@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-29 | Total apps: 27 | Total tests: 5,522
+> Last updated: 2026-03-29 | Total apps: 28 | Total tests: 6,161
 
 ## Quick Overview
 
@@ -33,6 +33,7 @@
 | 25 | [kidstats2035](#kidstats2035) | Futuristic youth sports analytics | Python/Jupyter/Plotly | 270 | complete | `jupyter notebook kidstats2035.ipynb` |
 | 26 | [shipwatch](#shipwatch) | One-hand supply chain CLI | Node.js CLI | 291 | complete | `node src/cli.js` |
 | 27 | [shopkeeper](#shopkeeper) | Bakery game teaching biz skills | Web app/Vanilla JS | 400 | complete | `open index.html` |
+| 28 | [foodtrend](#foodtrend) | Food TikTok content strategy | Python/Jupyter/Plotly | 639 | complete | `jupyter notebook foodtrend.ipynb` |
 
 ---
 
@@ -1160,3 +1161,48 @@ Coffee shelf life expiry off-by-one: test expected expiry at day 2 but shelfLife
 - Supplier negotiation mini-game
 - Tax calculation (secretly teaching accounting)
 - Multi-language support
+
+---
+
+### <a id="foodtrend"></a>28. foodtrend - 2026-03-29
+
+**What is this?**
+A one-hand-friendly Jupyter notebook for aspiring food TikTokers. 7 Plotly visualizations: engagement heatmap, trending categories, hashtag growth, competitor landscape, content gaps, growth projection, and strategy summary. Just Shift+Enter through cells — zero typing needed.
+
+**Discovery Roll**
+Source: 9 (Food/recipe culture) | Persona: 4 (Aspiring TikToker) | Platform: 12 (Jupyter/data viz) | Wildcard: 5 (One-hand usable)
+
+**Features Built**
+- Posting time heatmap (7 days x 24 hours) with evening/weekend peaks
+- 10 food category growth rates (Air Fryer +35% leads)
+- 20 trending hashtags with competition color coding
+- 8 competitor accounts scatter plot (followers vs engagement vs growth)
+- Content gap analysis identifying underserved high-growth niches
+- 12-month follower projection with viral month markers
+
+**Tech Stack**
+Python / Jupyter / Plotly / pandas
+
+**Key Files**
+```
+foodtrend/
+  foodtrend.ipynb          # 8-cell notebook
+  src/data_engine.py       # All data generation and analysis
+  tests/test_engine.py     # 639 tests
+```
+
+**How to Run**
+```bash
+pip install plotly pandas jupyter && jupyter notebook foodtrend.ipynb
+```
+
+**Tests**: 639 passing | **Files**: 4 | **LOC**: ~850 | **Build time**: ~2 min
+
+**Challenges & Fixes**
+None — clean build.
+
+**Potential Next Steps**
+- Real TikTok API integration
+- A/B test content calendar generator
+- Recipe viral score predictor
+- Multi-platform comparison (TikTok vs Reels vs Shorts)

@@ -31,5 +31,6 @@
 | 25 | kidstats2035 | Futuristic youth sports analytics | Python/Jupyter/Plotly | 270 |
 | 26 | shipwatch | One-hand supply chain CLI | Node.js CLI | 291 |
 | 27 | shopkeeper | Bakery game teaching biz skills | Web app/Vanilla JS | 400 |
+| 28 | foodtrend | Food TikTok content strategy | Python/Jupyter/Plotly | 639 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.
