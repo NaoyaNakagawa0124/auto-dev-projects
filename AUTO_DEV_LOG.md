@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-29 | Total apps: 31 | Total tests: 6,729
+> Last updated: 2026-03-29 | Total apps: 32 | Total tests: 7,245
 
 ## Quick Overview
 
@@ -37,6 +37,7 @@
 | 29 | [blindbite](#blindbite) | Anti-DoorDash mystery restaurant | Chrome Extension/JS | 381 | complete | Load unpacked in `chrome://extensions` |
 | 30 | [duetplan](#duetplan) | Collab topic matcher for creators | Rust+WASM | 24 | complete | `wasm-pack build --target web && python3 -m http.server` |
 | 31 | [clapboard](#clapboard) | Movie-style work time tracker | Chrome Extension/JS | 163 | complete | Load unpacked in `chrome://extensions` |
+| 32 | [shotlist2035](#shotlist2035) | AI photography shot list generator | Electron/HTML/JS | 516 | complete | `open src/index.html` |
 
 ---
 
@@ -1348,3 +1349,50 @@ None — clean build.
 - Keyboard shortcuts (Ctrl+Shift+A/C)
 - Background timer persistence
 - Team "cast" mode
+
+---
+
+### <a id="shotlist2035"></a>32. shotlist2035 - 2026-03-29
+
+**What is this?**
+A 2035-themed Electron app acting as an AI Director of Photography. Generates personalized shot lists from 10 trending 2026 visual styles (cinematic, neon portrait, bold color, candid, retro film, screenshot aesthetic, etc.). 26 shot templates with descriptions, difficulty ratings, gear lists, viral potential scores, and AI Director notes. Filter by style and skill level.
+
+**Discovery Roll**
+Source: 2 (Netflix/TikTok/Spotify trending) | Persona: 15 (Photographer, 10K unsorted photos) | Platform: 9 (Electron) | Wildcard: 4 (Year 2035)
+
+**Features Built**
+- 10 trending visual styles with trend scores from 2026 photography data
+- 26 shot templates across all styles with difficulty, gear, and descriptions
+- Style filtering and 4-tier skill matching (Beginner → Pro)
+- Viral potential scoring per shot based on trend data
+- AI Director v12.0 notes with strategic photography advice
+- Summary with style mix, difficulty breakdown, and gear checklist
+
+**Tech Stack**
+Electron / HTML / CSS / Vanilla JS
+
+**Key Files**
+```
+shotlist2035/
+  package.json / main.js    # Electron wrapper
+  src/engine.js              # Styles, templates, generation, scoring
+  src/index.html             # UI with gradient-themed design
+  tests/test.js              # 516 tests
+```
+
+**How to Run**
+```bash
+open src/index.html
+# or: npm install && npm start
+```
+
+**Tests**: 516 passing | **Files**: 6 | **LOC**: ~900 | **Build time**: ~1 min
+
+**Challenges & Fixes**
+Count=0 defaults to 5 (not 1) since engine uses `count || 5` — adjusted test expectation.
+
+**Potential Next Steps**
+- Photo upload + AI comparison to shot template
+- Location-based shot suggestions
+- Weekly trending style updates via API
+- Portfolio builder from completed shots

@@ -1,0 +1,11 @@
+{
+  "name": "shotlist2035",
+  "version": "1.0.0",
+  "description": "AI Director of Photography — Trending shot list generator for photographers",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "node tests/test.js"
+  },
+  "devDependencies": { "electron": "^33.0.0" }
+}

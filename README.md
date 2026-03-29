@@ -35,5 +35,6 @@
 | 29 | blindbite | Anti-DoorDash mystery restaurant | Chrome Extension/JS | 381 |
 | 30 | duetplan | Collab topic matcher for creators | Rust+WASM | 24 |
 | 31 | clapboard | Movie-style work time tracker | Chrome Extension/JS | 163 |
+| 32 | shotlist2035 | AI photography shot list generator | Electron/HTML/JS | 516 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.
