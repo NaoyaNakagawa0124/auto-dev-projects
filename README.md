@@ -32,5 +32,6 @@
 | 26 | shipwatch | One-hand supply chain CLI | Node.js CLI | 291 |
 | 27 | shopkeeper | Bakery game teaching biz skills | Web app/Vanilla JS | 400 |
 | 28 | foodtrend | Food TikTok content strategy | Python/Jupyter/Plotly | 639 |
+| 29 | blindbite | Anti-DoorDash mystery restaurant | Chrome Extension/JS | 381 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

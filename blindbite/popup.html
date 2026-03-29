@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlindBite</title>
+  <style>
+    :root { --bg: #1a1a2e; --card: #16213e; --text: #e8e8f0; --dim: #8888aa; --accent: #e94560; --gold: #feca57; --green: #48dbfb; --radius: 12px; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { width: 360px; min-height: 480px; background: var(--bg); color: var(--text); font-family: Georgia, serif; font-size: 14px; padding: 16px; }
+    h1 { text-align: center; font-size: 22px; color: var(--accent); margin-bottom: 4px; }
+    .subtitle { text-align: center; font-size: 12px; color: var(--dim); margin-bottom: 16px; font-style: italic; }
+
+    .pick-card { background: var(--card); border-radius: var(--radius); padding: 20px; text-align: center; margin-bottom: 12px; border: 1px solid #2a2a4a; }
+    .pick-icon { font-size: 48px; margin-bottom: 8px; }
+    .pick-name { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+    .pick-cuisine { font-size: 14px; color: var(--gold); }
+    .pick-vibe { font-size: 13px; color: var(--dim); font-style: italic; margin: 4px 0; }
+    .pick-distance { font-size: 13px; color: var(--green); }
+    .pick-message { font-size: 13px; color: var(--dim); margin-top: 12px; font-style: italic; padding-top: 12px; border-top: 1px solid #2a2a4a; }
+
+    .fact-card { background: #1a2744; border-radius: var(--radius); padding: 14px; margin-bottom: 12px; border-left: 3px solid var(--gold); font-size: 12px; }
+    .fact-ingredient { font-weight: 700; color: var(--gold); margin-bottom: 4px; }
+    .fact-text { color: var(--dim); line-height: 1.5; }
+    .fact-origin { font-size: 11px; color: #666; margin-top: 4px; }
+
+    .btn-row { display: flex; gap: 8px; margin-bottom: 12px; }
+    .btn { flex: 1; padding: 12px; border: none; border-radius: var(--radius); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
+    .btn-trust { background: var(--accent); color: white; }
+    .btn-trust:hover { opacity: 0.9; }
+    .btn-reroll { background: var(--card); color: var(--dim); border: 1px solid #2a2a4a; }
+    .btn-reroll:hover { border-color: var(--accent); }
+
+    .stats { display: flex; justify-content: space-around; background: var(--card); border-radius: var(--radius); padding: 12px; font-size: 12px; text-align: center; }
+    .stat-val { font-size: 18px; font-weight: 700; color: var(--accent); }
+    .stat-label { color: var(--dim); font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .trust-badge { text-align: center; margin-top: 8px; font-size: 12px; color: var(--dim); }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <h1>🙈 BlindBite</h1>
+  <p class="subtitle">The anti-DoorDash. Trust the pick.</p>
+
+  <div id="pick-card" class="pick-card">
+    <div id="pick-icon" class="pick-icon"></div>
+    <div id="pick-name" class="pick-name"></div>
+    <div id="pick-cuisine" class="pick-cuisine"></div>
+    <div id="pick-vibe" class="pick-vibe"></div>
+    <div id="pick-distance" class="pick-distance"></div>
+    <div id="pick-message" class="pick-message"></div>
+  </div>
+
+  <div id="fact-card" class="fact-card">
+    <div id="fact-ingredient" class="fact-ingredient"></div>
+    <div id="fact-text" class="fact-text"></div>
+    <div id="fact-origin" class="fact-origin"></div>
+  </div>
+
+  <div class="btn-row">
+    <button id="btn-trust" class="btn btn-trust">I'll Go! 🎉</button>
+    <button id="btn-reroll" class="btn btn-reroll">Re-roll 🎲</button>
+  </div>
+
+  <div class="stats">
+    <div><div class="stat-val" id="stat-picks">0</div><div class="stat-label">Picks</div></div>
+    <div><div class="stat-val" id="stat-trusted">0</div><div class="stat-label">Trusted</div></div>
+    <div><div class="stat-val" id="stat-trust">0%</div><div class="stat-label">Trust</div></div>
+    <div><div class="stat-val" id="stat-streak">0</div><div class="stat-label">Streak</div></div>
+  </div>
+  <div id="trust-badge" class="trust-badge"></div>
+
+  <script src="js/engine.js"></script>
+  <script>
+    let prefs = null;
+    let currentPick = null;
+    let pickSeed = Date.now();
+
+    const storage = {
+      get(key, cb) {
+        if (typeof chrome !== 'undefined' && chrome.storage) {
+          chrome.storage.local.get([key], r => cb(r[key]));
+        } else {
+          try { cb(JSON.parse(localStorage.getItem(key))); } catch(e) { cb(undefined); }
+        }
+      },
+      set(key, val) {
+        if (typeof chrome !== 'undefined' && chrome.storage) {
+          const o = {}; o[key] = val; chrome.storage.local.set(o);
+        } else {
+          try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {}
+        }
+      }
+    };
+
+    function init() {
+      storage.get('blindbite_prefs', function(saved) {
+        prefs = saved || createDefaultPreferences();
+        roll();
+        document.getElementById('btn-trust').addEventListener('click', trust);
+        document.getElementById('btn-reroll').addEventListener('click', roll);
+        renderStats();
+      });
+    }
+
+    function roll() {
+      pickSeed = Date.now() + Math.random() * 10000;
+      currentPick = generatePick(prefs, pickSeed);
+      renderPick();
+    }
+
+    function trust() {
+      if (!currentPick) return;
+      prefs = recordPick(prefs, currentPick, true);
+      storage.set('blindbite_prefs', prefs);
+      renderStats();
+      roll();
+    }
+
+    function renderPick() {
+      document.getElementById('pick-icon').textContent = currentPick.cuisineIcon;
+      document.getElementById('pick-name').textContent = currentPick.restaurant;
+      document.getElementById('pick-cuisine').textContent = currentPick.cuisine;
+      document.getElementById('pick-vibe').textContent = currentPick.vibe;
+      document.getElementById('pick-distance').textContent = currentPick.distance + ' miles away';
+      document.getElementById('pick-message').textContent = currentPick.mysteryMessage;
+
+      const f = currentPick.supplyChainFact;
+      document.getElementById('fact-ingredient').textContent = '📦 ' + f.ingredient;
+      document.getElementById('fact-text').textContent = f.fact;
+      document.getElementById('fact-origin').textContent = 'Origin: ' + f.origin;
+    }
+
+    function renderStats() {
+      document.getElementById('stat-picks').textContent = prefs.totalPicks;
+      document.getElementById('stat-trusted').textContent = prefs.totalTrusted;
+      document.getElementById('stat-trust').textContent = getTrustScore(prefs) + '%';
+      document.getElementById('stat-streak').textContent = prefs.streak;
+
+      const trust = getTrustLevel(getTrustScore(prefs));
+      document.getElementById('trust-badge').textContent = trust.icon + ' ' + trust.level + ' — ' + trust.badge;
+    }
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
+  </script>
+</body>
+</html>

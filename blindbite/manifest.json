@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "BlindBite — The Anti-DoorDash",
+  "version": "1.0.0",
+  "description": "Cure decision fatigue. One mystery restaurant pick. No reviews, no ratings, no photos.",
+  "permissions": ["storage"],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

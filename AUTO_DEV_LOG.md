@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-29 | Total apps: 28 | Total tests: 6,161
+> Last updated: 2026-03-29 | Total apps: 29 | Total tests: 6,542
 
 ## Quick Overview
 
@@ -34,6 +34,7 @@
 | 26 | [shipwatch](#shipwatch) | One-hand supply chain CLI | Node.js CLI | 291 | complete | `node src/cli.js` |
 | 27 | [shopkeeper](#shopkeeper) | Bakery game teaching biz skills | Web app/Vanilla JS | 400 | complete | `open index.html` |
 | 28 | [foodtrend](#foodtrend) | Food TikTok content strategy | Python/Jupyter/Plotly | 639 | complete | `jupyter notebook foodtrend.ipynb` |
+| 29 | [blindbite](#blindbite) | Anti-DoorDash mystery restaurant | Chrome Extension/JS | 381 | complete | Load unpacked in `chrome://extensions` |
 
 ---
 
@@ -1206,3 +1207,49 @@ None — clean build.
 - A/B test content calendar generator
 - Recipe viral score predictor
 - Multi-platform comparison (TikTok vs Reels vs Shorts)
+
+---
+
+### <a id="blindbite"></a>29. blindbite - 2026-03-29
+
+**What is this?**
+The anti-DoorDash Chrome extension. Instead of overwhelming you with choices, it gives you ONE mystery restaurant pick. No reviews, no ratings, no photos — just a name, cuisine, vibe, distance, and a supply chain fact about your food's ingredients. Tracks your "trust score" (how often you go with the pick vs re-roll). 86% of Gen Z have menu anxiety — this cures it.
+
+**Discovery Roll**
+Source: 23 (Supply chain/shipping) | Persona: 6 (Foodie, eats out daily) | Platform: 5 (Browser extension) | Wildcard: 2 (Opposite of popular app — anti-DoorDash)
+
+**Features Built**
+- Mystery restaurant picker: 12 cuisines, 60 restaurants, random selection
+- 15 supply chain ingredient facts (origin, miles traveled, trivia)
+- Trust Score system with 5 levels (Control Freak → Blind Faith)
+- Streak tracking for consecutive trusted picks
+- Food delivery site detection (DoorDash, UberEats, Yelp, etc.)
+- Dark-themed popup with mystery vibe
+
+**Tech Stack**
+Chrome Extension (Manifest V3) / Vanilla JS / Chrome Storage API
+
+**Key Files**
+```
+blindbite/
+  manifest.json        # Extension config
+  popup.html           # Self-contained popup with inline app.js
+  js/engine.js         # Core logic, data, trust scoring
+  tests/test.js        # 381 tests
+```
+
+**How to Run**
+```bash
+# Load as unpacked extension or open popup.html
+```
+
+**Tests**: 381 passing | **Files**: 5 | **LOC**: ~800 | **Build time**: ~2 min
+
+**Challenges & Fixes**
+None — clean build.
+
+**Potential Next Steps**
+- Real restaurant data via Google Places API
+- Location-based picks with browser geolocation
+- "Food passport" tracking explored cuisines
+- Social sharing of mystery picks

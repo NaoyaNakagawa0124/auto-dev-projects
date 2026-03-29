@@ -1,5 +1,5 @@
 {
-  "apps_completed": 28,
+  "apps_completed": 29,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -31,7 +31,8 @@
     {"source": 4, "persona": 2, "platform": 12, "wildcard": 4},
     {"source": 23, "persona": 20, "platform": 2, "wildcard": 5},
     {"source": 18, "persona": 3, "platform": 1, "wildcard": 7},
-    {"source": 9, "persona": 4, "platform": 12, "wildcard": 5}
+    {"source": 9, "persona": 4, "platform": 12, "wildcard": 5},
+    {"source": 23, "persona": 6, "platform": 5, "wildcard": 2}
   ],
   "history": [
     {"name": "cinewrapped"}, {"name": "chakraforge"}, {"name": "laikas-journey"},
@@ -43,6 +44,6 @@
     {"name": "cramclock"}, {"name": "wreckhouse"}, {"name": "runwayrise"},
     {"name": "starlog"}, {"name": "lumilink"}, {"name": "nochecalma"},
     {"name": "kidstats2035"}, {"name": "shipwatch"}, {"name": "shopkeeper"},
-    {"name": "foodtrend"}
+    {"name": "foodtrend"}, {"name": "blindbite"}
   ]
 }
