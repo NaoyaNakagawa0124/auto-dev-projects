@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-29 | Total apps: 24 | Total tests: 4,561
+> Last updated: 2026-03-29 | Total apps: 25 | Total tests: 4,831
 
 ## Quick Overview
 
@@ -30,6 +30,7 @@
 | 22 | [starlog](#starlog) | Anime watchlist as space exploration | Swift 6.1/macOS CLI | 53 | complete | `swift build && .build/debug/starlog` |
 | 23 | [lumilink](#lumilink) | Co-op light puzzle for couples | Godot 4/GDScript | 587 | complete | Open in Godot 4.3+ |
 | 24 | [nochecalma](#nochecalma) | Midnight-only parent sanctuary | Electron/HTML/JS | 651 | complete | `open src/index.html` (midnight-6am) |
+| 25 | [kidstats2035](#kidstats2035) | Futuristic youth sports analytics | Python/Jupyter/Plotly | 270 | complete | `jupyter notebook kidstats2035.ipynb` |
 
 ---
 
@@ -1015,3 +1016,48 @@ None — clean build.
 - Midnight push notification ("The sanctuary is open")
 - Export journal entries to markdown
 - Partner mode for couples
+
+---
+
+### <a id="kidstats2035"></a>25. kidstats2035 - 2026-03-29
+
+**What is this?**
+A Jupyter notebook set in the year 2035, showing a futuristic youth multi-sport analytics dashboard. 8 sports, skill radar, injury risk heatmap, growth predictions, AI coaching — all in beautiful dark-themed Plotly charts. Designed for a busy parent to scan in 5 minutes. Customizable with name/age/seed.
+
+**Discovery Roll**
+Source: 4 (Trending sports/esports) | Persona: 2 (Overworked parent, 5 min) | Platform: 12 (Jupyter/data viz) | Wildcard: 4 (Year 2035)
+
+**Features Built**
+- Performance trajectory across 8 sports with line charts (2032-2035)
+- 6-dimension skill radar (speed, endurance, strength, agility, coordination, mental focus)
+- Injury risk heatmap with color-coded body zones
+- Growth trajectory with AI predictions to 2038 (dual y-axis)
+- AI-optimized weekly training schedule
+- AI Coach v12.3 recommendation with development analysis
+
+**Tech Stack**
+Python / Jupyter / Plotly / pandas / dataclasses
+
+**Key Files**
+```
+kidstats2035/
+  kidstats2035.ipynb      # Main notebook with 7 visualization cells
+  src/data_engine.py      # Data generation, models, AI recommendations
+  tests/test_engine.py    # 270 tests
+```
+
+**How to Run**
+```bash
+pip install plotly pandas jupyter && jupyter notebook kidstats2035.ipynb
+```
+
+**Tests**: 270 passing | **Files**: 4 | **LOC**: ~900 | **Build time**: ~2 min
+
+**Challenges & Fixes**
+None — clean build.
+
+**Potential Next Steps**
+- Real data import from youth sports APIs
+- Sibling/teammate comparison mode
+- PDF export for coaches
+- Live IoT sensor integration (2035 wearables)
