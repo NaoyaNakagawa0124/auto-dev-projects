@@ -1,0 +1,317 @@
+/* ===== RETRO 90s/2000s INTERNET AESTHETICS ===== */
+/* Intentionally "ugly beautiful" — this IS the design */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Press+Start+2P&display=swap');
+
+:root {
+  --retro-font: 'Press Start 2P', 'MS Gothic', monospace;
+  --jp-font: 'Noto Sans JP', sans-serif;
+  --primary: #ff69b4;
+  --secondary: #ff1493;
+  --bg: #1a0010;
+  --star-color: #ff69b4;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--jp-font);
+  background: var(--bg);
+  color: #fff;
+  overflow-x: hidden;
+  cursor: crosshair;
+}
+
+/* Canvas behind everything */
+#fx-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Main content */
+#shrine-content {
+  position: relative;
+  z-index: 5;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* ===== SETUP FORM ===== */
+#setup-form {
+  background: rgba(0,0,0,0.7);
+  border: 3px double var(--primary);
+  padding: 24px;
+  margin: 40px auto;
+  max-width: 500px;
+  text-align: center;
+}
+
+#setup-form h1 {
+  font-family: var(--retro-font);
+  font-size: 1.2rem;
+  color: var(--primary);
+  margin-bottom: 16px;
+  text-shadow: 0 0 10px var(--primary);
+}
+
+.form-row {
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.form-row label {
+  display: block;
+  font-size: 0.8rem;
+  color: #ccc;
+  margin-bottom: 4px;
+}
+
+.form-row input, .form-row select {
+  width: 100%;
+  padding: 8px;
+  background: #111;
+  border: 1px solid var(--primary);
+  color: #fff;
+  font-family: var(--jp-font);
+  font-size: 0.9rem;
+}
+
+.theme-grid {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.theme-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.theme-btn.selected { border-color: #fff; box-shadow: 0 0 10px #fff; transform: scale(1.1); }
+.theme-btn:hover { transform: scale(1.15); }
+
+.create-btn {
+  background: var(--primary);
+  color: #000;
+  border: none;
+  padding: 12px 24px;
+  font-family: var(--retro-font);
+  font-size: 0.8rem;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: all 0.2s;
+}
+
+.create-btn:hover { background: #fff; transform: scale(1.05); }
+
+/* ===== SHRINE PAGE ===== */
+#shrine-page { display: none; }
+
+/* Retro banner */
+.retro-banner {
+  text-align: center;
+  padding: 20px;
+  border: 3px double var(--primary);
+  background: rgba(0,0,0,0.5);
+  margin-bottom: 16px;
+}
+
+.retro-banner h1 {
+  font-family: var(--retro-font);
+  font-size: 1.1rem;
+  color: var(--primary);
+  text-shadow: 0 0 15px var(--primary), 0 0 30px var(--primary);
+  margin-bottom: 4px;
+}
+
+.retro-banner .subtitle {
+  font-size: 0.75rem;
+  color: #ccc;
+  font-style: italic;
+}
+
+/* Marquee */
+.marquee-container {
+  overflow: hidden;
+  background: #000;
+  border: 1px solid var(--primary);
+  padding: 4px 0;
+  margin-bottom: 12px;
+}
+
+.marquee-text {
+  display: inline-block;
+  white-space: nowrap;
+  animation: marquee 12s linear infinite;
+  font-size: 0.85rem;
+  color: var(--primary);
+}
+
+@keyframes marquee {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+/* Badge row */
+.badge-row {
+  text-align: center;
+  margin: 12px 0;
+  font-size: 1.5rem;
+  letter-spacing: 8px;
+}
+
+/* Sections */
+.retro-section {
+  background: rgba(0,0,0,0.6);
+  border: 2px solid var(--primary);
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.retro-section h2 {
+  font-family: var(--retro-font);
+  font-size: 0.7rem;
+  color: var(--secondary);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* Visitor counter */
+.visitor-counter {
+  text-align: center;
+  padding: 8px;
+  background: #000;
+  border: 1px inset #666;
+  font-family: var(--retro-font);
+  font-size: 0.7rem;
+  color: #0f0;
+  margin: 12px 0;
+}
+
+.counter-num {
+  font-size: 1.2rem;
+  color: #0f0;
+  text-shadow: 0 0 5px #0f0;
+}
+
+/* Guestbook */
+.guestbook-entry {
+  padding: 8px;
+  border-bottom: 1px dashed #555;
+  font-size: 0.8rem;
+}
+
+.guestbook-entry .name {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.guestbook-entry .date {
+  color: #888;
+  font-size: 0.65rem;
+}
+
+.guestbook-entry .text {
+  color: #ddd;
+  margin-top: 2px;
+}
+
+.guestbook-form {
+  margin-top: 8px;
+  display: flex;
+  gap: 4px;
+}
+
+.guestbook-form input {
+  flex: 1;
+  padding: 4px 8px;
+  background: #111;
+  border: 1px solid #555;
+  color: #fff;
+  font-size: 0.75rem;
+  font-family: var(--jp-font);
+}
+
+.guestbook-form button {
+  padding: 4px 12px;
+  background: var(--primary);
+  color: #000;
+  border: none;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+/* Under construction */
+.under-construction {
+  text-align: center;
+  padding: 8px;
+  font-family: var(--retro-font);
+  font-size: 0.6rem;
+  color: #ff0;
+  animation: blink 1s infinite;
+  margin: 12px 0;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Footer */
+.retro-footer {
+  text-align: center;
+  font-size: 0.6rem;
+  color: #666;
+  padding: 12px 0;
+  border-top: 1px solid #333;
+  margin-top: 16px;
+}
+
+.retro-footer a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+/* Edit button */
+.edit-btn {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 20;
+  background: rgba(0,0,0,0.6);
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  padding: 6px 12px;
+  font-family: var(--jp-font);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+/* Rainbow text utility */
+.rainbow {
+  background: linear-gradient(90deg, #ff0000, #ff8800, #ffff00, #00ff00, #0088ff, #8800ff, #ff0088);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: rainbowShift 3s linear infinite;
+}
+
+@keyframes rainbowShift {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  #shrine-content { padding: 8px; }
+  .retro-banner h1 { font-size: 0.8rem; }
+}

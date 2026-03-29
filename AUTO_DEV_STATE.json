@@ -1,5 +1,5 @@
 {
-  "apps_completed": 46,
+  "apps_completed": 47,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -279,6 +279,12 @@
       "persona": 2,
       "platform": 7,
       "wildcard": 11
+    },
+    {
+      "source": 34,
+      "persona": 27,
+      "platform": 19,
+      "wildcard": 13
     }
   ],
   "history": [
@@ -419,6 +425,9 @@
     },
     {
       "name": "ikifuku"
+    },
+    {
+      "name": "oshishrine"
     }
   ]
 }

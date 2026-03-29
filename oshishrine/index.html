@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>推し神社 — あの頃のインターネットで推しを祀ろう</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <canvas id="fx-canvas"></canvas>
+
+  <div id="shrine-content">
+    <!-- Setup Form -->
+    <div id="setup-form">
+      <h1>⛩️ 推し神社 ⛩️</h1>
+      <p style="font-size: 0.75rem; color: #aaa; margin-bottom: 16px;">あなたの推しのためのレトロファンサイトを作ろう</p>
+      <div class="form-row">
+        <label>推しの名前</label>
+        <input type="text" id="input-name" placeholder="例: 推しの名前" />
+      </div>
+      <div class="form-row">
+        <label>キャッチフレーズ</label>
+        <input type="text" id="input-catch" placeholder="例: 世界で一番輝く存在" />
+      </div>
+      <div class="form-row">
+        <label>テーマカラー</label>
+        <div class="theme-grid" id="theme-grid"></div>
+      </div>
+      <button class="create-btn" id="create-btn">✨ 神社を建立する ✨</button>
+    </div>
+
+    <!-- Shrine Page -->
+    <div id="shrine-page">
+      <button class="edit-btn" id="edit-btn">✏️ 編集</button>
+
+      <div class="retro-banner">
+        <h1 id="shrine-title"></h1>
+        <div class="subtitle" id="shrine-subtitle"></div>
+      </div>
+
+      <div class="marquee-container">
+        <div class="marquee-text" id="marquee-text"></div>
+      </div>
+
+      <div class="badge-row" id="badge-row"></div>
+
+      <div class="retro-section">
+        <h2>♥ プロフィール ♥</h2>
+        <p id="profile-text" style="font-size: 0.85rem; line-height: 1.8;"></p>
+      </div>
+
+      <div class="visitor-counter">
+        あなたは <span class="counter-num" id="visitor-num">0</span> 人目の参拝者です
+      </div>
+
+      <div class="under-construction">
+        🚧 このサイトは永遠に工事中です 🚧
+      </div>
+
+      <div class="retro-section">
+        <h2>📖 ゲストブック 📖</h2>
+        <div id="guestbook-entries"></div>
+        <div class="guestbook-form">
+          <input type="text" id="gb-name" placeholder="お名前" />
+          <input type="text" id="gb-text" placeholder="ひとこと" />
+          <button id="gb-submit">書く</button>
+        </div>
+      </div>
+
+      <div class="retro-footer">
+        <p>Since 2003 | Best viewed with Internet Explorer 6.0 | 800x600</p>
+        <p>Powered by <span class="rainbow">推し神社 v1.0</span></p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
