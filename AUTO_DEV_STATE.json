@@ -1,5 +1,5 @@
 {
-  "apps_completed": 47,
+  "apps_completed": 48,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -285,6 +285,12 @@
       "persona": 27,
       "platform": 19,
       "wildcard": 13
+    },
+    {
+      "source": 5,
+      "persona": 36,
+      "platform": 12,
+      "wildcard": 30
     }
   ],
   "history": [
@@ -428,6 +434,9 @@
     },
     {
       "name": "oshishrine"
+    },
+    {
+      "name": "kuizunote"
     }
   ]
 }
