@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-29 18:30 | Total apps: 35 | Total tests: 7,608
+> Last updated: 2026-03-29 19:15 | Total apps: 36 | Total tests: 7,640
 
 ## Quick Overview
 
@@ -41,6 +41,7 @@
 | 33 | [commutestory](#commutestory) | Infrastructure narrative notebook | Python/Jupyter/Plotly | 305 | complete | `jupyter notebook commutestory.ipynb` |
 | 34 | [dormescape](#dormescape) | First apartment text adventure | Rust+WASM | 19 | complete | `wasm-pack build --target web && python3 -m http.server` |
 | 35 | [cineconquest](#cineconquest) | 3D globe movie conquest game | Three.js/Vite/Vanilla JS | 39 | complete | `npm run dev` |
+| 36 | [nijilog](#nijilog) | Generative art mood diary | p5.js/Vite/Vanilla JS | 32 | complete | `npm run dev` |
 
 ---
 
@@ -1546,3 +1547,55 @@ None — clean build. Three.js globe rendering with custom atmosphere shader wor
 - News API for dynamic country challenges based on current events
 - PWA manifest for installable mobile experience
 - Share conquest map as image on social media
+
+---
+
+### <a id="nijilog"></a>36. nijilog - 2026-03-29 19:15
+
+**What is this?**
+A generative art diary where your daily emotions flow as colored particle streams on a p5.js canvas. Consecutive entries create smooth, beautiful color flows; skipped days create visible gaps (like supply chain breaks), motivating consistency. Color is central — each of 8 moods has a distinct hue that defines your personal artwork over time.
+
+**Discovery Roll**
+Source: 23 (Supply chain/shipping news) | Persona: 31 (日記をつけたいけど続かない人) | Platform: 19 (p5.js creative coding) | Wildcard: 32 (色が重要な意味を持つ)
+
+**Features Built**
+- Mood color picker: 8 moods with distinct colors (喜び, 穏やか, 元気, 愛, 悲しみ, 怒り, 不安, ふつう)
+- p5.js generative particle flow visualization with wobble physics and glow effects
+- Gap detection: dashed lines and labels for skipped days
+- Calendar view: color-coded month grid with mood-per-day
+- Entry list: chronological view with mood colors and text
+- Stats dashboard: streak, longest streak, mood distribution bars, motivational messages
+- Streak celebrations at 3/7/14/30 day milestones
+
+**Tech Stack**
+JavaScript / p5.js / Vite / localStorage / M PLUS Rounded 1c font / Dark glassmorphism CSS
+
+**Key Files**
+```
+src/main.js          — App orchestration & event handling
+src/flow.js          — p5.js particle stream generator & gap visualization
+src/store.js         — State management with streak & gap computation
+src/ui.js            — Panel rendering (form, calendar, list, stats)
+src/data/moods.js    — 8 mood definitions with HSL values for p5.js
+src/style.css        — Dark theme with glassmorphism, mood color variables
+tests/run.js         — 32 tests covering moods, store, stats, gaps
+```
+
+**How to Run**
+```bash
+cd nijilog
+npm install
+npm run dev
+```
+
+**Tests**: 32 passing | **Files**: 14 | **LOC**: ~2,840 | **Build time**: ~415ms
+
+**Challenges & Fixes**
+None — clean build. p5.js HSL color mode worked seamlessly with mood color system.
+
+**Potential Next Steps**
+- Export flow visualization as shareable image
+- Mood keyword auto-detection from entry text
+- Ambient background music that changes with mood
+- PWA for installable mobile experience
+- Weekly AI-generated mood insights

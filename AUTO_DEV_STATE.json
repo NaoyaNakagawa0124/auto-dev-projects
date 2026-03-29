@@ -1,5 +1,5 @@
 {
-  "apps_completed": 35,
+  "apps_completed": 36,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -213,6 +213,12 @@
       "persona": 13,
       "platform": 19,
       "wildcard": 10
+    },
+    {
+      "source": 23,
+      "persona": 31,
+      "platform": 19,
+      "wildcard": 32
     }
   ],
   "history": [
@@ -320,6 +326,9 @@
     },
     {
       "name": "cineconquest"
+    },
+    {
+      "name": "nijilog"
     }
   ]
 }

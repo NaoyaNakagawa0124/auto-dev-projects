@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>虹ログ — 感情が流れるジェネラティブ日記</title>
+  <link rel="stylesheet" href="/src/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- Canvas background -->
+  <div id="canvas-container"></div>
+
+  <!-- Header -->
+  <header id="header">
+    <h1>虹ログ</h1>
+    <p class="tagline">感情が流れるジェネラティブ日記</p>
+  </header>
+
+  <!-- Streak badge -->
+  <div id="streak-badge" class="hidden">
+    <span id="streak-fire">🔥</span>
+    <span id="streak-count">0</span>
+    <span id="streak-label">日連続</span>
+  </div>
+
+  <!-- Entry button -->
+  <button id="entry-btn" title="今日の気持ちを記録する">
+    <span class="entry-btn-icon">✦</span>
+  </button>
+
+  <!-- Bottom nav -->
+  <nav id="nav">
+    <button class="nav-btn active" data-view="flow" title="フロー">〰️</button>
+    <button class="nav-btn" data-view="calendar" title="カレンダー">📅</button>
+    <button class="nav-btn" data-view="list" title="一覧">📋</button>
+    <button class="nav-btn" data-view="stats" title="統計">📊</button>
+  </nav>
+
+  <!-- Side panel -->
+  <div id="panel" class="hidden">
+    <div class="panel-head">
+      <h2 id="panel-title">今日の気持ち</h2>
+      <button id="panel-close" class="close-btn">✕</button>
+    </div>
+    <div id="panel-body"></div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="hidden">
+    <span id="toast-icon"></span>
+    <span id="toast-text"></span>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
