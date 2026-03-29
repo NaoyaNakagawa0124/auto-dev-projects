@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-29 | Total apps: 22 | Total tests: 3,323
+> Last updated: 2026-03-29 | Total apps: 23 | Total tests: 3,910
 
 ## Quick Overview
 
@@ -28,6 +28,7 @@
 | 20 | [wreckhouse](#wreckhouse) | Anti-House Flipper disaster game | C#/Mono | 167 | complete | `mcs -out:wreckhouse.exe src/*.cs && mono wreckhouse.exe` |
 | 21 | [runwayrise](#runwayrise) | Fashion RPG fitness extension | Chrome Extension/Vanilla JS | 475 | complete | Load unpacked in `chrome://extensions` |
 | 22 | [starlog](#starlog) | Anime watchlist as space exploration | Swift 6.1/macOS CLI | 53 | complete | `swift build && .build/debug/starlog` |
+| 23 | [lumilink](#lumilink) | Co-op light puzzle for couples | Godot 4/GDScript | 587 | complete | Open in Godot 4.3+ |
 
 ---
 
@@ -913,3 +914,51 @@ Missing `import Foundation` in test file for `ProcessInfo` and `FileManager` —
 - MyAnimeList/AniList API integration
 - Galaxy map with actual star position ASCII art
 - Recommendation engine based on explored nebulae
+
+---
+
+### <a id="lumilink"></a>23. lumilink - 2026-03-29
+
+**What is this?**
+A Godot 4 local co-op puzzle game for couples. Two light orbs must synchronize their movement to illuminate dark paths. Inspired by ArXiv research on synchronous play facilitating intimacy in LDR relationships. Deliberately limited to exactly 3 features by wildcard constraint.
+
+**Discovery Roll**
+Source: 20 (Academic papers/ArXiv) | Persona: 5 (LDR couple) | Platform: 14 (Godot game/GDScript) | Wildcard: 6 (Maximum 3 features only)
+
+**Features Built**
+- Sync Movement: grid-based 2-player controls (WASD + Arrows) with collision and bounds
+- Resonance Meter: builds when adjacent, decays with distance, threshold at 50% to light tiles
+- Light Paths: 10 hand-crafted levels telling a relationship story (First Light → Together)
+
+**Tech Stack**
+Godot 4.3 / GDScript / Python test harness
+
+**Key Files**
+```
+lumilink/
+  project.godot          # Godot project with input mappings
+  scenes/main.tscn       # Main scene (text format)
+  scripts/
+    game_data.gd         # Constants, levels, pure functions
+    game_state.gd        # Mutable game state
+    main.gd              # Scene controller, rendering, input
+  tests/
+    test_game.py          # 587 Python tests mirroring GDScript logic
+```
+
+**How to Run**
+```bash
+# Open in Godot 4.3+, or run tests:
+python3 tests/test_game.py
+```
+
+**Tests**: 587 passing | **Files**: 7 | **LOC**: ~1,050 | **Build time**: ~2 min
+
+**Challenges & Fixes**
+Integration test initially failed because play simulation moved players apart after building resonance — fixed strategy to keep players adjacent while sweeping through dark tiles.
+
+**Potential Next Steps**
+- Online multiplayer via Godot networking for actual LDR couples
+- Particle effects and glow shaders for resonance visualization
+- Dynamic music that harmonizes when resonance is high
+- Custom level editor

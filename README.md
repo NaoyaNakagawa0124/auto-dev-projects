@@ -26,5 +26,6 @@
 | 20 | wreckhouse | Anti-House Flipper disaster game | C#/Mono | 167 |
 | 21 | runwayrise | Fashion RPG fitness extension | Chrome Extension | 475 |
 | 22 | starlog | Anime watchlist as space exploration | Swift 6.1/macOS | 53 |
+| 23 | lumilink | Co-op light puzzle for couples | Godot 4/GDScript | 587 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.
