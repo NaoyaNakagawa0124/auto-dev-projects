@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-29 | Total apps: 29 | Total tests: 6,542
+> Last updated: 2026-03-29 | Total apps: 30 | Total tests: 6,566
 
 ## Quick Overview
 
@@ -35,6 +35,7 @@
 | 27 | [shopkeeper](#shopkeeper) | Bakery game teaching biz skills | Web app/Vanilla JS | 400 | complete | `open index.html` |
 | 28 | [foodtrend](#foodtrend) | Food TikTok content strategy | Python/Jupyter/Plotly | 639 | complete | `jupyter notebook foodtrend.ipynb` |
 | 29 | [blindbite](#blindbite) | Anti-DoorDash mystery restaurant | Chrome Extension/JS | 381 | complete | Load unpacked in `chrome://extensions` |
+| 30 | [duetplan](#duetplan) | Collab topic matcher for creators | Rust+WASM | 24 | complete | `wasm-pack build --target web && python3 -m http.server` |
 
 ---
 
@@ -1253,3 +1254,49 @@ None — clean build.
 - Location-based picks with browser geolocation
 - "Food passport" tracking explored cuisines
 - Social sharing of mystery picks
+
+---
+
+### <a id="duetplan"></a>30. duetplan - 2026-03-29
+
+**What is this?**
+A Rust+WASM collaborative web app for content creator duos. Two creators independently swipe on 30 trending topics (real March 2026 TikTok/Netflix/Spotify data), then reveal their matches — topics they both want to collaborate on. Generates a collab plan with weekly schedule. URL-encoded state sharing, no server needed.
+
+**Discovery Roll**
+Source: 2 (Trending Netflix/TikTok/Spotify) | Persona: 4 (Aspiring YouTuber) | Platform: 10 (Rust+WASM) | Wildcard: 12 (Co-op/collaborative)
+
+**Features Built**
+- 30 real trending topics across 21 categories with icons
+- Swipe-style voting (yes/skip) for each creator
+- Match finding: reveals topics both creators want
+- Compatibility score (0-100%) with quality labels (Creative Soulmates → Opposites Attract)
+- Auto-generated collab plan with 4-week schedule
+- URL-encoded vote sharing (no backend required)
+
+**Tech Stack**
+Rust / wasm-bindgen / wasm-pack / HTML/CSS/JS
+
+**Key Files**
+```
+duetplan/
+  Cargo.toml          # Rust project with wasm-bindgen
+  src/lib.rs          # All logic: topics, voting, matching, plan generation (24 tests)
+  index.html          # Frontend with WASM import
+  pkg/                # WASM build output
+```
+
+**How to Run**
+```bash
+wasm-pack build --target web && python3 -m http.server 8080
+```
+
+**Tests**: 24 passing (Rust) | **Files**: 3 | **LOC**: ~600 | **Build time**: ~10 sec
+
+**Challenges & Fixes**
+None — clean build. Second Rust+WASM project (after afterhours).
+
+**Potential Next Steps**
+- Real-time WebSocket sync instead of URL sharing
+- Custom topic submission
+- TikTok/YouTube trending API integration
+- Match history across sessions

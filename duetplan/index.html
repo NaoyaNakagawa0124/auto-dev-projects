@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DuetPlan — Collab Topic Matcher</title>
+  <style>
+    :root { --bg:#0f0f1a; --card:#1a1a2e; --text:#e8e8f0; --dim:#8888aa; --accent:#e94560; --green:#48dbfb; --gold:#feca57; --radius:14px; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--bg); color:var(--text); font-family:Georgia,serif; max-width:480px; margin:0 auto; padding:20px; min-height:100vh; }
+    h1 { text-align:center; font-size:26px; color:var(--accent); margin-bottom:4px; }
+    .sub { text-align:center; font-size:13px; color:var(--dim); margin-bottom:20px; font-style:italic; }
+    .card { background:var(--card); border-radius:var(--radius); padding:20px; margin-bottom:14px; text-align:center; border:1px solid #2a2a4a; }
+    .topic-icon { font-size:40px; margin-bottom:8px; }
+    .topic-title { font-size:20px; font-weight:700; margin-bottom:4px; }
+    .topic-cat { font-size:13px; color:var(--gold); }
+    .topic-desc { font-size:13px; color:var(--dim); margin-top:6px; font-style:italic; }
+    .counter { font-size:12px; color:var(--dim); margin-bottom:10px; text-align:center; }
+    .btn-row { display:flex; gap:10px; margin-bottom:14px; }
+    .btn { flex:1; padding:14px; border:none; border-radius:var(--radius); font-family:inherit; font-size:16px; font-weight:700; cursor:pointer; }
+    .btn-yes { background:var(--green); color:#0f0f1a; }
+    .btn-no { background:#333; color:var(--dim); }
+    .btn-yes:hover,.btn-no:hover { opacity:0.9; }
+    .phase-title { text-align:center; font-size:18px; color:var(--accent); margin-bottom:10px; }
+    .share-box { background:var(--card); border-radius:var(--radius); padding:16px; margin-bottom:14px; }
+    .share-url { width:100%; background:#0f0f1a; border:1px solid #2a2a4a; border-radius:8px; color:var(--text); font-size:12px; padding:10px; margin:8px 0; font-family:monospace; }
+    .btn-copy { width:100%; background:var(--accent); color:white; padding:12px; border:none; border-radius:var(--radius); font-family:inherit; font-size:14px; font-weight:700; cursor:pointer; }
+    .match-card { background:var(--card); border-radius:var(--radius); padding:14px; margin-bottom:8px; text-align:left; border-left:3px solid var(--gold); }
+    .match-title { font-weight:700; font-size:15px; }
+    .match-cat { font-size:12px; color:var(--gold); }
+    .match-desc { font-size:12px; color:var(--dim); }
+    .stats { display:flex; justify-content:space-around; background:var(--card); border-radius:var(--radius); padding:14px; margin-bottom:14px; }
+    .stat-val { font-size:22px; font-weight:700; color:var(--accent); text-align:center; }
+    .stat-label { font-size:10px; color:var(--dim); text-transform:uppercase; text-align:center; }
+    .quality { text-align:center; font-size:18px; margin-bottom:14px; }
+    .plan-box { background:var(--card); border-radius:var(--radius); padding:16px; white-space:pre-line; font-size:13px; line-height:1.6; }
+    .hidden { display:none; }
+    .input-box { background:var(--card); border-radius:var(--radius); padding:16px; margin-bottom:14px; }
+    .input-box input { width:100%; background:#0f0f1a; border:1px solid #2a2a4a; border-radius:8px; color:var(--text); padding:10px; font-size:14px; font-family:inherit; margin:8px 0; }
+    .input-box label { font-size:13px; color:var(--dim); }
+  </style>
+</head>
+<body>
+  <h1>🎬 DuetPlan</h1>
+  <p class="sub">Collaborative content topic matcher for creator duos</p>
+
+  <!-- Phase: Swiping -->
+  <div id="phase-swipe">
+    <p class="phase-title" id="player-label">Creator 1 — Swipe on topics</p>
+    <div class="counter" id="swipe-counter">1 / 30</div>
+    <div class="card" id="topic-card">
+      <div class="topic-icon" id="t-icon"></div>
+      <div class="topic-title" id="t-title"></div>
+      <div class="topic-cat" id="t-cat"></div>
+      <div class="topic-desc" id="t-desc"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-no" id="btn-skip">Skip ❌</button>
+      <button class="btn btn-yes" id="btn-yes">Yes! ✅</button>
+    </div>
+  </div>
+
+  <!-- Phase: Share (after Creator 1) -->
+  <div id="phase-share" class="hidden">
+    <p class="phase-title">Creator 1 Done! Share with your partner.</p>
+    <div class="share-box">
+      <p>Send this link to Creator 2:</p>
+      <input type="text" class="share-url" id="share-url" readonly>
+      <button class="btn-copy" id="btn-copy">Copy Link 📋</button>
+    </div>
+    <p style="text-align:center;font-size:13px;color:var(--dim);">Creator 2 will swipe on the same topics, then see your matches!</p>
+  </div>
+
+  <!-- Phase: Enter partner code -->
+  <div id="phase-enter" class="hidden">
+    <p class="phase-title">Enter Creator 1's code to see matches</p>
+    <div class="input-box">
+      <label>Paste the code from the URL (the part after #)</label>
+      <input type="text" id="partner-code" placeholder="e.g. 101010110...">
+      <button class="btn-copy" id="btn-reveal" style="background:var(--green);color:#0f0f1a;">Reveal Matches! 🎉</button>
+    </div>
+  </div>
+
+  <!-- Phase: Results -->
+  <div id="phase-results" class="hidden">
+    <p class="phase-title">Your Collab Matches! 🎉</p>
+    <div class="stats">
+      <div><div class="stat-val" id="r-matches">0</div><div class="stat-label">Matches</div></div>
+      <div><div class="stat-val" id="r-compat">0%</div><div class="stat-label">Compatibility</div></div>
+      <div><div class="stat-val" id="r-c1yes">0</div><div class="stat-label">C1 Yes</div></div>
+      <div><div class="stat-val" id="r-c2yes">0</div><div class="stat-label">C2 Yes</div></div>
+    </div>
+    <div class="quality" id="r-quality"></div>
+    <div id="match-list"></div>
+    <div class="plan-box" id="plan-text"></div>
+  </div>
+
+  <script type="module">
+    import init, {
+      get_topic_count, get_topic_title, get_topic_category, get_topic_description,
+      get_category_icon, encode_votes, decode_votes, find_matches,
+      compatibility_score, count_yes, generate_plan, match_quality,
+    } from './pkg/duetplan.js';
+
+    await init();
+
+    const total = get_topic_count();
+    let currentIdx = 0;
+    let votes = new Uint8Array(total);
+    let isCreator2 = false;
+    let partnerVotes = null;
+
+    // Check URL for partner votes
+    const hash = window.location.hash.slice(1);
+    if (hash && hash.length >= total) {
+      partnerVotes = new Uint8Array(decode_votes(hash));
+      isCreator2 = true;
+      document.getElementById('player-label').textContent = 'Creator 2 — Your turn to swipe!';
+    }
+
+    showTopic();
+
+    document.getElementById('btn-yes').onclick = () => vote(1);
+    document.getElementById('btn-skip').onclick = () => vote(0);
+    document.getElementById('btn-copy').onclick = () => {
+      const url = document.getElementById('share-url');
+      navigator.clipboard.writeText(url.value).then(() => {
+        document.getElementById('btn-copy').textContent = 'Copied! ✅';
+      });
+    };
+    document.getElementById('btn-reveal').onclick = () => {
+      const code = document.getElementById('partner-code').value.trim();
+      if (code.length >= total) {
+        partnerVotes = new Uint8Array(decode_votes(code));
+        showResults();
+      }
+    };
+
+    function showTopic() {
+      if (currentIdx >= total) { finishSwiping(); return; }
+      document.getElementById('t-icon').textContent = get_category_icon(get_topic_category(currentIdx));
+      document.getElementById('t-title').textContent = get_topic_title(currentIdx);
+      document.getElementById('t-cat').textContent = get_topic_category(currentIdx);
+      document.getElementById('t-desc').textContent = get_topic_description(currentIdx);
+      document.getElementById('swipe-counter').textContent = (currentIdx + 1) + ' / ' + total;
+    }
+
+    function vote(v) {
+      votes[currentIdx] = v;
+      currentIdx++;
+      showTopic();
+    }
+
+    function finishSwiping() {
+      document.getElementById('phase-swipe').classList.add('hidden');
+      const encoded = encode_votes(votes);
+
+      if (isCreator2 && partnerVotes) {
+        showResults();
+      } else {
+        // Creator 1 — show share link
+        const url = window.location.origin + window.location.pathname + '#' + encoded;
+        document.getElementById('share-url').value = url;
+        document.getElementById('phase-share').classList.remove('hidden');
+      }
+    }
+
+    function showResults() {
+      document.getElementById('phase-swipe').classList.add('hidden');
+      document.getElementById('phase-share').classList.add('hidden');
+      document.getElementById('phase-enter').classList.add('hidden');
+      document.getElementById('phase-results').classList.remove('hidden');
+
+      const c1 = isCreator2 ? partnerVotes : votes;
+      const c2 = isCreator2 ? votes : partnerVotes;
+      const matchArr = new Uint32Array(find_matches(c1, c2));
+      const compat = compatibility_score(c1, c2);
+
+      document.getElementById('r-matches').textContent = matchArr.length;
+      document.getElementById('r-compat').textContent = compat + '%';
+      document.getElementById('r-c1yes').textContent = count_yes(c1);
+      document.getElementById('r-c2yes').textContent = count_yes(c2);
+      document.getElementById('r-quality').textContent = match_quality(matchArr.length, total);
+
+      const list = document.getElementById('match-list');
+      list.innerHTML = '';
+      for (const idx of matchArr) {
+        const card = document.createElement('div');
+        card.className = 'match-card';
+        card.innerHTML = `
+          <div class="match-title">${get_category_icon(get_topic_category(idx))} ${get_topic_title(idx)}</div>
+          <div class="match-cat">${get_topic_category(idx)}</div>
+          <div class="match-desc">${get_topic_description(idx)}</div>`;
+        list.appendChild(card);
+      }
+
+      document.getElementById('plan-text').textContent = generate_plan(matchArr);
+    }
+  </script>
+</body>
+</html>
