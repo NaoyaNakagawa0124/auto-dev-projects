@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Build artifacts
+target/
+.build/
+dist/
+build/
+*.exe
+*.o
+*.dylib
+
+# IDE
+.DS_Store
+.vscode/
+.idea/
+
+# Environment
+.env
+*.db
+*.db-shm
+*.db-wal
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Rust/WASM
+pkg/
