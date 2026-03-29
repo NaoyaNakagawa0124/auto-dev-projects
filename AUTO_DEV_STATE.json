@@ -1,5 +1,5 @@
 {
-  "apps_completed": 20,
+  "apps_completed": 21,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -23,7 +23,8 @@
     {"source": 11, "persona": 20, "platform": 18, "wildcard": 4},
     {"source": 1, "persona": 16, "platform": 1, "wildcard": 12},
     {"source": 27, "persona": 8, "platform": 18, "wildcard": 8},
-    {"source": 26, "persona": 1, "platform": 6, "wildcard": 2}
+    {"source": 26, "persona": 1, "platform": 6, "wildcard": 2},
+    {"source": 11, "persona": 12, "platform": 5, "wildcard": 14}
   ],
   "history": [
     {"name": "cinewrapped"}, {"name": "chakraforge"}, {"name": "laikas-journey"},
@@ -32,6 +33,6 @@
     {"name": "afterhours"}, {"name": "pawrank"}, {"name": "fitcoin"},
     {"name": "sleepcraft"}, {"name": "lovebytes"}, {"name": "yarnpal"},
     {"name": "sproutmap"}, {"name": "chromadrip"}, {"name": "anivote"},
-    {"name": "cramclock"}, {"name": "wreckhouse"}
+    {"name": "cramclock"}, {"name": "wreckhouse"}, {"name": "runwayrise"}
   ]
 }

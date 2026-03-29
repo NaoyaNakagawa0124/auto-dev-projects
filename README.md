@@ -24,5 +24,6 @@
 | 18 | anivote | Collaborative anime voting | Web app/Vanilla JS | 182 |
 | 19 | cramclock | Late-night study timer | Deno/TypeScript CLI | 17 |
 | 20 | wreckhouse | Anti-House Flipper disaster game | C#/Mono | 167 |
+| 21 | runwayrise | Fashion RPG fitness extension | Chrome Extension | 475 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

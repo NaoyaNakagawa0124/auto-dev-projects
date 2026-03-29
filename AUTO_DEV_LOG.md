@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-29 | Total apps: 20 | Total tests: 2,795
+> Last updated: 2026-03-29 | Total apps: 21 | Total tests: 3,270
 
 ## Quick Overview
 
@@ -26,6 +26,7 @@
 | 18 | [anivote](#anivote) | Collaborative anime voting | Web app/Vanilla JS | 182 | complete | `open index.html` |
 | 19 | [cramclock](#cramclock) | Late-night study timer | Deno/TypeScript CLI | 17 | complete | `deno run src/cli.ts start` |
 | 20 | [wreckhouse](#wreckhouse) | Anti-House Flipper disaster game | C#/Mono | 167 | complete | `mcs -out:wreckhouse.exe src/*.cs && mono wreckhouse.exe` |
+| 21 | [runwayrise](#runwayrise) | Fashion RPG fitness extension | Chrome Extension/Vanilla JS | 475 | complete | Load unpacked in `chrome://extensions` |
 
 ---
 
@@ -803,3 +804,56 @@ String substring calculation in SocialFeed.RenderPost caused ArgumentOutOfRangeE
 - Achievement system (flood the house, duct tape mastery, etc.)
 - Multiple parent personalities with different patience curves
 - High score persistence to file
+
+---
+
+### <a id="runwayrise"></a>21. runwayrise - 2026-03-29
+
+**What is this?**
+A Chrome extension RPG where real-world workouts advance your character through a 7-chapter fashion career narrative. Start as an intern at Maison Lumiere in basic sweats, rise to creative director in bespoke couture. The story creates emotional stakes that keep fitness beginners from quitting. Spring 2026 color palette (cobalt, cherry red, canary yellow, violet).
+
+**Discovery Roll**
+Source: 11 (Fashion/art/design trends) | Persona: 12 (Fitness beginner who keeps quitting) | Platform: 5 (Browser extension) | Wildcard: 14 (Storyline/narrative progression)
+
+**Features Built**
+- 7-chapter narrative with multi-line story text and evolving character wardrobe
+- 10 workout types with XP rates, duration bonuses (1.2x at 30min, 1.5x at 60min)
+- Streak tracking with active/warning/broken states
+- 15 achievements (first workout, streaks, variety, early bird, night owl, chapters)
+- XP leveling with progressive scaling and chapter advancement
+- Spring 2026 fashion palette dark-mode UI
+
+**Tech Stack**
+Chrome Extension (Manifest V3) / Vanilla HTML/CSS/JS / Chrome Storage API
+
+**Key Files**
+```
+runwayrise/
+  manifest.json         # Extension manifest
+  popup.html            # Main popup interface
+  styles/popup.css      # Spring 2026 dark palette UI
+  js/story.js           # 7 chapters, 15 achievements, 10 workout types
+  js/engine.js          # XP, levels, streaks, chapters, achievements
+  js/app.js             # UI controller with Chrome Storage abstraction
+  tests/test.js         # 475 unit + integration tests
+```
+
+**How to Run**
+```bash
+# Load as unpacked extension:
+# 1. Open chrome://extensions
+# 2. Enable Developer Mode
+# 3. Click "Load unpacked" → select runwayrise/
+```
+
+**Tests**: 475 passing | **Files**: 8 | **LOC**: ~1,400 | **Build time**: ~3 min
+
+**Challenges & Fixes**
+- XP rounding: `Math.round` applied at each step caused 1-point differences vs mental math — fixed test expectations
+- Early/late workout detection: `getHours()` returns local time but test timestamps are UTC — switched to `getUTCHours()`
+
+**Potential Next Steps**
+- Animated CSS character avatar that changes per chapter
+- Weekly progress summary via Chrome notifications
+- Branching story paths based on preferred workout types
+- Social sharing of chapter completion milestones

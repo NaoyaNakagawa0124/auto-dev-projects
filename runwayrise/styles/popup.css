@@ -1,0 +1,494 @@
+/* RunwayRise - Spring 2026 Fashion Palette */
+:root {
+  --cobalt: #0047AB;
+  --cherry: #DE3163;
+  --canary: #FFEF00;
+  --violet: #7F00FF;
+  --gold: #FFD700;
+  --bg-dark: #0F0F14;
+  --bg-card: #1A1A24;
+  --bg-input: #252535;
+  --text-primary: #F5F5F7;
+  --text-secondary: #9CA3AF;
+  --text-muted: #6B7280;
+  --border: #2D2D3D;
+  --radius: 10px;
+  --radius-sm: 6px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  width: 380px;
+  min-height: 500px;
+  max-height: 600px;
+  overflow-y: auto;
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+#app { padding: 16px; }
+
+/* Header */
+#header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+#header h1 {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--text-primary);
+}
+
+#header .accent { color: var(--cherry); }
+
+#level-badge {
+  background: linear-gradient(135deg, var(--cobalt), var(--violet));
+  color: white;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+/* Tabs */
+#tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+
+.tab {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 8px;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s;
+}
+
+.tab:hover { color: var(--text-secondary); background: var(--bg-card); }
+.tab.active { color: var(--cherry); background: var(--bg-card); }
+
+/* Tab Content */
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Story Tab */
+#chapter-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.badge {
+  background: var(--cobalt);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+#chapter-role {
+  color: var(--text-secondary);
+  font-style: italic;
+  font-size: 13px;
+}
+
+#outfit-display {
+  text-align: center;
+  font-size: 48px;
+  margin: 16px 0;
+  padding: 20px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+#narrative-box {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 14px;
+  border-left: 3px solid var(--cherry);
+  min-height: 80px;
+}
+
+#narrative-text {
+  color: var(--text-primary);
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+  font-style: italic;
+}
+
+#next-line {
+  float: right;
+}
+
+#chapter-progress { margin-bottom: 12px; }
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.progress-bar {
+  height: 8px;
+  background: var(--bg-input);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cobalt), var(--cherry));
+  border-radius: 4px;
+  transition: width 0.5s ease;
+  width: 0%;
+}
+
+.small-text {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+#streak-status {
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  text-align: center;
+}
+
+#streak-status.active { background: rgba(0, 71, 171, 0.2); color: var(--cobalt); border: 1px solid rgba(0, 71, 171, 0.3); }
+#streak-status.warning { background: rgba(255, 239, 0, 0.1); color: var(--canary); border: 1px solid rgba(255, 239, 0, 0.2); }
+#streak-status.broken { background: rgba(222, 49, 99, 0.1); color: var(--cherry); border: 1px solid rgba(222, 49, 99, 0.2); }
+#streak-status.none { background: var(--bg-card); color: var(--text-secondary); border: 1px solid var(--border); }
+
+/* Workout Tab */
+h2 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+
+h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 16px 0 8px;
+  color: var(--text-secondary);
+}
+
+.form-group { margin-bottom: 14px; }
+.form-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.type-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+}
+
+.type-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 11px;
+  padding: 8px 4px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.type-btn:hover { border-color: var(--cobalt); }
+.type-btn.selected { border-color: var(--cherry); background: rgba(222, 49, 99, 0.15); }
+
+.type-btn .type-icon { display: block; font-size: 18px; margin-bottom: 2px; }
+.type-btn .type-name { display: block; font-size: 9px; color: var(--text-muted); }
+
+.duration-row {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.dur-btn {
+  flex: 1;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dur-btn:hover { border-color: var(--cobalt); }
+.dur-btn.selected { border-color: var(--cherry); background: rgba(222, 49, 99, 0.15); }
+
+input[type="number"] {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 13px;
+  padding: 8px 10px;
+  outline: none;
+}
+
+input[type="number"]:focus { border-color: var(--cobalt); }
+
+.btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn:hover { border-color: var(--cobalt); }
+
+.btn-primary {
+  width: 100%;
+  background: linear-gradient(135deg, var(--cobalt), var(--violet));
+  border: none;
+  color: white;
+  font-size: 14px;
+  padding: 10px;
+  border-radius: var(--radius);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary:hover { opacity: 0.9; }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-small { font-size: 11px; padding: 4px 10px; }
+
+.hidden { display: none !important; }
+
+#workout-result {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin: 12px 0;
+  text-align: center;
+  border: 1px solid var(--cobalt);
+}
+
+#xp-gained {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--canary);
+  margin-bottom: 4px;
+}
+
+#workout-flavor {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+#new-achievements {
+  margin-top: 8px;
+}
+
+.achievement-alert {
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid var(--gold);
+  border-radius: var(--radius-sm);
+  padding: 8px;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--gold);
+}
+
+#new-chapter-alert {
+  background: rgba(222, 49, 99, 0.15);
+  border: 1px solid var(--cherry);
+  border-radius: var(--radius);
+  padding: 12px;
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--cherry);
+  text-align: center;
+}
+
+.workout-entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
+.workout-entry .we-type { color: var(--text-primary); }
+.workout-entry .we-details { color: var(--text-muted); }
+.workout-entry .we-xp { color: var(--canary); font-weight: 600; }
+
+/* Wardrobe Tab */
+#wardrobe-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.wardrobe-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  text-align: center;
+  font-size: 24px;
+  position: relative;
+}
+
+.wardrobe-item.locked {
+  opacity: 0.3;
+  filter: grayscale(1);
+}
+
+.wardrobe-item.current {
+  border-color: var(--cherry);
+  background: rgba(222, 49, 99, 0.1);
+}
+
+.wardrobe-item .wi-label {
+  display: block;
+  font-size: 9px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+#outfit-pieces {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+
+.outfit-piece {
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  text-align: center;
+}
+
+.outfit-piece .op-slot {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.outfit-piece .op-name {
+  font-size: 12px;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Stats Tab */
+#stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  padding: 12px 8px;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--cherry);
+}
+
+.stat-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+#achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+
+.achievement-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px;
+  text-align: center;
+  font-size: 20px;
+  position: relative;
+}
+
+.achievement-item.locked { opacity: 0.25; filter: grayscale(1); }
+.achievement-item.unlocked { border-color: var(--gold); }
+
+.achievement-item .ai-name {
+  display: block;
+  font-size: 8px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Scrollbar */
+body::-webkit-scrollbar { width: 6px; }
+body::-webkit-scrollbar-track { background: var(--bg-dark); }
+body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+body::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RunwayRise</title>
+  <link rel="stylesheet" href="styles/popup.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header id="header">
+      <h1>RUNWAY<span class="accent">RISE</span></h1>
+      <div id="level-badge">Lv. <span id="level-num">1</span></div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav id="tabs">
+      <button class="tab active" data-tab="story">Story</button>
+      <button class="tab" data-tab="workout">Workout</button>
+      <button class="tab" data-tab="wardrobe">Wardrobe</button>
+      <button class="tab" data-tab="stats">Stats</button>
+    </nav>
+
+    <!-- Story Tab -->
+    <section id="tab-story" class="tab-content active">
+      <div id="chapter-header">
+        <span id="chapter-badge" class="badge">Chapter 1</span>
+        <span id="chapter-role"></span>
+      </div>
+      <div id="outfit-display">
+        <span id="outfit-emoji"></span>
+      </div>
+      <div id="narrative-box">
+        <p id="narrative-text"></p>
+        <button id="next-line" class="btn btn-small">Next ▸</button>
+      </div>
+      <div id="chapter-progress">
+        <div class="progress-label">
+          <span>Progress to next chapter</span>
+          <span id="chapter-percent">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div id="chapter-fill" class="progress-fill"></div>
+        </div>
+        <p id="chapter-remaining" class="small-text"></p>
+      </div>
+      <div id="streak-status"></div>
+    </section>
+
+    <!-- Workout Tab -->
+    <section id="tab-workout" class="tab-content">
+      <h2>Log Workout</h2>
+      <div id="workout-form">
+        <div class="form-group">
+          <label>Type</label>
+          <div id="workout-types" class="type-grid"></div>
+        </div>
+        <div class="form-group">
+          <label>Duration (minutes)</label>
+          <div class="duration-row">
+            <button class="dur-btn" data-dur="10">10</button>
+            <button class="dur-btn" data-dur="15">15</button>
+            <button class="dur-btn" data-dur="20">20</button>
+            <button class="dur-btn" data-dur="30">30</button>
+            <button class="dur-btn" data-dur="45">45</button>
+            <button class="dur-btn" data-dur="60">60</button>
+          </div>
+          <input type="number" id="custom-duration" min="1" max="300" placeholder="Or enter custom...">
+        </div>
+        <button id="log-workout" class="btn btn-primary" disabled>Log Workout</button>
+      </div>
+      <div id="workout-result" class="hidden">
+        <div id="xp-gained"></div>
+        <div id="workout-flavor"></div>
+        <div id="new-achievements"></div>
+        <div id="new-chapter-alert" class="hidden"></div>
+      </div>
+      <div id="recent-workouts">
+        <h3>Recent</h3>
+        <div id="workout-list"></div>
+      </div>
+    </section>
+
+    <!-- Wardrobe Tab -->
+    <section id="tab-wardrobe" class="tab-content">
+      <h2>Your Wardrobe</h2>
+      <div id="wardrobe-grid"></div>
+      <div id="current-outfit-detail">
+        <h3>Current Look</h3>
+        <div id="outfit-pieces"></div>
+      </div>
+    </section>
+
+    <!-- Stats Tab -->
+    <section id="tab-stats" class="tab-content">
+      <h2>Fashion Stats</h2>
+      <div id="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-xp">0</div>
+          <div class="stat-label">Total XP</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-workouts">0</div>
+          <div class="stat-label">Workouts</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-streak">0</div>
+          <div class="stat-label">Current Streak</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-best-streak">0</div>
+          <div class="stat-label">Best Streak</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-minutes">0</div>
+          <div class="stat-label">Total Minutes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-types">0</div>
+          <div class="stat-label">Workout Types</div>
+        </div>
+      </div>
+      <h3>Achievements</h3>
+      <div id="achievements-grid"></div>
+    </section>
+  </div>
+
+  <script src="js/story.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
