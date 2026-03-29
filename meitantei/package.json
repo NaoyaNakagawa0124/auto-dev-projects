@@ -1,0 +1,17 @@
+{
+  "name": "meitantei",
+  "version": "1.0.0",
+  "description": "就活中のあなた。ある日、不可解な事件の証拠写真を手に入れた。写真を調べ、手がかりを見つけ、真相を解明せよ。",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "node tests/run.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "vite": "^8.0.3"
+  }
+}

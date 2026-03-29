@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-30 01:00 | Total apps: 39 | Total tests: 7,821
+> Last updated: 2026-03-30 01:45 | Total apps: 40 | Total tests: 7,869
 
 ## Quick Overview
 
@@ -45,6 +45,7 @@
 | 37 | [snapjudge](#snapjudge) | Speed photo-culling game (3 features) | Godot 4/GDScript | 64 | complete | `godot project.godot` |
 | 38 | [ronriroom](#ronriroom) | Office escape logic puzzles | C/Raylib | 64 | complete | `make && ./ronriroom` |
 | 39 | [kidlog](#kidlog) | SNS-style family milestone TUI | Python/Textual | 53 | complete | `python3 src/app.py` |
+| 40 | [meitantei](#meitantei) | Detective photo evidence game | Vanilla JS/Canvas/Vite | 48 | complete | `npm run dev` |
 
 ---
 
@@ -1740,3 +1741,51 @@ None — clean implementation. Textual's modal screens and CSS-like styling made
 - Export timeline as shareable HTML/PDF for grandparents
 - Multi-child profiles with separate feeds
 - Weekly summary notifications
+
+---
+
+### <a id="meitantei"></a>40. meitantei - 2026-03-30 01:45
+
+**What is this?**
+A web-based detective investigation game where a job-hunting student examines procedurally drawn crime scenes. Click evidence to discover clues, then accuse the right suspect with sufficient evidence. 3 university-themed cases: stolen job offer, threatening posters, and research data tampering.
+
+**Discovery Roll**
+Source: 25 (True crime/mystery) | Persona: 23 (就活中の大学生) | Platform: 7 (UE→Web adapted) | Wildcard: 36 (写真やカメラを使う)
+
+**Features Built**
+- Canvas-rendered crime scenes with clickable evidence hotspots and hover effects
+- Clue discovery system with detail overlays and clue panel tracking
+- Accusation modal: select suspect, validates both culprit and required evidence
+- 3 cases with 3-5 clues each, 3-4 suspects, branching wrong/right outcomes
+- Progress persistence with completed case tracking
+- Dark mystery aesthetic with vignette, noir grid, gold accents
+
+**Tech Stack**
+Vanilla JS / Canvas API / Vite / CSS3 / localStorage
+
+**Key Files**
+```
+src/cases.js      — 3 case definitions (scenes, clues, suspects, solutions)
+src/renderer.js   — Canvas drawing (scenes, hotspots, clue details, vignette)
+src/store.js      — Game state persistence (progress, clues, completion)
+src/main.js       — Game loop, input handling, screen management
+src/style.css     — Dark mystery theme with glassmorphism
+tests/run.js      — 48 tests (cases, solutions, store, data integrity)
+```
+
+**How to Run**
+```bash
+cd meitantei
+npm install
+npm run dev
+```
+
+**Tests**: 48 passing | **Files**: 13 | **LOC**: ~2,220 | **Build**: 239ms (15KB bundle)
+
+**Challenges & Fixes**
+UE not available — adapted to web Canvas for immersive investigation. Zero-asset approach with procedural scene drawing.
+
+**Potential Next Steps**
+- Evidence board with drag-and-connect clues
+- Timed investigation mode
+- Sound effects and ambient mystery music

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>名探偵 — 写真から真実を暴け</title>
+  <link rel="stylesheet" href="/src/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- Title Screen -->
+  <div id="title-screen">
+    <h1>🔍 名探偵</h1>
+    <p class="subtitle">写真から真実を暴け</p>
+    <div class="case-list" id="case-list"></div>
+  </div>
+
+  <!-- Investigation Screen -->
+  <div id="investigation-screen">
+    <canvas id="scene-canvas"></canvas>
+    <div id="hud">
+      <div>
+        <span class="case-title" id="hud-title"></span>
+        <span class="clue-count" id="hud-clues"></span>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button class="hud-btn" id="btn-accuse">🎯 告発する</button>
+        <button class="hud-btn" id="btn-back">← 戻る</button>
+      </div>
+    </div>
+    <div id="clue-panel">
+      <span class="clue-empty" id="clue-empty">手がかりを探そう... 証拠をクリックして調査</span>
+    </div>
+  </div>
+
+  <!-- Accusation Modal -->
+  <div id="accusation-modal">
+    <div class="modal-content">
+      <h2>🎯 誰が犯人だ？</h2>
+      <div id="suspect-list"></div>
+      <button class="modal-close" id="btn-cancel-accuse">キャンセル</button>
+    </div>
+  </div>
+
+  <!-- Result Modal -->
+  <div id="result-modal">
+    <div class="result-content" id="result-content"></div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

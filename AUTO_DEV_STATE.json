@@ -1,5 +1,5 @@
 {
-  "apps_completed": 39,
+  "apps_completed": 40,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -237,6 +237,12 @@
       "persona": 2,
       "platform": 3,
       "wildcard": 44
+    },
+    {
+      "source": 25,
+      "persona": 23,
+      "platform": 7,
+      "wildcard": 36
     }
   ],
   "history": [
@@ -356,6 +362,9 @@
     },
     {
       "name": "kidlog"
+    },
+    {
+      "name": "meitantei"
     }
   ]
 }

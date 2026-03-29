@@ -43,5 +43,6 @@
 | 37 | snapjudge | Speed photo-culling game (3 features) | Godot 4/GDScript | 64 |
 | 38 | ronriroom | Office escape logic puzzles | C/Raylib | 64 |
 | 39 | kidlog | SNS-style family milestone TUI | Python/Textual | 53 |
+| 40 | meitantei | Detective photo evidence game | Vanilla JS/Canvas/Vite | 48 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.
