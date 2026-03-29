@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-30 05:30 | Total apps: 45 | Total tests: 8,133
+> Last updated: 2026-03-30 06:15 | Total apps: 46 | Total tests: 8,171
 
 ## Quick Overview
 
@@ -51,6 +51,7 @@
 | 43 | [pixelhome](#pixelhome) | Pixel art moving task extension | Chrome Extension/JS | 49 | complete | Load unpacked in `chrome://extensions` |
 | 44 | [eigasketch](#eigasketch) | Sketch-style movie quiz game | Godot 4/GDScript | 71 | complete | `godot project.godot` |
 | 45 | [amimonotenki](#amimonotenki) | Temperature scarf pattern generator | p5.js/Vite/OpenMeteo API | 35 | complete | `npm run dev` |
+| 46 | [ikifuku](#ikifuku) | Breathing exercise generative art | Vanilla JS/Canvas/Vite | 38 | complete | `npm run dev` |
 
 ---
 
@@ -2023,3 +2024,48 @@ Test had wrong temperature range name — fixed to match actual data (猛暑 not
 - Print/export as PDF with yarn shopping list
 - Compare two cities side-by-side
 - Monthly separator markers in the pattern
+
+---
+
+### <a id="ikifuku"></a>46. ikifuku - 2026-03-30 06:15
+
+**What is this?**
+A beautiful 5-minute breathing exercise web app that generates unique art as you breathe. Each inhale draws particles inward, each exhale creates expanding ripples. Four breathing patterns (4-7-8 リラックス, 4-4-4 バランス, 4-2-6 エナジー, 5-5-5 カーム). After 5 minutes, save your unique breath art as PNG. Glassmorphism UI, 8KB bundle.
+
+**Discovery Roll**
+Source: 33 (Hacker News) | Persona: 2 (忙しすぎる親) | Platform: 7 (UE→Web) | Wildcard: 11 (スクショ映えするUI)
+
+**Features Built**
+- 4 breathing patterns with configurable inhale/hold/exhale durations
+- Generative art: ripples, particles, glowing orb responding to breath phases
+- 5-color palette rotation on each phase change
+- Session HUD: phase label, timer, progress bars, pause/resume
+- Completion screen with cycle stats and PNG download
+- Glassmorphism dark UI with gradient accents
+
+**Tech Stack**
+Vanilla JS / Canvas 2D / Vite / CSS glassmorphism
+
+**Key Files**
+```
+src/breathing.js  — BreathingEngine class: patterns, phases, tick, breathValue
+src/art.js        — BreathArt class: ripples, particles, orb, color palette
+src/main.js       — App controller, game loop, screen management
+src/style.css     — Glassmorphism dark theme, responsive
+tests/run.js      — 38 tests (engine, patterns, phases, progress, controls)
+```
+
+**How to Run**
+```bash
+cd ikifuku && npm install && npm run dev
+```
+
+**Tests**: 38 passing | **Files**: 9 | **LOC**: ~1,000 | **Build**: 242ms (8KB bundle)
+
+**Challenges & Fixes**
+None — clean implementation. Canvas trail effect (semi-transparent overlay) creates beautiful layered art naturally.
+
+**Potential Next Steps**
+- Ambient audio (rain, waves, forest)
+- Session history with saved artworks gallery
+- Custom breathing pattern creator

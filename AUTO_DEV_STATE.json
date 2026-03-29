@@ -1,5 +1,5 @@
 {
-  "apps_completed": 45,
+  "apps_completed": 46,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -273,6 +273,12 @@
       "persona": 37,
       "platform": 19,
       "wildcard": 28
+    },
+    {
+      "source": 33,
+      "persona": 2,
+      "platform": 7,
+      "wildcard": 11
     }
   ],
   "history": [
@@ -410,6 +416,9 @@
     },
     {
       "name": "amimonotenki"
+    },
+    {
+      "name": "ikifuku"
     }
   ]
 }

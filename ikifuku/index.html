@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>息吹 — 呼吸がアートになる5分間</title>
+  <link rel="stylesheet" href="/src/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <canvas id="art-canvas"></canvas>
+
+  <div id="ui-overlay">
+    <!-- Title Card -->
+    <div id="title-card">
+      <h1>息吹</h1>
+      <p class="tagline">呼吸がアートになる5分間<br>深呼吸で、あなただけの作品を描こう</p>
+      <div class="pattern-selector" id="pattern-selector"></div>
+      <button class="start-btn" id="start-btn">✨ はじめる</button>
+    </div>
+
+    <!-- Session HUD -->
+    <div id="session-hud">
+      <div class="hud-inner">
+        <div class="phase-label" id="phase-label">吸う</div>
+        <div class="timer-text" id="timer-text">残り 5:00</div>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+        <div class="phase-timer-bar"><div class="phase-timer-fill" id="phase-fill"></div></div>
+        <button class="pause-btn" id="pause-btn">⏸ 一時停止</button>
+      </div>
+    </div>
+
+    <!-- Complete Card -->
+    <div id="complete-card">
+      <h2>🌟 お疲れさま</h2>
+      <p>5分間の呼吸セッションが完了しました</p>
+      <div class="stats-row" id="stats-row"></div>
+      <div class="action-btns">
+        <button class="again-btn" id="again-btn">もう一度</button>
+        <button class="share-btn" id="share-btn">📸 保存</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
