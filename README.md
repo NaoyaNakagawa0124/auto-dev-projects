@@ -47,5 +47,6 @@
 | 41 | tsundoku | Book-stacking Tetris puzzle | C/Raylib | 57 |
 | 42 | midnightbento | Bento box spatial puzzle | Godot 4/GDScript | 52 |
 | 43 | pixelhome | Pixel art moving task extension | Chrome Extension/JS | 49 |
+| 44 | eigasketch | Sketch-style movie quiz game | Godot 4/GDScript | 71 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

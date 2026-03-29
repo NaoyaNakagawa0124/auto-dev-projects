@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <rect width="128" height="128" rx="16" fill="#1a1a2e"/>
+  <path d="M30 90 L50 40 L70 70 L90 30" stroke="#f0e68c" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="6 4"/>
+  <circle cx="64" cy="64" r="25" stroke="#6c8cff" stroke-width="2" fill="none" stroke-dasharray="4 3"/>
+  <text x="64" y="118" text-anchor="middle" fill="#f0e68c" font-size="10" font-family="sans-serif">SKETCH</text>
+</svg>

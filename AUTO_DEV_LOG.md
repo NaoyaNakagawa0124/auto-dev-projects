@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-30 04:00 | Total apps: 43 | Total tests: 8,027
+> Last updated: 2026-03-30 04:45 | Total apps: 44 | Total tests: 8,098
 
 ## Quick Overview
 
@@ -49,6 +49,7 @@
 | 41 | [tsundoku](#tsundoku) | Book-stacking Tetris puzzle | C/Raylib | 57 | complete | `make && ./tsundoku` |
 | 42 | [midnightbento](#midnightbento) | Bento box spatial puzzle | Godot 4/GDScript | 52 | complete | `godot project.godot` |
 | 43 | [pixelhome](#pixelhome) | Pixel art moving task extension | Chrome Extension/JS | 49 | complete | Load unpacked in `chrome://extensions` |
+| 44 | [eigasketch](#eigasketch) | Sketch-style movie quiz game | Godot 4/GDScript | 71 | complete | `godot project.godot` |
 
 ---
 
@@ -1928,3 +1929,48 @@ None — clean implementation. Storage abstraction allows testing with localStor
 - Animated furniture (walking pixel cat, flickering lamp)
 - Custom task creation
 - Day/night room themes based on time
+
+---
+
+### <a id="eigasketch"></a>44. eigasketch - 2026-03-30 04:45
+
+**What is this?**
+A Godot 4 movie quiz game with hand-drawn sketch-style visuals. Wobbly procedural hints (circles, rectangles, lines, stars, waves) are progressively drawn on a paper-grid canvas. Players guess the movie from 4 choices. 30 movies across 6 genres with speed-based scoring.
+
+**Discovery Roll**
+Source: 30 (Random country news) | Persona: 13 (映画オタク) | Platform: 14 (Godot) | Wildcard: 31 (手書き風ビジュアル)
+
+**Features Built**
+- 30 movies across 6 genres (Action, SF, Horror, Romance, Anime, Fantasy) with 4 sketch hints each
+- Wobbly sketch renderer: sin-based wobble on circles, rects, lines, stars, waves
+- Progressive hint reveal with time-based auto-progression
+- Speed scoring with hint penalty (fewer hints = more points)
+- 10-question quick mode and 30-question full challenge
+- S-F grading system
+
+**Tech Stack**
+GDScript / Godot 4 / Procedural sketch drawing / Node.js test suite
+
+**Key Files**
+```
+scripts/movie_data.gd    — 30 movies with visual hint definitions
+scripts/quiz_engine.gd   — Quiz flow, scoring, grading
+scripts/sketch_drawer.gd — Wobbly procedural drawing (6 shape types)
+scenes/main_ui.gd        — UI controller, input, results
+tests/run.js             — 71 tests
+```
+
+**How to Run**
+```bash
+godot project.godot
+```
+
+**Tests**: 71 passing | **Files**: 12 | **LOC**: ~1,600
+
+**Challenges & Fixes**
+None — clean implementation. 30-movie database with curated visual hints across all genres.
+
+**Potential Next Steps**
+- User-contributed movie databases
+- Multiplayer who-guesses-faster mode
+- Freehand drawing mode (player draws, game guesses)

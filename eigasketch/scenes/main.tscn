@@ -1,0 +1,89 @@
+[gd_scene load_steps=2 format=3 uid="uid://main"]
+
+[ext_resource type="Script" path="res://scenes/main_ui.gd" id="1"]
+
+[node name="Main" type="Node2D"]
+
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.06, 0.05, 0.1, 1)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="UIRoot" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1")
+
+[node name="TitleScreen" type="VBoxContainer" parent="UI/UIRoot"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -200.0
+offset_right = 200.0
+offset_bottom = 200.0
+alignment = 1
+
+[node name="Title" type="Label" parent="UI/UIRoot/TitleScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "🎬 映画スケッチ"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="UI/UIRoot/TitleScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.6, 0.6, 0.8, 0.7)
+text = "スケッチから映画を当てろ！"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="UI/UIRoot/TitleScreen"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 30)
+
+[node name="Desc" type="Label" parent="UI/UIRoot/TitleScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.7, 0.7, 0.8, 0.7)
+text = "手書き風のヒントが徐々に描かれる
+4択から正しい映画を選ぼう
+早く答えるほど高得点！"
+horizontal_alignment = 1
+
+[node name="Spacer2" type="Control" parent="UI/UIRoot/TitleScreen"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 20)
+
+[node name="StartButton" type="Button" parent="UI/UIRoot/TitleScreen"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 50)
+theme_override_font_sizes/font_size = 20
+text = "▶ クイズ開始（10問）"
+
+[node name="StartAllButton" type="Button" parent="UI/UIRoot/TitleScreen"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 40)
+theme_override_font_sizes/font_size = 16
+text = "🏆 全30問チャレンジ"
+
+[node name="GameScreen" type="Control" parent="UI/UIRoot"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="ResultScreen" type="Control" parent="UI/UIRoot"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
