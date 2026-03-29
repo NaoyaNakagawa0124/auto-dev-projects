@@ -29,5 +29,6 @@
 | 23 | lumilink | Co-op light puzzle for couples | Godot 4/GDScript | 587 |
 | 24 | nochecalma | Midnight-only parent sanctuary | Electron/HTML/JS | 651 |
 | 25 | kidstats2035 | Futuristic youth sports analytics | Python/Jupyter/Plotly | 270 |
+| 26 | shipwatch | One-hand supply chain CLI | Node.js CLI | 291 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

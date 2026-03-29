@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-29 | Total apps: 25 | Total tests: 4,831
+> Last updated: 2026-03-29 | Total apps: 26 | Total tests: 5,122
 
 ## Quick Overview
 
@@ -31,6 +31,7 @@
 | 23 | [lumilink](#lumilink) | Co-op light puzzle for couples | Godot 4/GDScript | 587 | complete | Open in Godot 4.3+ |
 | 24 | [nochecalma](#nochecalma) | Midnight-only parent sanctuary | Electron/HTML/JS | 651 | complete | `open src/index.html` (midnight-6am) |
 | 25 | [kidstats2035](#kidstats2035) | Futuristic youth sports analytics | Python/Jupyter/Plotly | 270 | complete | `jupyter notebook kidstats2035.ipynb` |
+| 26 | [shipwatch](#shipwatch) | One-hand supply chain CLI | Node.js CLI | 291 | complete | `node src/cli.js` |
 
 ---
 
@@ -1061,3 +1062,52 @@ None — clean build.
 - Sibling/teammate comparison mode
 - PDF export for coaches
 - Live IoT sensor integration (2035 wearables)
+
+---
+
+### <a id="shipwatch"></a>26. shipwatch - 2026-03-29
+
+**What is this?**
+A one-hand-usable Node.js CLI for monitoring global shipping disruptions at 3am. Based on real 2026 events: Strait of Hormuz closure, Suez congestion, Panama Canal drought, Middle East airspace restrictions, Thailand port disruptions. Dashboard, route delays, package tracker — all navigable with left-hand single keys.
+
+**Discovery Roll**
+Source: 23 (Supply chain/shipping news) | Persona: 20 (Night owl, 3am) | Platform: 2 (CLI tool) | Wildcard: 5 (One-hand usable only)
+
+**Features Built**
+- Global risk dashboard with severity-colored disruption list and risk score bar
+- 5 detailed disruption reports with carriers, reroute info, cost/delay impact
+- Route delay estimator for 8 major shipping lanes with disruption cross-reference
+- Package tracker with 6 shipments showing status, ETA, delay reasons
+- One-hand navigation: all keys left-hand reachable (d, r, t, q, 1-5, ?)
+
+**Tech Stack**
+Node.js / ANSI terminal rendering / Zero dependencies
+
+**Key Files**
+```
+shipwatch/
+  src/
+    data.js        # Disruptions, routes, packages, delay calculator
+    renderer.js    # Box-drawn terminal UI, ANSI colors
+    cli.js         # CLI entry point + interactive mode
+  tests/
+    test.js        # 291 tests
+```
+
+**How to Run**
+```bash
+node src/cli.js        # Dashboard
+node src/cli.js i      # Interactive mode
+node tests/test.js     # Tests
+```
+
+**Tests**: 291 passing | **Files**: 5 | **LOC**: ~750 | **Build time**: ~1 min
+
+**Challenges & Fixes**
+Bar renderer crashed when route delay exceeded max width — fixed with Math.min clamp.
+
+**Potential Next Steps**
+- Live API integration (MarineTraffic, Xeneta)
+- Custom package tracking
+- Alert mode with severity change notifications
+- Export to JSON/CSV
