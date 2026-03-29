@@ -1,5 +1,5 @@
 {
-  "apps_completed": 36,
+  "apps_completed": 37,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -219,6 +219,12 @@
       "persona": 31,
       "platform": 19,
       "wildcard": 32
+    },
+    {
+      "source": 37,
+      "persona": 15,
+      "platform": 14,
+      "wildcard": 6
     }
   ],
   "history": [
@@ -329,6 +335,9 @@
     },
     {
       "name": "nijilog"
+    },
+    {
+      "name": "snapjudge"
     }
   ]
 }
