@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-29 | Total apps: 33 | Total tests: 7,550
+> Last updated: 2026-03-29 | Total apps: 34 | Total tests: 7,569
 
 ## Quick Overview
 
@@ -39,6 +39,7 @@
 | 31 | [clapboard](#clapboard) | Movie-style work time tracker | Chrome Extension/JS | 163 | complete | Load unpacked in `chrome://extensions` |
 | 32 | [shotlist2035](#shotlist2035) | AI photography shot list generator | Electron/HTML/JS | 516 | complete | `open src/index.html` |
 | 33 | [commutestory](#commutestory) | Infrastructure narrative notebook | Python/Jupyter/Plotly | 305 | complete | `jupyter notebook commutestory.ipynb` |
+| 34 | [dormescape](#dormescape) | First apartment text adventure | Rust+WASM | 19 | complete | `wasm-pack build --target web && python3 -m http.server` |
 
 ---
 
@@ -1443,3 +1444,49 @@ None — clean build.
 - Real GTFS transit data integration
 - Audio narration for actual commuters
 - City-specific editions (NYC, London, Tokyo)
+
+---
+
+### <a id="dormescape"></a>34. dormescape - 2026-03-29
+
+**What is this?**
+A Rust+WASM interactive fiction game where a student at 2am navigates finding their first apartment after graduation. 7 chapters teach real financial concepts — the 30% rent rule, lease reading, credit scores, move-in budgeting, and emergency funds — through binary story choices. HUD tracks savings, rent, and credit. Ends with a financial grade based on your decisions. All data from 2026 housing market research ($915/bed avg, 27.2% income-to-rent).
+
+**Discovery Roll**
+Source: 22 (Real estate/housing) | Persona: 8 (Student cramming at 2am) | Platform: 10 (Rust+WASM) | Wildcard: 14 (Storyline/narrative)
+
+**Features Built**
+- 7-chapter text adventure (2:00 AM → 5:00 AM sunrise)
+- Binary choices with budget/rent/credit effects and financial lessons
+- HUD tracking savings, rent, credit score, chapter progress
+- Financial grade (A-D) based on final rent-to-income ratio
+- Monthly budget breakdown calculator
+- Progress bar with chapter dots
+
+**Tech Stack**
+Rust / wasm-bindgen / wasm-pack / HTML/CSS/JS
+
+**Key Files**
+```
+dormescape/
+  Cargo.toml        # Rust project
+  src/lib.rs         # 7 chapters, choices, effects, grading (19 tests)
+  index.html         # Frontend with WASM import
+  pkg/               # WASM build output
+```
+
+**How to Run**
+```bash
+wasm-pack build --target web && python3 -m http.server 8080
+```
+
+**Tests**: 19 passing (Rust) | **Files**: 3 | **LOC**: ~500 | **Build time**: ~5 sec
+
+**Challenges & Fixes**
+None — clean build. Third Rust+WASM project.
+
+**Potential Next Steps**
+- Multiple city storylines with different costs
+- Shareable results card for social media
+- Branching paths with more choices per chapter
+- Real apartment listing API integration

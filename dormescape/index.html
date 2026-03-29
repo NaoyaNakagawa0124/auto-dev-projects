@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DormEscape — Your First Apartment Adventure</title>
+  <style>
+    :root{--bg:#0a0a18;--card:#12122a;--text:#e8e8f0;--dim:#7878aa;--accent:#e94560;--gold:#feca57;--green:#55efc4;--radius:14px;}
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{background:var(--bg);color:var(--text);font-family:Georgia,serif;max-width:580px;margin:0 auto;padding:20px;min-height:100vh;}
+    h1{text-align:center;font-size:26px;color:var(--accent);margin-bottom:4px;}
+    .sub{text-align:center;font-size:12px;color:var(--dim);margin-bottom:20px;}
+    .chapter{background:var(--card);border-radius:var(--radius);padding:20px;margin-bottom:14px;border-left:3px solid var(--accent);}
+    .ch-title{font-size:18px;font-weight:700;color:var(--gold);margin-bottom:10px;}
+    .ch-text{font-size:14px;line-height:1.7;color:var(--text);margin-bottom:16px;}
+    .choice-btn{display:block;width:100%;padding:14px;margin-bottom:8px;background:var(--card);border:1px solid #333;border-radius:var(--radius);color:var(--text);font-family:inherit;font-size:14px;text-align:left;cursor:pointer;transition:all 0.2s;}
+    .choice-btn:hover{border-color:var(--accent);background:#1a1a3a;}
+    .lesson{background:#1a2744;border-radius:var(--radius);padding:14px;margin-bottom:14px;font-size:13px;color:var(--green);border-left:3px solid var(--green);line-height:1.5;}
+    .hud{display:flex;justify-content:space-around;background:var(--card);border-radius:var(--radius);padding:12px;margin-bottom:14px;font-size:12px;text-align:center;}
+    .hud-val{font-size:18px;font-weight:700;color:var(--gold);}
+    .hud-label{color:var(--dim);font-size:10px;text-transform:uppercase;}
+    .grade-card{text-align:center;background:var(--card);border-radius:var(--radius);padding:24px;margin-top:14px;border:2px solid var(--gold);}
+    .grade{font-size:36px;font-weight:700;color:var(--gold);}
+    .grade-desc{font-size:14px;color:var(--dim);margin-top:8px;}
+    .progress{display:flex;gap:4px;margin-bottom:14px;}
+    .dot{flex:1;height:6px;border-radius:3px;background:#222;}
+    .dot.done{background:var(--accent);}
+    .dot.current{background:var(--gold);}
+  </style>
+</head>
+<body>
+  <h1>🏠 DormEscape</h1>
+  <p class="sub">A 2am adventure through your first apartment search</p>
+  <div class="hud">
+    <div><div class="hud-val" id="h-budget">$2,400</div><div class="hud-label">Savings</div></div>
+    <div><div class="hud-val" id="h-rent">$0</div><div class="hud-label">Rent</div></div>
+    <div><div class="hud-val" id="h-credit">680</div><div class="hud-label">Credit</div></div>
+    <div><div class="hud-val" id="h-chapter">1/7</div><div class="hud-label">Chapter</div></div>
+  </div>
+  <div class="progress" id="progress"></div>
+  <div id="story"></div>
+  <div id="grade-area" style="display:none;"></div>
+
+  <script type="module">
+    import init, {
+      get_chapter_count, get_chapter_title, get_chapter_text,
+      get_choice_count, get_choice_text, get_choice_lesson, get_choice_next,
+      apply_choice_effect, calculate_monthly_budget, get_financial_grade, is_final_chapter,
+    } from './pkg/dormescape.js';
+
+    await init();
+
+    let ch = 0, budget = 2400, rent = 0, credit = 680;
+    const total = get_chapter_count();
+
+    renderProgress();
+    renderChapter();
+
+    function renderProgress() {
+      const p = document.getElementById('progress');
+      p.innerHTML = '';
+      for (let i = 0; i < total; i++) {
+        const d = document.createElement('div');
+        d.className = 'dot' + (i < ch ? ' done' : i === ch ? ' current' : '');
+        p.appendChild(d);
+      }
+    }
+
+    function renderChapter() {
+      const story = document.getElementById('story');
+      story.innerHTML = '';
+
+      const div = document.createElement('div');
+      div.className = 'chapter';
+      div.innerHTML = `<div class="ch-title">${get_chapter_title(ch)}</div><div class="ch-text">${get_chapter_text(ch)}</div>`;
+      story.appendChild(div);
+
+      const count = get_choice_count(ch);
+      for (let i = 0; i < count; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.textContent = get_choice_text(ch, i);
+        btn.onclick = () => makeChoice(i);
+        story.appendChild(btn);
+      }
+
+      updateHUD();
+    }
+
+    function makeChoice(choice) {
+      const r = apply_choice_effect(budget, rent, credit, ch, choice);
+      budget = r[0]; rent = r[1]; credit = r[2];
+
+      const lesson = get_choice_lesson(ch, choice);
+      const next = get_choice_next(ch, choice);
+
+      // Show lesson
+      const story = document.getElementById('story');
+      story.querySelectorAll('.choice-btn').forEach(b => b.remove());
+      const lessonDiv = document.createElement('div');
+      lessonDiv.className = 'lesson';
+      lessonDiv.textContent = lesson;
+      story.appendChild(lessonDiv);
+
+      if (is_final_chapter(next) || next >= total) {
+        setTimeout(() => { ch = Math.min(next, total - 1); renderProgress(); renderChapter(); showGrade(); }, 1500);
+      } else {
+        setTimeout(() => { ch = next; renderProgress(); renderChapter(); }, 1500);
+      }
+    }
+
+    function showGrade() {
+      const b = calculate_monthly_budget(42000, rent);
+      const remaining = b[6];
+      const grade = get_financial_grade(remaining, rent, 42000);
+
+      const area = document.getElementById('grade-area');
+      area.style.display = 'block';
+      area.innerHTML = `<div class="grade-card">
+        <div style="font-size:14px;color:var(--dim);margin-bottom:8px;">YOUR FINANCIAL GRADE</div>
+        <div class="grade">${grade.charAt(0)}</div>
+        <div class="grade-desc">${grade.substring(4)}</div>
+        <div style="margin-top:16px;font-size:13px;color:var(--dim);">
+          Monthly Budget: $${b[0]} after tax<br>
+          Rent: $${rent} | Food: $${b[2]} | Transport: $${b[3]}<br>
+          Remaining: $${b[6]}/month
+        </div>
+      </div>`;
+    }
+
+    function updateHUD() {
+      document.getElementById('h-budget').textContent = '$' + budget.toLocaleString();
+      document.getElementById('h-rent').textContent = '$' + rent;
+      document.getElementById('h-credit').textContent = credit;
+      document.getElementById('h-chapter').textContent = (ch + 1) + '/' + total;
+    }
+  </script>
+</body>
+</html>
