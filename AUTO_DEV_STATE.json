@@ -1,5 +1,5 @@
 {
-  "apps_completed": 49,
+  "apps_completed": 50,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -297,6 +297,12 @@
       "persona": 27,
       "platform": 10,
       "wildcard": 33
+    },
+    {
+      "source": 25,
+      "persona": 4,
+      "platform": 19,
+      "wildcard": 47
     }
   ],
   "history": [
@@ -446,6 +452,9 @@
     },
     {
       "name": "oshimap"
+    },
+    {
+      "name": "madorimystery"
     }
   ]
 }

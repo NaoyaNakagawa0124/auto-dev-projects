@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>間取りミステリー — 間取りから事件が生まれる</title>
+  <link rel="stylesheet" href="/src/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>🔍 間取りミステリー</h1>
+      <span id="mode-label">設計モード</span>
+    </header>
+    <div id="main">
+      <div id="canvas-area">
+        <canvas id="game-canvas" width="520" height="400"></canvas>
+      </div>
+      <div id="sidebar">
+        <!-- Design mode -->
+        <div id="design-panel">
+          <h2>🏠 部屋を配置</h2>
+          <div class="room-palette" id="room-palette"></div>
+          <p style="font-size: 0.7rem; color: var(--text-sub); margin-bottom: 8px;">クリックで配置 / 右クリックで削除</p>
+          <button class="btn btn-accent" id="btn-generate">🔍 ミステリーを生成！</button>
+          <button class="btn btn-outline" id="btn-clear">🗑️ リセット</button>
+        </div>
+        <!-- Investigate mode -->
+        <div id="investigate-panel" style="display:none;">
+          <div id="story-box"></div>
+          <h2>🔍 手がかり</h2>
+          <p style="font-size: 0.7rem; color: var(--text-sub);">部屋をクリックして調査しよう</p>
+          <div class="clue-list" id="clue-list"></div>
+          <h2 style="margin-top: 12px;">🎯 犯人を告発</h2>
+          <div class="suspect-list" id="suspect-list"></div>
+          <button class="btn btn-outline" id="btn-back" style="margin-top: 8px;">← 設計に戻る</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="result-overlay">
+    <div id="result-card">
+      <h2 id="result-title"></h2>
+      <p id="result-text"></p>
+      <button class="btn btn-gold" id="btn-result-ok">閉じる</button>
+    </div>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

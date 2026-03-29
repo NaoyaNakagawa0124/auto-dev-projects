@@ -1,0 +1,13 @@
+{
+  "name": "madorimystery",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "node tests/run.js"
+  },
+  "dependencies": {
+    "vite": "^8.0.3"
+  }
+}

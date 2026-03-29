@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-30 08:30 | Total apps: 49 | Total tests: 8,285
+> Last updated: 2026-03-30 09:15 | Total apps: 50 🎉 | Total tests: 8,325
 
 ## Quick Overview
 
@@ -55,6 +55,7 @@
 | 47 | [oshishrine](#oshishrine) | Retro GeoCities fan shrine builder | Vanilla JS/Canvas/Vite | 46 | complete | `npm run dev` |
 | 48 | [kuizunote](#kuizunote) | Brain training puzzle notebook | Python/Jupyter/matplotlib | 57 | complete | `jupyter notebook kuizunote.ipynb` |
 | 49 | [oshimap](#oshimap) | Oshi tour map tracker | Rust+WASM/Canvas | 11 | complete | `wasm-pack build --target web` |
+| **50** | [**madorimystery**](#madorimystery) | **Floor plan mystery generator** | **Vanilla JS/Canvas/Vite** | **40** | **complete** | `npm run dev` |
 
 ---
 
@@ -2207,3 +2208,49 @@ None — clean build. Haversine formula verified against known Tokyo-Osaka dista
 - SVG map with prefecture boundaries
 - Photo attachment per event
 - Share map as image or URL
+
+---
+
+### <a id="madorimystery"></a>50. madorimystery - 2026-03-30 09:15 🎉 MILESTONE APP #50!
+
+**What is this?**
+A floor plan mystery generator! Design a room layout on a grid, then the app auto-generates a complete murder mystery within it — culprit, weapon, motive, crime scene, clues, and a red herring. Switch to investigation mode to search rooms, collect evidence, and accuse the culprit. Perfect content for mystery YouTubers and TikTokers.
+
+**Discovery Roll**
+Source: 25 (True crime/mystery) | Persona: 4 (YouTuber志望) | Platform: 19 (p5.js→Canvas) | Wildcard: 47 (間取りを作る)
+
+**Features Built**
+- Grid-based floor plan editor: 8 room types with overlap detection
+- Seeded mystery generator: deterministic results from floor plan layout
+- 4 suspects with names, roles, alibis, emojis
+- 5 weapons with room affinity, 5 motives
+- 4+ clues per mystery including red herring
+- Investigation mode: click rooms to discover clues
+- Accusation system: requires 2+ clues before charging
+
+**Tech Stack**
+Vanilla JS / Canvas 2D / Vite / Seeded RNG / Grid collision
+
+**Key Files**
+```
+src/mystery.js    — Mystery generator: suspects, weapons, motives, clues, seeded RNG
+src/floorplan.js  — FloorPlan class: grid CRUD, overlap detection, Canvas rendering
+src/main.js       — App controller: design/investigate modes, accusation flow
+src/style.css     — Dark mystery theme with red accent
+tests/run.js      — 40 tests (rooms, suspects, floor plan, mystery gen, investigation)
+```
+
+**How to Run**
+```bash
+cd madorimystery && npm install && npm run dev
+```
+
+**Tests**: 40 passing | **Files**: 9 | **LOC**: ~1,300 | **Build**: 240ms (10KB)
+
+**Challenges & Fixes**
+None — clean milestone build. Seeded RNG ensures reproducible mysteries for content creation.
+
+**Potential Next Steps**
+- Multiple mystery scenarios per floor plan
+- Timer mode for speed investigation
+- Export as shareable mystery image
