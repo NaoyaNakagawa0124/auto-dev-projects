@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-30 14:30 | Total apps: 54 | Total tests: 9,128
+> Last updated: 2026-03-30 15:30 | Total apps: 55 | Total tests: 9,186
 
 ## Quick Overview
 
@@ -60,6 +60,7 @@
 | 52 | [hoshifumi](#hoshifumi) | Star constellation typing game | Three.js/GLSL/Vanilla JS | 0 | complete | `npx serve hoshifumi/` |
 | 53 | [himamogura](#himamogura) | Hobby discovery Discord bot with mole mascot | Node.js/discord.js/SQLite | 710 | complete | `node src/bot.js` |
 | 54 | [netamemo](#netamemo) | Collaborative content idea clipboard for creators | Chrome Extension/Vanilla JS | 55 | complete | Load unpacked in `chrome://extensions` |
+| 55 | [neonreader](#neonreader) | Cyberpunk reader mode for seniors | Chrome Extension/Vanilla JS | 58 | complete | Load unpacked in `chrome://extensions` |
 
 ---
 
@@ -2449,3 +2450,53 @@ None — clean build with all Manifest V3 requirements met.
 - WebRTC peer-to-peer real-time board sync
 - AI-powered idea scoring based on current trends
 - Export to YouTube Studio / TikTok drafts
+
+---
+
+### <a id="neonreader"></a>55. neonreader - 2026-03-30 15:30
+
+**What is this?**
+A Chrome extension that transforms any webpage into a clean, cyberpunk-styled reading experience for seniors. Neon text on dark backgrounds provides excellent readability while making browsing feel cool and futuristic. Features a reading guide, HUD overlay, scanline effects, and typewriter animation.
+
+**Discovery Roll**
+Source: 1 (World news headlines) | Persona: 3 (初めてスマホを持った祖父母) | Platform: 5 (Browser extension) | Wildcard: 29 (サイバーパンク世界観)
+
+**Features Built**
+- One-click reader mode with multi-strategy text extraction (article, role=main, paragraph heuristic)
+- 4 neon color themes: ネオングリーン, サイバーシアン, アンバー, ホワイト
+- Configurable font size (20-32px), line height, letter spacing with large defaults
+- Reading guide band following mouse position for line tracking
+- HUD overlay: character count, reading time, scroll progress
+- Scanline CRT effect + typewriter title animation
+- Alt+R keyboard shortcut, settings persist via chrome.storage
+
+**Tech Stack**
+Chrome Extension Manifest V3 / Vanilla JS / CSS / chrome.storage.local
+
+**Key Files**
+```
+popup/popup.html+css+js     — Settings UI with sliders and theme selection
+content/reader.js+css       — Reader mode overlay with text extraction
+content/hud.js              — HUD overlay component
+shared/textExtractor.js     — Multi-strategy article extraction
+shared/settings.js          — Settings management
+tests/run.js                — 58 tests
+```
+
+**How to Run**
+```bash
+# Load in Chrome:
+# 1. chrome://extensions → Developer Mode ON
+# 2. "Load unpacked" → select neonreader folder
+# 3. Visit any webpage → click extension icon → "リーダーモード起動"
+```
+
+**Tests**: 58 passing | **Files**: 17 | **LOC**: ~1,800 | **Build time**: ~6 min
+
+**Challenges & Fixes**
+None — clean build. Cyberpunk neon-on-dark aesthetic works perfectly for accessibility (high contrast).
+
+**Potential Next Steps**
+- Text-to-speech integration
+- Auto-simplify complex vocabulary
+- Furigana for difficult kanji

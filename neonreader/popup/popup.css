@@ -1,0 +1,292 @@
+/* Neon Reader — Popup Styles */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 350px;
+  background: #0a0a0f;
+  color: #e0e0e0;
+  font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  font-size: 14px;
+  /* Subtle grid pattern */
+  background-image:
+    linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.popup-container {
+  padding: 16px;
+}
+
+/* Header */
+.popup-header {
+  text-align: center;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #00ff4140;
+  margin-bottom: 14px;
+}
+
+.popup-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #00ff41;
+  text-shadow: 0 0 10px #00ff4160, 0 0 20px #00ff4130;
+  letter-spacing: 0.05em;
+}
+
+.popup-subtitle {
+  font-size: 12px;
+  color: #00ff4180;
+  margin-top: 4px;
+  letter-spacing: 0.08em;
+}
+
+/* Sections */
+.popup-section {
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-size: 12px;
+  font-weight: 400;
+  color: #00ff4180;
+  text-align: center;
+  margin-bottom: 12px;
+  letter-spacing: 0.1em;
+}
+
+/* Primary Button */
+.btn-primary {
+  display: block;
+  width: 100%;
+  padding: 14px 20px;
+  font-size: 18px;
+  font-weight: 700;
+  font-family: inherit;
+  color: #00ff41;
+  background: transparent;
+  border: 2px solid #00ff41;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.05em;
+  min-height: 52px;
+}
+
+.btn-primary:hover {
+  background: #00ff41;
+  color: #0a0a0f;
+  box-shadow: 0 0 20px #00ff4160, 0 0 40px #00ff4130;
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+/* Secondary Button */
+.btn-secondary {
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #888;
+  background: transparent;
+  border: 1px solid #333;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 44px;
+}
+
+.btn-secondary:hover {
+  border-color: #ff4444;
+  color: #ff4444;
+}
+
+/* Setting rows */
+.setting-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  min-height: 44px;
+}
+
+.setting-label {
+  flex: 0 0 72px;
+  font-size: 13px;
+  color: #aaa;
+}
+
+.setting-value {
+  flex: 0 0 50px;
+  text-align: right;
+  font-size: 13px;
+  color: #00ff41;
+  font-family: 'Courier New', monospace;
+}
+
+/* Range sliders */
+.neon-range {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  background: #222;
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+}
+
+.neon-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #00ff41;
+  box-shadow: 0 0 8px #00ff4180;
+  cursor: pointer;
+  border: 2px solid #0a0a0f;
+}
+
+.neon-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #00ff41;
+  box-shadow: 0 0 8px #00ff4180;
+  cursor: pointer;
+  border: 2px solid #0a0a0f;
+}
+
+.neon-range::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 3px;
+}
+
+/* Theme radio buttons */
+.theme-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.theme-option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.theme-option input[type="radio"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #444;
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-right: 8px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.theme-option input[type="radio"]:checked {
+  border-color: currentColor;
+  box-shadow: 0 0 8px currentColor;
+}
+
+.theme-option input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.theme-label {
+  font-size: 13px;
+}
+
+.theme-green { color: #00ff41; }
+.theme-green input, .theme-option:has(.theme-green) input { color: #00ff41; }
+.theme-cyan { color: #00f0ff; }
+.theme-option:has(.theme-cyan) input { color: #00f0ff; }
+.theme-amber { color: #ffb000; }
+.theme-option:has(.theme-amber) input { color: #ffb000; }
+.theme-white { color: #e0e0e0; }
+.theme-option:has(.theme-white) input { color: #e0e0e0; }
+
+/* Checkboxes */
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  min-height: 44px;
+  padding: 2px 0;
+}
+
+.checkbox-row input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #444;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-right: 10px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.checkbox-row input[type="checkbox"]:checked {
+  border-color: #00ff41;
+  box-shadow: 0 0 8px #00ff4140;
+}
+
+.checkbox-row input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #00ff41;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.checkbox-label {
+  font-size: 13px;
+  color: #ccc;
+}
+
+/* Shortcut section */
+.popup-shortcut {
+  text-align: center;
+}
+
+.shortcut-text {
+  font-size: 12px;
+  color: #888;
+  font-family: 'Courier New', monospace;
+  background: #111122;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #222;
+}

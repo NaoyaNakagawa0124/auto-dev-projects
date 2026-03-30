@@ -1,5 +1,5 @@
 {
-  "apps_completed": 54,
+  "apps_completed": 55,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -327,6 +327,12 @@
       "persona": 4,
       "platform": 5,
       "wildcard": 12
+    },
+    {
+      "source": 1,
+      "persona": 3,
+      "platform": 5,
+      "wildcard": 29
     }
   ],
   "history": [
@@ -491,6 +497,9 @@
     },
     {
       "name": "netamemo"
+    },
+    {
+      "name": "neonreader"
     }
   ]
 }

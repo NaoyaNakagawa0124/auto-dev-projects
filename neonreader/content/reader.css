@@ -1,0 +1,260 @@
+/* Neon Reader — Reader Mode Styles */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+
+#neon-reader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2147483647;
+  background: #0a0a0f;
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  animation: neon-fade-in 0.4s ease-out;
+  scroll-behavior: smooth;
+}
+
+@keyframes neon-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes neon-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Top bar */
+#neon-reader-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 2147483647;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 24px;
+  background: rgba(10, 10, 15, 0.95);
+  border-bottom: 1px solid var(--neon-accent, #00ff41);
+  backdrop-filter: blur(10px);
+}
+
+#neon-reader-topbar-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--neon-accent, #00ff41);
+  text-shadow: 0 0 8px var(--neon-accent, #00ff41);
+  letter-spacing: 0.05em;
+}
+
+#neon-reader-close {
+  background: transparent;
+  border: 1px solid var(--neon-accent, #00ff41);
+  color: var(--neon-accent, #00ff41);
+  font-size: 22px;
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+#neon-reader-close:hover {
+  background: var(--neon-accent, #00ff41);
+  color: #0a0a0f;
+  box-shadow: 0 0 15px var(--neon-accent, #00ff41);
+}
+
+/* Content area */
+#neon-reader-content {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 40px 24px 100px;
+  position: relative;
+}
+
+/* Title */
+#neon-reader-content h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--neon-heading, #39ff14);
+  text-shadow: var(--neon-glow);
+  margin-bottom: 32px;
+  line-height: 1.4;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--neon-dim, #00802080);
+}
+
+/* Content elements */
+#neon-reader-content p {
+  color: var(--neon-text, #00ff41);
+  margin-bottom: 1.2em;
+}
+
+#neon-reader-content h2 {
+  font-size: 1.4em;
+  font-weight: 700;
+  color: var(--neon-heading, #39ff14);
+  text-shadow: var(--neon-glow);
+  margin-top: 2em;
+  margin-bottom: 0.8em;
+  padding-left: 12px;
+  border-left: 3px solid var(--neon-accent, #00ff41);
+}
+
+#neon-reader-content h3,
+#neon-reader-content h4,
+#neon-reader-content h5,
+#neon-reader-content h6 {
+  font-size: 1.2em;
+  font-weight: 700;
+  color: var(--neon-heading, #39ff14);
+  text-shadow: var(--neon-glow);
+  margin-top: 1.5em;
+  margin-bottom: 0.6em;
+}
+
+#neon-reader-content li {
+  color: var(--neon-text, #00ff41);
+  margin-bottom: 0.5em;
+  padding-left: 1.2em;
+  position: relative;
+}
+
+#neon-reader-content li::before {
+  content: '>';
+  position: absolute;
+  left: 0;
+  color: var(--neon-accent, #00ff41);
+  text-shadow: 0 0 5px var(--neon-accent, #00ff41);
+}
+
+#neon-reader-content blockquote {
+  color: var(--neon-dim, #00802080);
+  border-left: 3px solid var(--neon-accent, #00ff41);
+  padding: 12px 20px;
+  margin: 1em 0;
+  background: rgba(0, 255, 65, 0.03);
+  border-radius: 0 6px 6px 0;
+  font-style: italic;
+}
+
+#neon-reader-content pre,
+#neon-reader-content .neon-code {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--neon-dim, #00802080);
+  border-radius: 6px;
+  padding: 16px;
+  font-family: 'Courier New', 'Source Code Pro', monospace;
+  font-size: 0.85em;
+  color: var(--neon-text, #00ff41);
+  overflow-x: auto;
+  margin: 1em 0;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+#neon-reader-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid var(--neon-dim, #00802080);
+  margin: 1em 0;
+}
+
+/* Reading guide line */
+#neon-reader-guide {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 3.5em;
+  background: var(--neon-dim, rgba(0, 128, 32, 0.08));
+  pointer-events: none;
+  z-index: 2147483646;
+  transition: top 0.15s ease-out;
+  border-top: 1px solid rgba(0, 255, 65, 0.06);
+  border-bottom: 1px solid rgba(0, 255, 65, 0.06);
+}
+
+/* Progress bar */
+#neon-reader-progress {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  background: var(--neon-accent, #00ff41);
+  box-shadow: 0 0 8px var(--neon-accent, #00ff41);
+  z-index: 2147483647;
+  transition: width 0.1s linear;
+  width: 0%;
+}
+
+/* Scanline effect */
+#neon-reader-overlay.scanlines::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 255, 65, 0.015) 2px,
+    rgba(0, 255, 65, 0.015) 4px
+  );
+  pointer-events: none;
+  z-index: 2147483646;
+}
+
+/* Custom scrollbar */
+#neon-reader-overlay::-webkit-scrollbar {
+  width: 10px;
+}
+
+#neon-reader-overlay::-webkit-scrollbar-track {
+  background: #0a0a0f;
+}
+
+#neon-reader-overlay::-webkit-scrollbar-thumb {
+  background: var(--neon-dim, #00802080);
+  border-radius: 5px;
+  border: 2px solid #0a0a0f;
+}
+
+#neon-reader-overlay::-webkit-scrollbar-thumb:hover {
+  background: var(--neon-accent, #00ff41);
+  box-shadow: 0 0 6px var(--neon-accent, #00ff41);
+}
+
+/* Typewriter cursor blink */
+@keyframes neon-cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.neon-typewriter-cursor {
+  display: inline-block;
+  width: 3px;
+  height: 1em;
+  background: var(--neon-accent, #00ff41);
+  box-shadow: 0 0 6px var(--neon-accent, #00ff41);
+  animation: neon-cursor-blink 0.7s infinite;
+  vertical-align: text-bottom;
+  margin-left: 2px;
+}

@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "ネオンリーダー — サイバーパンク読書モード",
+  "version": "1.0.0",
+  "description": "ワンクリックでWebページをサイバーパンク風の読みやすいモードに変換。大きな文字、高コントラスト、近未来な読書体験。",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "commands": {
+    "toggle-reader": {
+      "suggested_key": { "default": "Alt+R" },
+      "description": "ネオンリーダーを切り替え"
+    }
+  }
+}
