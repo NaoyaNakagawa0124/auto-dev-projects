@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="sidepanel.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-top">
+      <h1 class="logo">ネタメモ</h1>
+      <div class="header-actions">
+        <input type="text" id="username-input" placeholder="ユーザー名" class="username-input" />
+      </div>
+    </div>
+  </header>
+
+  <!-- Quick Add -->
+  <div class="quick-add">
+    <button id="quick-add-btn" class="btn-primary quick-add-btn">＋ 現在のページを保存</button>
+  </div>
+
+  <!-- Tabs -->
+  <nav class="tabs">
+    <button class="tab active" data-tab="list">アイデア一覧</button>
+    <button class="tab" data-tab="add">追加</button>
+    <button class="tab" data-tab="share">共有</button>
+  </nav>
+
+  <!-- Tab: List -->
+  <section id="tab-list" class="tab-content active">
+    <div class="search-bar">
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="search-input" placeholder="ネタを検索..." class="search-input" />
+    </div>
+
+    <div class="filters">
+      <div class="category-pills" id="category-pills">
+        <button class="pill active" data-cat="all">すべて</button>
+        <button class="pill" data-cat="tutorial">📖 チュートリアル</button>
+        <button class="pill" data-cat="review">⭐ レビュー</button>
+        <button class="pill" data-cat="vlog">🎥 Vlog</button>
+        <button class="pill" data-cat="short">⚡ ショート</button>
+        <button class="pill" data-cat="collab">🤝 コラボ</button>
+        <button class="pill" data-cat="other">💡 その他</button>
+      </div>
+      <select id="sort-select" class="sort-select">
+        <option value="newest">新しい順</option>
+        <option value="potential">ポテンシャル高い順</option>
+        <option value="votes">投票多い順</option>
+        <option value="trend">トレンド順</option>
+      </select>
+    </div>
+
+    <div id="ideas-list" class="ideas-list"></div>
+
+    <div id="empty-state" class="empty-state" style="display:none;">
+      <div class="empty-icon">💡</div>
+      <p>まだネタがありません。</p>
+      <p class="empty-sub">右クリックか「追加」タブから始めよう！</p>
+    </div>
+  </section>
+
+  <!-- Tab: Add -->
+  <section id="tab-add" class="tab-content">
+    <form id="add-form" class="add-form">
+      <div class="form-group">
+        <label for="add-title">アイデアのタイトル <span class="required">*</span></label>
+        <input type="text" id="add-title" placeholder="例: 100均グッズレビュー" required />
+      </div>
+      <div class="form-group">
+        <label for="add-url">参考URL</label>
+        <input type="url" id="add-url" placeholder="https://..." />
+      </div>
+      <div class="form-group">
+        <label for="add-desc">メモ・詳細</label>
+        <textarea id="add-desc" rows="3" placeholder="どんな動画にする？ポイントは？"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="add-category">カテゴリ</label>
+        <select id="add-category">
+          <option value="tutorial">📖 チュートリアル</option>
+          <option value="review">⭐ レビュー</option>
+          <option value="vlog">🎥 Vlog</option>
+          <option value="short">⚡ ショート</option>
+          <option value="collab">🤝 コラボ</option>
+          <option value="other" selected>💡 その他</option>
+        </select>
+      </div>
+
+      <div class="ratings-group">
+        <div class="rating-slider">
+          <label>ポテンシャル <span class="rating-desc">どれくらいバズりそう？</span></label>
+          <div class="slider-row">
+            <input type="range" id="add-potential" min="1" max="5" value="3" />
+            <span class="slider-val" id="val-potential">3</span>
+          </div>
+        </div>
+        <div class="rating-slider">
+          <label>工数 <span class="rating-desc">作るのにかかる手間は？</span></label>
+          <div class="slider-row">
+            <input type="range" id="add-effort" min="1" max="5" value="3" />
+            <span class="slider-val" id="val-effort">3</span>
+          </div>
+        </div>
+        <div class="rating-slider">
+          <label>トレンド度 <span class="rating-desc">今のトレンドに乗ってる？</span></label>
+          <div class="slider-row">
+            <input type="range" id="add-trend" min="1" max="5" value="3" />
+            <span class="slider-val" id="val-trend">3</span>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary">ネタを保存</button>
+    </form>
+  </section>
+
+  <!-- Tab: Share -->
+  <section id="tab-share" class="tab-content">
+    <div class="share-section">
+      <h3>エクスポート</h3>
+      <p class="share-desc">このコードを友達に送ると、あなたのネタボードを共有できます</p>
+      <button id="export-btn" class="btn-secondary">共有コードを生成</button>
+      <div id="export-result" class="export-result" style="display:none;">
+        <textarea id="export-code" readonly class="code-area"></textarea>
+        <button id="copy-btn" class="btn-small">コードをコピー</button>
+        <span id="copy-confirm" class="copy-confirm" style="display:none;">コピーしました！</span>
+      </div>
+    </div>
+    <div class="share-section">
+      <h3>インポート</h3>
+      <textarea id="import-code" class="code-area" placeholder="共有コードを入力..."></textarea>
+      <label class="checkbox-label">
+        <input type="checkbox" id="skip-duplicates" checked />
+        重複を除く
+      </label>
+      <button id="import-btn" class="btn-secondary">インポート</button>
+      <div id="import-result" class="import-result" style="display:none;"></div>
+    </div>
+    <div class="share-section">
+      <h3>投票結果</h3>
+      <div id="vote-results" class="vote-results">
+        <p class="muted">アイデアに投票すると、ここにランキングが表示されます</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Edit Modal -->
+  <div id="edit-modal" class="modal" style="display:none;">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <h3>ネタを編集</h3>
+      <form id="edit-form">
+        <input type="hidden" id="edit-id" />
+        <div class="form-group">
+          <label for="edit-title">タイトル</label>
+          <input type="text" id="edit-title" required />
+        </div>
+        <div class="form-group">
+          <label for="edit-url">URL</label>
+          <input type="url" id="edit-url" />
+        </div>
+        <div class="form-group">
+          <label for="edit-desc">メモ</label>
+          <textarea id="edit-desc" rows="2"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="edit-category">カテゴリ</label>
+          <select id="edit-category">
+            <option value="tutorial">📖 チュートリアル</option>
+            <option value="review">⭐ レビュー</option>
+            <option value="vlog">🎥 Vlog</option>
+            <option value="short">⚡ ショート</option>
+            <option value="collab">🤝 コラボ</option>
+            <option value="other">💡 その他</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" id="edit-cancel" class="btn-ghost">キャンセル</button>
+          <button type="submit" class="btn-primary">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="sidepanel.js" type="module"></script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-30 13:30 | Total apps: 53 | Total tests: 9,073
+> Last updated: 2026-03-30 14:30 | Total apps: 54 | Total tests: 9,128
 
 ## Quick Overview
 
@@ -59,6 +59,7 @@
 | 51 | [wasurenote](#wasurenote) | Anti-diary worry destroyer | Vanilla JS/Canvas/Vite | 38 | complete | `npm run dev` |
 | 52 | [hoshifumi](#hoshifumi) | Star constellation typing game | Three.js/GLSL/Vanilla JS | 0 | complete | `npx serve hoshifumi/` |
 | 53 | [himamogura](#himamogura) | Hobby discovery Discord bot with mole mascot | Node.js/discord.js/SQLite | 710 | complete | `node src/bot.js` |
+| 54 | [netamemo](#netamemo) | Collaborative content idea clipboard for creators | Chrome Extension/Vanilla JS | 55 | complete | Load unpacked in `chrome://extensions` |
 
 ---
 
@@ -2396,3 +2397,55 @@ None — clean build. All 710 tests pass including database CRUD, hobby data int
 - Hobby recommendation engine based on rating patterns
 - Weather API integration for outdoor hobby suggestions
 - Server-specific hobby challenges and competitions
+
+---
+
+### <a id="netamemo"></a>54. netamemo - 2026-03-30 14:30
+
+**What is this?**
+A Chrome extension for aspiring YouTubers/TikTokers to collect content ideas from anywhere on the web, organize them with ratings, and collaborate with friends via sharing codes. Right-click any page to save it as a "ネタ" (content idea), then share boards and vote on the best ideas together.
+
+**Discovery Roll**
+Source: 33 (Hacker News — テック系の話題) | Persona: 4 (YouTuber/TikToker志望の人) | Platform: 5 (Browser extension) | Wildcard: 12 (2人以上でコラボ)
+
+**Features Built**
+- Right-click context menu: save any webpage as a content idea with auto-extracted metadata
+- 6 category system with emoji badges (Tutorial, Review, Vlog, Short, Collab, Other)
+- 3-axis rating: ポテンシャル, 工数, トレンド度 (1-5 each)
+- Export/import sharing codes for collaborative idea boards (no backend)
+- Vote system (thumbs up/down) with ranking display
+- Side panel for persistent browse-and-clip workflow
+- Search, category filter, 4 sort modes
+
+**Tech Stack**
+Chrome Extension Manifest V3 / Vanilla JS / chrome.storage.local / Base64 sharing
+
+**Key Files**
+```
+manifest.json           — Manifest V3 config
+popup/popup.html+css+js — Main popup with 3 tabs
+sidepanel/              — Persistent side panel
+background.js           — Context menu + storage
+content.js              — Page info extraction
+shared/sharing.js       — Export/import/merge logic
+shared/data.js          — Categories, constants
+tests/run.js            — 55 tests
+```
+
+**How to Run**
+```bash
+# Load in Chrome:
+# 1. Open chrome://extensions
+# 2. Enable Developer Mode
+# 3. "Load unpacked" → select netamemo folder
+```
+
+**Tests**: 55 passing | **Files**: 15 | **LOC**: ~1,500 | **Build time**: ~8 min
+
+**Challenges & Fixes**
+None — clean build with all Manifest V3 requirements met.
+
+**Potential Next Steps**
+- WebRTC peer-to-peer real-time board sync
+- AI-powered idea scoring based on current trends
+- Export to YouTube Studio / TikTok drafts
