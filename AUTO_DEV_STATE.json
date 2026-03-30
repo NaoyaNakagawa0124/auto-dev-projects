@@ -1,5 +1,5 @@
 {
-  "apps_completed": 58,
+  "apps_completed": 59,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -351,6 +351,12 @@
       "persona": 10,
       "platform": 11,
       "wildcard": 34
+    },
+    {
+      "source": 6,
+      "persona": 6,
+      "platform": 16,
+      "wildcard": 47
     }
   ],
   "history": [
@@ -527,6 +533,9 @@
     },
     {
       "name": "wancostar"
+    },
+    {
+      "name": "tenkimeshi"
     }
   ]
 }

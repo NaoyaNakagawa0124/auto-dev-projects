@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>テンキメシ — 天気で決める今日のごはん</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0d1117;
+    color: #c9d1d9;
+    font-family: 'Noto Sans JP', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    color: #58a6ff;
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+    color: #8b949e;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .controls {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .controls label {
+    font-size: 0.8rem;
+    color: #8b949e;
+  }
+
+  .controls input, .controls select {
+    background: #161b22;
+    border: 1px solid #30363d;
+    color: #c9d1d9;
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    width: 100px;
+  }
+
+  .controls button {
+    background: #238636;
+    color: #fff;
+    border: none;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.8rem;
+    transition: background 0.2s;
+  }
+
+  .controls button:hover { background: #2ea043; }
+
+  /* Device frame */
+  .device {
+    background: #1c1c1c;
+    border-radius: 24px;
+    padding: 18px;
+    box-shadow:
+      0 0 0 2px #333,
+      0 20px 60px rgba(0,0,0,0.6),
+      inset 0 1px 0 rgba(255,255,255,0.05);
+    max-width: 640px;
+    width: 100%;
+  }
+
+  .device-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .led {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #238636;
+    box-shadow: 0 0 4px #238636;
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .device-label {
+    font-size: 0.65rem;
+    color: #555;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* Screen */
+  .screen {
+    background: #0a0a1a;
+    border-radius: 12px;
+    padding: 1.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    min-height: 500px;
+    border: 1px solid #222;
+    overflow-x: auto;
+  }
+
+  .screen .header {
+    text-align: center;
+    border-bottom: 2px solid #30363d;
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .screen .header .title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #79c0ff;
+  }
+
+  .screen .header .tagline {
+    font-size: 0.75rem;
+    color: #6e7681;
+    margin-top: 0.25rem;
+  }
+
+  .section {
+    margin: 0.75rem 0;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #21262d;
+  }
+
+  .section:last-child { border-bottom: none; }
+
+  .location {
+    color: #3fb950;
+    font-size: 0.85rem;
+  }
+
+  .weather-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.25rem 1rem;
+    margin-top: 0.5rem;
+  }
+
+  .weather-item {
+    color: #e3b341;
+    font-size: 0.82rem;
+  }
+
+  .recommendation {
+    text-align: center;
+    padding: 0.75rem 0;
+  }
+
+  .food-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0.25rem 0;
+  }
+
+  .food-desc {
+    color: #8b949e;
+    font-size: 0.8rem;
+    margin: 0.5rem 0;
+  }
+
+  .menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0;
+  }
+
+  .menu-list li {
+    color: #c9d1d9;
+    font-size: 0.8rem;
+    padding: 0.1rem 0;
+  }
+
+  .menu-list li::before {
+    content: "● ";
+    color: #f0883e;
+  }
+
+  .floorplan-container {
+    margin-top: 0.5rem;
+  }
+
+  .floorplan-title {
+    color: #3fb950;
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .floorplan {
+    background: #0d1117;
+    border: 1px solid #21262d;
+    border-radius: 8px;
+    padding: 0.75rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    line-height: 1.35;
+    color: #7ee787;
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  .footer {
+    text-align: center;
+    color: #484f58;
+    font-size: 0.7rem;
+    margin-top: 0.5rem;
+  }
+
+  .loading {
+    text-align: center;
+    color: #58a6ff;
+    padding: 3rem;
+    font-size: 1rem;
+  }
+
+  .loading .spinner {
+    display: inline-block;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .error {
+    color: #f85149;
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.85rem;
+  }
+
+  /* Color classes for food categories */
+  .color-cyan { color: #79c0ff; }
+  .color-red { color: #f85149; }
+  .color-yellow { color: #e3b341; }
+  .color-bright-yellow { color: #f0c000; }
+  .color-bright-red { color: #ff7b72; }
+  .color-blue { color: #58a6ff; }
+  .color-magenta { color: #bc8cff; }
+  .color-green { color: #3fb950; }
+
+  @media (max-width: 600px) {
+    body { padding: 1rem; }
+    .device { padding: 12px; }
+    .screen { padding: 1rem; font-size: 0.75rem; }
+    .floorplan { font-size: 0.58rem; }
+    .weather-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<h1>🌤️ テンキメシ 🍽️</h1>
+<p class="subtitle">Raspberry Pi IoT 天気グルメデバイス シミュレーター</p>
+
+<div class="controls">
+  <label>緯度:</label>
+  <input type="number" id="lat" value="35.6762" step="0.01">
+  <label>経度:</label>
+  <input type="number" id="lon" value="139.6503" step="0.01">
+  <label>都市:</label>
+  <input type="text" id="city" value="東京" style="width:80px;">
+  <button onclick="refresh()">🔄 更新</button>
+</div>
+
+<div class="device">
+  <div class="device-top">
+    <div class="led"></div>
+    <span class="device-label">Tenkimeshi RPi</span>
+    <div class="led"></div>
+  </div>
+  <div class="screen" id="screen">
+    <div class="loading"><span class="spinner">🍜</span> 天気データを取得中...</div>
+  </div>
+</div>
+
+<script>
+// --- 食べ物カテゴリ ---
+const FOOD_CATEGORIES = {
+  cold_noodle: {
+    name: "冷たい麺", emoji: "🍜",
+    examples: ["冷やし中華", "ざるそば", "冷やしうどん", "そうめん", "冷麺"],
+    description: "暑い日は冷たい麺でさっぱり！", colorClass: "color-cyan",
+  },
+  hot_nabe: {
+    name: "鍋物", emoji: "🍲",
+    examples: ["しゃぶしゃぶ", "すき焼き", "もつ鍋", "キムチ鍋", "水炊き"],
+    description: "寒い日はみんなで鍋を囲もう！", colorClass: "color-red",
+  },
+  ramen: {
+    name: "ラーメン", emoji: "🍜",
+    examples: ["味噌ラーメン", "豚骨ラーメン", "醤油ラーメン", "塩ラーメン", "つけ麺"],
+    description: "雨の日はラーメンで温まろう！", colorClass: "color-yellow",
+  },
+  curry: {
+    name: "カレー", emoji: "🍛",
+    examples: ["バターチキン", "スパイスカレー", "カツカレー", "グリーンカレー", "欧風カレー"],
+    description: "じめじめした日にはスパイシーなカレー！", colorClass: "color-bright-yellow",
+  },
+  bbq: {
+    name: "焼肉・BBQ", emoji: "🥩",
+    examples: ["焼肉", "ホルモン", "BBQ", "ジンギスカン", "サムギョプサル"],
+    description: "晴れた日は外で焼肉！気分も上がる！", colorClass: "color-bright-red",
+  },
+  sushi: {
+    name: "寿司・海鮮", emoji: "🍣",
+    examples: ["回転寿司", "海鮮丼", "刺身定食", "ちらし寿司", "手巻き寿司"],
+    description: "穏やかな日は新鮮な魚を楽しもう！", colorClass: "color-blue",
+  },
+  cafe: {
+    name: "カフェ・軽食", emoji: "☕",
+    examples: ["パンケーキ", "サンドイッチ", "パスタ", "スープセット", "ケーキ"],
+    description: "のんびりした天気にはカフェでまったり。", colorClass: "color-magenta",
+  },
+  izakaya: {
+    name: "居酒屋", emoji: "🍺",
+    examples: ["焼き鳥", "おでん", "唐揚げ", "枝豆", "刺身盛り合わせ"],
+    description: "風が強い日は居酒屋で一杯！", colorClass: "color-green",
+  },
+  chinese: {
+    name: "中華料理", emoji: "🥟",
+    examples: ["餃子", "チャーハン", "麻婆豆腐", "酢豚", "エビチリ"],
+    description: "曇りの日にはパワフルな中華！", colorClass: "color-red",
+  },
+  yoshoku: {
+    name: "洋食", emoji: "🍽️",
+    examples: ["ハンバーグ", "オムライス", "ナポリタン", "クリームシチュー", "エビフライ"],
+    description: "肌寒い日は懐かしの洋食で心もお腹も満たそう。", colorClass: "color-yellow",
+  },
+};
+
+// --- 天気コード → 日本語 ---
+const WEATHER_DESC = {
+  0: "快晴 ☀️", 1: "晴れ 🌤️", 2: "くもり ⛅", 3: "曇天 ☁️",
+  45: "霧 🌫️", 48: "霧氷 🌫️",
+  51: "小雨 🌦️", 53: "雨 🌧️", 55: "大雨 🌧️",
+  61: "小雨 🌦️", 63: "雨 🌧️", 65: "大雨 🌧️", 67: "凍雨 🌧️",
+  71: "小雪 🌨️", 73: "雪 ❄️", 75: "大雪 ❄️", 77: "霧雪 ❄️",
+  80: "にわか雨 🌦️", 81: "にわか雨 🌧️", 82: "土砂降り 🌧️",
+  85: "にわか雪 🌨️", 86: "にわか大雪 ❄️",
+  95: "雷雨 ⛈️", 96: "雷雨+雹 ⛈️", 99: "雷雨+大雹 ⛈️",
+};
+
+// --- フロアプラン ---
+const FLOORPLANS = {
+  "冷たい麺": `┌──────────────────────────────────────┐
+│  🍜 冷麺ダイニング                    │
+├────────┬─────────────────────────────┤
+│ 厨房   │      オープンテラス          │
+│ ┌────┐ │  ○  ○  ○  ○  ○           │
+│ │製麺│ │  ○  ○  ○  ○  ○           │
+│ │機  │ │                    ☀️       │
+│ └────┘ │  ── 竹すだれ ──            │
+│        │  ○  ○  ○  ○  ○           │
+│ 冷蔵庫 │                             │
+│ ▓▓▓▓▓ │  🌿 坪庭  🌿               │
+│  入口→ │                             │
+└────────┴─────────────────────────────┘
+  ○ = 座席  ▓ = カウンター`,
+  "鍋物": `┌──────────────────────────────────────┐
+│  🍲 あったか鍋処                      │
+├──────┬──────────┬─────────────────────┤
+│ 厨房 │ 鍋コーナー│   座敷             │
+│ ┌──┐ │ ▓▓▓▓▓▓▓ │  ┌──────────┐     │
+│ │  │ │ ○○○○○○ │  │ 掘りごたつ│     │
+│ └──┘ │          │  │  ○  ○    │     │
+│      │ テーブル  │  │  ○  ○    │     │
+│ 食材 │ ○🍲○    │  └──────────┘     │
+│ 棚   │ ○🍲○    │  ┌──────────┐     │
+│      │ ○🍲○    │  │  個室     │     │
+│ 入口 │          │  │  ○○○○  │     │
+│  →   │          │  └──────────┘     │
+└──────┴──────────┴─────────────────────┘
+  ○ = 座席  ▓ = カウンター  🍲 = 鍋`,
+  "ラーメン": `┌──────────────────────────────────────┐
+│  🍜 あったかラーメン店                │
+├──────┬────────────┬───────────────────┤
+│ 厨房 │ カウンター  │  小上がり        │
+│ ┌──┐ │ ▓▓▓▓▓▓▓▓ │  ┌────────┐     │
+│ │  │ │ ○○○○○○○ │  │ こたつ  │     │
+│ └──┘ │            │  │  ○  ○ │     │
+│      │            │  │  ○  ○ │     │
+│ 寸胴 │            │  └────────┘     │
+│ ○○ │  テーブル   │                   │
+│      │  ○○ ○○  │  ┌────────┐     │
+│ 製麺 │  ○○ ○○  │  │ 個室   │     │
+│ 室   │            │  │ ○○○○│     │
+│ 入口 │            │  └────────┘     │
+│  →   │            │                   │
+└──────┴────────────┴───────────────────┘
+  ○ = 座席  ▓ = カウンター`,
+  "カレー": `┌──────────────────────────────────────┐
+│  🍛 スパイスカレー食堂                │
+├────────┬─────────────────────────────┤
+│ 厨房   │    ダイニングホール          │
+│ ┌────┐ │                             │
+│ │スパ│ │  ○○  ○○  ○○            │
+│ │イス│ │  ○○  ○○  ○○            │
+│ │棚  │ │                             │
+│ └────┘ │  ── スパイス展示 ──        │
+│ カウン │  ○○  ○○  ○○            │
+│ ター   │  ○○  ○○  ○○            │
+│ ▓▓▓▓▓ │                             │
+│  入口→ │  🌶️ ナン窯 🌶️             │
+└────────┴─────────────────────────────┘
+  ○ = 座席  ▓ = カウンター`,
+  "焼肉・BBQ": `┌──────────────────────────────────────┐
+│  🥩 テラス焼肉ガーデン                │
+├──────┬───────────────────────────────┤
+│ 厨房 │        屋外テラス             │
+│ ┌──┐ │                               │
+│ │  │ │  ○🔥○  ○🔥○  ○🔥○      │
+│ └──┘ │                               │
+│      │  ○🔥○  ○🔥○    ☀️          │
+│ 肉   │                               │
+│ 冷蔵 │  ── パーゴラ ──              │
+│ 庫   │                               │
+│      │  ○🔥○  ○🔥○  ○🔥○      │
+│ 入口 │  🌳          🌳              │
+│  →   │                               │
+└──────┴───────────────────────────────┘
+  ○ = 座席  🔥 = グリル`,
+  "寿司・海鮮": `┌──────────────────────────────────────┐
+│  🍣 粋な寿司処                        │
+├────────┬─────────────────────────────┤
+│ 厨房   │                             │
+│ ┌────┐ │  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓          │
+│ │ネタ│ │  ○○○○○○○○○○○          │
+│ │ケー│ │     カウンター              │
+│ │ス  │ │                             │
+│ └────┘ │  テーブル席                 │
+│        │  ○○  ○○                  │
+│ 生簀   │  ○○  ○○                  │
+│ 🐟    │                             │
+│        │  ┌──────┐  ┌──────┐       │
+│        │  │個室A │  │個室B │       │
+│  入口→ │  │○○○│  │○○○│       │
+│        │  └──────┘  └──────┘       │
+└────────┴─────────────────────────────┘
+  ○ = 座席  ▓ = カウンター  🐟 = 生簀`,
+  "カフェ・軽食": `┌──────────────────────────────────────┐
+│  ☕ のんびりカフェ                     │
+├────────┬─────────────────────────────┤
+│ 厨房   │    カフェスペース            │
+│ ┌────┐ │                             │
+│ │珈琲│ │  ☕○  ☕○  ☕○           │
+│ │マシ│ │                             │
+│ │ン  │ │  📚 本棚 📚               │
+│ └────┘ │                             │
+│        │  ソファ席                   │
+│ ケーキ │  ┌────────────┐            │
+│ ショー │  │ ○  ○  ○ │            │
+│ ケース │  └────────────┘            │
+│ ▓▓▓▓▓ │  🌱 窓際 🌱               │
+│  入口→ │  ○  ○  ○  ○             │
+└────────┴─────────────────────────────┘
+  ○ = 座席  ▓ = カウンター`,
+  "居酒屋": `┌──────────────────────────────────────┐
+│  🍺 にぎやか居酒屋                    │
+├──────┬────────────┬───────────────────┤
+│ 厨房 │ カウンター  │  座敷             │
+│ ┌──┐ │ ▓▓▓▓▓▓▓▓ │  ┌────────────┐ │
+│ │  │ │ ○○○○○○ │  │  ○  ○  ○ │ │
+│ └──┘ │            │  │  ○  ○  ○ │ │
+│      │ 焼き鳥     │  └────────────┘ │
+│ 樽   │ コーナー   │                   │
+│ 🍶  │ 🔥🔥🔥   │  ┌────────────┐ │
+│      │            │  │  宴会場     │ │
+│      │  テーブル  │  │ ○○○○○○│ │
+│      │  ○○ ○○ │  │ ○○○○○○│ │
+│ 入口 │  ○○ ○○ │  └────────────┘ │
+│  →   │            │                   │
+└──────┴────────────┴───────────────────┘
+  ○ = 座席  ▓ = カウンター`,
+  "中華料理": `┌──────────────────────────────────────┐
+│  🥟 本格中華飯店                      │
+├────────┬─────────────────────────────┤
+│ 厨房   │    大ホール                 │
+│ ┌────┐ │                             │
+│ │中華│ │  ○○○○  ○○○○          │
+│ │鍋  │ │  ○  ⊙  ○  ○  ⊙  ○    │
+│ │    │ │  ○○○○  ○○○○          │
+│ └────┘ │                             │
+│        │  ── 回転テーブル ──        │
+│ 点心   │                             │
+│ 蒸し器 │  ○○○○  ○○○○          │
+│ 🥟    │  ○  ⊙  ○  ○  ⊙  ○    │
+│        │  ○○○○  ○○○○          │
+│  入口→ │                             │
+└────────┴─────────────────────────────┘
+  ○ = 座席  ⊙ = 回転テーブル`,
+  "洋食": `┌──────────────────────────────────────┐
+│  🍽️ 懐かしの洋食屋                    │
+├────────┬─────────────────────────────┤
+│ 厨房   │    ダイニング               │
+│ ┌────┐ │                             │
+│ │オー│ │  ○○  ○○  ○○           │
+│ │ブン│ │                             │
+│ │    │ │  ○○  ○○  ○○           │
+│ └────┘ │                             │
+│        │  ▓▓▓▓▓▓▓▓▓▓              │
+│ ワイン │  ○○○○○○○○             │
+│ セラー │     カウンター              │
+│ 🍷    │                             │
+│        │  🖼️ ギャラリー壁 🖼️        │
+│  入口→ │                             │
+└────────┴─────────────────────────────┘
+  ○ = 座席  ▓ = カウンター`,
+};
+
+// --- レコメンドロジック ---
+function recommend(temp, weatherCode, windSpeed, humidity) {
+  if (temp >= 30) return FOOD_CATEGORIES.cold_noodle;
+  if (temp <= 5) return FOOD_CATEGORIES.hot_nabe;
+  if (weatherCode >= 61) return FOOD_CATEGORIES.ramen;
+  if (weatherCode >= 45 && humidity > 80) return FOOD_CATEGORIES.curry;
+  if (weatherCode === 0 && temp >= 20) return FOOD_CATEGORIES.bbq;
+  if (weatherCode === 0 && temp >= 10) return FOOD_CATEGORIES.sushi;
+  if (weatherCode <= 3 && windSpeed > 20) return FOOD_CATEGORIES.izakaya;
+  if (weatherCode >= 2 && weatherCode <= 3) return FOOD_CATEGORIES.chinese;
+  if (temp < 15) return FOOD_CATEGORIES.yoshoku;
+  return FOOD_CATEGORIES.cafe;
+}
+
+function getWeatherDesc(code) {
+  return WEATHER_DESC[code] || `不明 (${code})`;
+}
+
+function formatTime() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  const h = String(now.getHours()).padStart(2, '0');
+  const mi = String(now.getMinutes()).padStart(2, '0');
+  return `${y}-${m}-${d} ${h}:${mi}`;
+}
+
+// --- 画面描画 ---
+function renderScreen(city, weather, food, floorplan) {
+  const weatherDesc = getWeatherDesc(weather.weather_code);
+  const screen = document.getElementById('screen');
+
+  screen.innerHTML = `
+    <div class="header">
+      <div class="title">🌤️ テンキメシ 🍽️</div>
+      <div class="tagline">天気で決める今日のごはん</div>
+    </div>
+
+    <div class="section">
+      <div class="location">📍 ${city} | ${formatTime()}</div>
+      <div class="weather-grid">
+        <div class="weather-item">🌡️ 気温: ${weather.temp}°C</div>
+        <div class="weather-item">🌧️ 天気: ${weatherDesc}</div>
+        <div class="weather-item">💨 風速: ${weather.wind_speed} km/h</div>
+        <div class="weather-item">💧 湿度: ${weather.humidity}%</div>
+      </div>
+    </div>
+
+    <div class="section recommendation">
+      <div class="food-name ${food.colorClass}">${food.emoji} 今日のおすすめ: ${food.name}</div>
+      <div class="food-desc">${food.description}</div>
+      <ul class="menu-list">
+        ${food.examples.slice(0, 3).map(e => `<li>${e}</li>`).join('')}
+      </ul>
+    </div>
+
+    <div class="section floorplan-container">
+      <div class="floorplan-title">🏠 理想のお店レイアウト:</div>
+      <div class="floorplan">${escapeHtml(floorplan)}</div>
+    </div>
+
+    <div class="footer">次の更新: 5分後 | 自動更新中</div>
+  `;
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// --- 天気取得 ---
+async function fetchWeather(lat, lon) {
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m&timezone=Asia/Tokyo`;
+  const res = await fetch(url);
+  const data = await res.json();
+  return {
+    temp: data.current.temperature_2m,
+    weather_code: data.current.weather_code,
+    wind_speed: data.current.wind_speed_10m,
+    humidity: data.current.relative_humidity_2m,
+  };
+}
+
+// --- メイン処理 ---
+async function refresh() {
+  const lat = parseFloat(document.getElementById('lat').value);
+  const lon = parseFloat(document.getElementById('lon').value);
+  const city = document.getElementById('city').value || '東京';
+
+  const screen = document.getElementById('screen');
+  screen.innerHTML = '<div class="loading"><span class="spinner">🍜</span> 天気データを取得中...</div>';
+
+  try {
+    const weather = await fetchWeather(lat, lon);
+    const food = recommend(weather.temp, weather.weather_code, weather.wind_speed, weather.humidity);
+    const floorplan = FLOORPLANS[food.name] || FLOORPLANS["ラーメン"];
+    renderScreen(city, weather, food, floorplan);
+  } catch (err) {
+    screen.innerHTML = `<div class="error">⚠️ エラー: ${err.message}<br>天気データの取得に失敗しました。</div>`;
+  }
+}
+
+// 初回読み込み & 自動更新
+refresh();
+setInterval(refresh, 5 * 60 * 1000);
+</script>
+
+</body>
+</html>

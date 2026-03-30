@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-30 21:00 | Total apps: 58 | Total tests: 9,284
+> Last updated: 2026-03-30 22:00 | Total apps: 59 | Total tests: 9,356
 
 ## Quick Overview
 
@@ -64,6 +64,7 @@
 | 56 | [bookcosmos](#bookcosmos) | Physics-simulated reading cosmos | Three.js/GLSL/N-body physics | 0 | complete | `npx serve bookcosmos/` |
 | 57 | [shuukatsu-meikyuu](#shuukatsu-meikyuu) | Roguelike job search dungeon crawler | Rust+WASM/Canvas | 47 | complete | `wasm-pack build --target web && cd www && python3 -m http.server` |
 | 58 | [wancostar](#wancostar) | Dog walk cosmic galaxy CLI | Swift 5.9/CLI/ANSI | 51 | complete | `swift run Wancostar galaxy` |
+| 59 | [tenkimeshi](#tenkimeshi) | Weather-based food recommender IoT | Python/OpenMeteo/RPi | 72 | complete | `python3 src/tenkimeshi.py --demo --once` |
 
 ---
 
@@ -2645,3 +2646,53 @@ None — clean build with all Swift tests passing.
 - HealthKit integration for automatic walk detection
 - GPS route recording via CoreLocation
 - Animated terminal output with curses
+
+---
+
+### <a id="tenkimeshi"></a>59. tenkimeshi - 2026-03-30 22:00
+
+**What is this?**
+A Raspberry Pi IoT project for foodies that recommends food based on current weather and generates ASCII restaurant floor plans. Fetches real weather from OpenMeteo API. Includes a web-based IoT device simulator and detailed wiring guides for OLED/e-Paper displays.
+
+**Discovery Roll**
+Source: 6 (天気・自然現象) | Persona: 6 (毎日外食するフーディー) | Platform: 16 (Arduino/RPi IoT) | Wildcard: 47 (建築・間取り)
+
+**Features Built**
+- 10 food categories mapped to weather (temp, code, wind, humidity)
+- 10 unique ASCII restaurant floor plans with Unicode box drawing
+- ANSI-colored terminal display simulating IoT screen
+- Web simulator with dark IoT device frame aesthetic
+- Wiring guides for SSD1306 OLED (I2C) and e-Paper (SPI) + BOM
+- Demo mode for offline testing, live mode with OpenMeteo API
+
+**Tech Stack**
+Python 3 (stdlib only) / OpenMeteo API / HTML/CSS/JS (simulator)
+
+**Key Files**
+```
+src/recommender.py    — 10 food categories, recommendation logic
+src/floorplan.py      — 10 ASCII floor plan templates
+src/weather.py        — OpenMeteo API + 26 weather descriptions
+src/display.py        — Terminal display formatter
+src/tenkimeshi.py     — Main entry with --demo/--once flags
+simulator/index.html  — Web IoT device simulator
+docs/WIRING.md        — Pin diagrams for OLED/e-Paper
+docs/BOM.md           — Bill of materials with yen pricing
+tests/                — 72 tests (3 test files)
+```
+
+**How to Run**
+```bash
+cd tenkimeshi && python3 src/tenkimeshi.py --demo --once
+# or open simulator/index.html
+```
+
+**Tests**: 72 passing | **Files**: 14 | **LOC**: ~2,200 | **Build time**: ~6 min
+
+**Challenges & Fixes**
+None — clean build, no external dependencies.
+
+**Potential Next Steps**
+- Actual RPi display driver integration
+- Restaurant search API (Tabelog, Google Places)
+- Historical weather-food preference learning
