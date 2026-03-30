@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-30 23:00 | Total apps: 60 | Total tests: 9,356
+> Last updated: 2026-03-31 00:00 | Total apps: 61 | Total tests: 9,356
 
 ## Quick Overview
 
@@ -66,6 +66,7 @@
 | 58 | [wancostar](#wancostar) | Dog walk cosmic galaxy CLI | Swift 5.9/CLI/ANSI | 51 | complete | `swift run Wancostar galaxy` |
 | 59 | [tenkimeshi](#tenkimeshi) | Weather-based food recommender IoT | Python/OpenMeteo/RPi | 72 | complete | `python3 src/tenkimeshi.py --demo --once` |
 | **60** | [**kabuoto**](#kabuoto) | **Stock market data sonification** | **Web Audio API/Canvas/JS** | **0** | **complete** | `open kabuoto/index.html` |
+| 61 | [nyantokashite](#nyantokashite) | Cat cleanup Sokoban puzzle game | Canvas 2D/Web Audio/JS | 0 | complete | `open nyantokashite/index.html` |
 
 ---
 
@@ -2741,3 +2742,48 @@ Flutter SDK not available — adapted to pure web app while keeping the Dart-ins
 - Real-time API integration (Yahoo Finance)
 - Multi-stock harmony (simultaneous playback)
 - MIDI export of generated melodies
+
+---
+
+### <a id="nyantokashite"></a>61. nyantokashite - 2026-03-31 00:00
+
+**What is this?**
+A Sokoban-style puzzle game where a mischievous cat has knocked items off shelves and you must push them back to their correct spots. The cat roams the level every 3 moves, blocking your path and creating dynamic puzzle elements. 20 handcrafted levels across 4 rooms with pixel-art characters.
+
+**Discovery Roll**
+Source: 24 (Pet/animal viral content — cat chaos videos) | Persona: 32 (片付けが苦手な人) | Platform: 7 (Unreal Engine → web Canvas) | Wildcard: 30 (パズル/謎解き中心)
+
+**Features Built**
+- Sokoban push mechanics with 20 handcrafted solvable levels
+- Dynamic cat AI: moves every 3 player moves, blocks paths
+- 4 themed rooms: リビング, キッチン, 書斎, 寝室 (progressive difficulty)
+- Full undo system + restart, star rating (par-based)
+- Pixel-art characters drawn programmatically (chibi cleaner + orange tabby)
+- Particle effects, 7 Web Audio sound effects
+- Title screen with animated cat, instructions, level select
+- Mobile touch controls with virtual d-pad
+
+**Tech Stack**
+HTML5 Canvas 2D / Web Audio API / Vanilla JavaScript / localStorage
+
+**Key Files**
+```
+index.html — Complete single-file game (1524 lines)
+README.md  — Project overview
+PLAN.md    — 4-phase implementation plan
+```
+
+**How to Run**
+```bash
+cd nyantokashite && open index.html
+```
+
+**Tests**: 0 (puzzle game) | **Files**: 5 | **LOC**: ~1,524 | **Build time**: ~5 min
+
+**Challenges & Fixes**
+Unreal Engine not available — adapted to web Canvas while keeping the 3D game design concept.
+
+**Potential Next Steps**
+- Level editor for user-created puzzles
+- More room themes and cat personality types
+- Online level sharing via URL encoding

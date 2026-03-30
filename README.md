@@ -64,5 +64,6 @@
 | 58 | wancostar | Dog walk cosmic galaxy CLI | Swift 5.9/CLI/ANSI | 51 |
 | 59 | tenkimeshi | Weather-based food recommender IoT | Python/OpenMeteo/RPi | 72 |
 | **60** | **kabuoto** | **Stock market data sonification** | **Web Audio/Canvas/JS** | **0** |
+| 61 | nyantokashite | Cat cleanup Sokoban puzzle game | Canvas 2D/Web Audio/JS | 0 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.
