@@ -1,5 +1,5 @@
 {
-  "apps_completed": 56,
+  "apps_completed": 57,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -339,6 +339,12 @@
       "persona": 38,
       "platform": 19,
       "wildcard": 22
+    },
+    {
+      "source": 40,
+      "persona": 23,
+      "platform": 10,
+      "wildcard": 18
     }
   ],
   "history": [
@@ -509,6 +515,9 @@
     },
     {
       "name": "bookcosmos"
+    },
+    {
+      "name": "shuukatsu-meikyuu"
     }
   ]
 }

@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-30 16:30 | Total apps: 56 | Total tests: 9,186
+> Last updated: 2026-03-30 17:30 | Total apps: 57 | Total tests: 9,233
 
 ## Quick Overview
 
@@ -62,6 +62,7 @@
 | 54 | [netamemo](#netamemo) | Collaborative content idea clipboard for creators | Chrome Extension/Vanilla JS | 55 | complete | Load unpacked in `chrome://extensions` |
 | 55 | [neonreader](#neonreader) | Cyberpunk reader mode for seniors | Chrome Extension/Vanilla JS | 58 | complete | Load unpacked in `chrome://extensions` |
 | 56 | [bookcosmos](#bookcosmos) | Physics-simulated reading cosmos | Three.js/GLSL/N-body physics | 0 | complete | `npx serve bookcosmos/` |
+| 57 | [shuukatsu-meikyuu](#shuukatsu-meikyuu) | Roguelike job search dungeon crawler | Rust+WASM/Canvas | 47 | complete | `wasm-pack build --target web && cd www && python3 -m http.server` |
 
 ---
 
@@ -2545,3 +2546,54 @@ None — clean build with all physics and visual effects working.
 - Reading timeline animation (watch cosmos grow over time)
 - Goodreads CSV import
 - Book recommendation from genre cluster analysis
+
+---
+
+### <a id="shuukatsu-meikyuu"></a>57. shuukatsu-meikyuu - 2026-03-30 17:30
+
+**What is this?**
+A Rust+WASM roguelike dungeon crawler themed around the Japanese job search process. Each run generates a unique 5-floor labyrinth with randomly generated companies, interview encounters, and events. Player stats grow through encounters, and a dashboard tracks progress across runs.
+
+**Discovery Roll**
+Source: 40 (データ分析・ダッシュボード) | Persona: 23 (就活中の大学生) | Platform: 10 (Rust+WASM) | Wildcard: 18 (毎回ランダム生成)
+
+**Features Built**
+- 5 themed floors: ES地獄 → グループディスカッション → 一次面接 → 技術試験 → 最終面接
+- Procedural 5x5 dungeon generation with 7 room types per floor
+- Random company generator (prefix × suffix × industry × size)
+- 4-stat system (コミュ力, 技術力, 表現力, メンタル) with skill checks
+- Item system (max 3): 完璧なES, ポートフォリオ, 推薦状, エナジードリンク etc.
+- Canvas-based dungeon map rendering with color-coded rooms
+- Run history dashboard with statistics
+
+**Tech Stack**
+Rust / wasm-bindgen / wasm-pack / HTML5 Canvas / Vanilla JS / localStorage
+
+**Key Files**
+```
+src/lib.rs        — Game state machine, WASM exports (634 lines)
+src/dungeon.rs    — Procedural generation (418 lines)
+src/encounter.rs  — Encounter resolution (401 lines)
+src/player.rs     — Stats, inventory (276 lines)
+src/company.rs    — Random company gen (122 lines)
+src/data.rs       — Japanese text data (154 lines)
+www/index.html    — Frontend UI (179 lines)
+www/style.css     — Styling (520 lines)
+```
+
+**How to Run**
+```bash
+cd shuukatsu-meikyuu
+wasm-pack build --target web --out-dir www/pkg
+cd www && python3 -m http.server 8000
+```
+
+**Tests**: 47 passing (cargo test) | **Files**: 10 | **LOC**: ~2,700 | **Build time**: ~8 min
+
+**Challenges & Fixes**
+Build agent was interrupted by rate limit. Resumed in next cycle — all code was already written and tests passing.
+
+**Potential Next Steps**
+- More encounter types (group interview, case study)
+- Achievement / badge system
+- Sound effects for encounters

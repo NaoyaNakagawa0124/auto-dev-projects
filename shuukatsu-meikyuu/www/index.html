@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>就活迷宮 - Shuukatsu Meikyuu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=DotGothic16&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Title Screen -->
+        <div id="title-screen" class="screen active">
+            <div class="title-container">
+                <h1 class="game-title">就活迷宮</h1>
+                <p class="game-subtitle">Shuukatsu Meikyuu</p>
+                <p class="game-tagline">内定を勝ち取れ！ローグライク就活RPG</p>
+                <div class="title-buttons">
+                    <button id="btn-start" class="btn btn-primary">冒険を始める</button>
+                    <button id="btn-dashboard" class="btn btn-secondary">ダッシュボード</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <div class="game-layout">
+                <!-- Left: Map -->
+                <div class="panel map-panel">
+                    <h2 class="panel-title" id="floor-title">1階: エントリーシート地獄</h2>
+                    <canvas id="dungeon-canvas" width="400" height="400"></canvas>
+                    <div class="controls">
+                        <button id="btn-north" class="btn btn-move">▲ 北</button>
+                        <div class="controls-row">
+                            <button id="btn-west" class="btn btn-move">◀ 西</button>
+                            <button id="btn-east" class="btn btn-move">東 ▶</button>
+                        </div>
+                        <button id="btn-south" class="btn btn-move">▼ 南</button>
+                    </div>
+                </div>
+
+                <!-- Right: Info -->
+                <div class="info-column">
+                    <!-- Stats -->
+                    <div class="panel stats-panel">
+                        <h2 class="panel-title">ステータス</h2>
+                        <div class="stat-row">
+                            <span class="stat-label">コミュ力</span>
+                            <div class="stat-bar-bg"><div id="bar-comm" class="stat-bar" style="width:30%"></div></div>
+                            <span class="stat-value" id="val-comm">30</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">技術力</span>
+                            <div class="stat-bar-bg"><div id="bar-tech" class="stat-bar" style="width:25%"></div></div>
+                            <span class="stat-value" id="val-tech">25</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">表現力</span>
+                            <div class="stat-bar-bg"><div id="bar-pres" class="stat-bar" style="width:20%"></div></div>
+                            <span class="stat-value" id="val-pres">20</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">メンタル</span>
+                            <div class="stat-bar-bg"><div id="bar-mental" class="stat-bar stat-mental" style="width:80%"></div></div>
+                            <span class="stat-value" id="val-mental">80</span>
+                        </div>
+                    </div>
+
+                    <!-- Inventory -->
+                    <div class="panel inventory-panel">
+                        <h2 class="panel-title">持ち物</h2>
+                        <div id="inventory-slots" class="inventory-slots">
+                            <div class="item-slot empty" id="slot-0">空</div>
+                            <div class="item-slot empty" id="slot-1">空</div>
+                            <div class="item-slot empty" id="slot-2">空</div>
+                        </div>
+                    </div>
+
+                    <!-- Message -->
+                    <div class="panel message-panel">
+                        <h2 class="panel-title">メッセージ</h2>
+                        <div id="message-box" class="message-box">
+                            就活迷宮へようこそ！
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Encounter Screen (overlay) -->
+        <div id="encounter-overlay" class="overlay">
+            <div class="encounter-dialog">
+                <h2 class="encounter-title" id="encounter-title">エンカウント！</h2>
+                <p id="encounter-desc" class="encounter-desc"></p>
+                <div id="encounter-choices" class="encounter-choices"></div>
+            </div>
+        </div>
+
+        <!-- Result Screen (overlay) -->
+        <div id="result-overlay" class="overlay">
+            <div class="result-dialog">
+                <p id="result-message" class="result-message"></p>
+                <button id="btn-continue" class="btn btn-primary">続ける</button>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="gameover-screen" class="screen">
+            <div class="gameover-container">
+                <h1 class="gameover-title">ゲームオーバー</h1>
+                <p id="gameover-message" class="gameover-message"></p>
+                <div class="gameover-stats" id="gameover-stats"></div>
+                <div class="title-buttons">
+                    <button id="btn-retry" class="btn btn-primary">もう一度挑戦する</button>
+                    <button id="btn-gameover-dashboard" class="btn btn-secondary">ダッシュボード</button>
+                    <button id="btn-gameover-title" class="btn btn-secondary">タイトルへ</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Victory Screen -->
+        <div id="victory-screen" class="screen">
+            <div class="victory-container">
+                <h1 class="victory-title">内定獲得！</h1>
+                <p class="victory-message">おめでとう！長い就活の旅、お疲れ様でした！</p>
+                <div class="victory-stats" id="victory-stats"></div>
+                <div class="title-buttons">
+                    <button id="btn-victory-retry" class="btn btn-primary">もう一度挑戦する</button>
+                    <button id="btn-victory-dashboard" class="btn btn-secondary">ダッシュボード</button>
+                    <button id="btn-victory-title" class="btn btn-secondary">タイトルへ</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Screen -->
+        <div id="dashboard-screen" class="screen">
+            <div class="dashboard-container">
+                <h1 class="dashboard-title">就活ダッシュボード</h1>
+                <div class="dashboard-summary" id="dashboard-summary">
+                    <div class="summary-card">
+                        <span class="summary-label">総挑戦回数</span>
+                        <span class="summary-value" id="dash-total-runs">0</span>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">最高到達フロア</span>
+                        <span class="summary-value" id="dash-best-floor">0</span>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">面接企業数</span>
+                        <span class="summary-value" id="dash-total-companies">0</span>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">合格率</span>
+                        <span class="summary-value" id="dash-success-rate">0%</span>
+                    </div>
+                </div>
+                <div class="dashboard-charts">
+                    <div class="chart-panel">
+                        <h3>フロア到達履歴</h3>
+                        <canvas id="chart-floors" width="500" height="200"></canvas>
+                    </div>
+                    <div class="chart-panel">
+                        <h3>ステータス成長</h3>
+                        <canvas id="chart-stats" width="500" height="200"></canvas>
+                    </div>
+                </div>
+                <div class="title-buttons">
+                    <button id="btn-dash-start" class="btn btn-primary">冒険を始める</button>
+                    <button id="btn-dash-title" class="btn btn-secondary">タイトルへ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>

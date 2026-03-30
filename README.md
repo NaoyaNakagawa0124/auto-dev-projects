@@ -60,5 +60,6 @@
 | 54 | netamemo | Collaborative content idea clipboard for creators | Chrome Extension/Vanilla JS | 55 |
 | 55 | neonreader | Cyberpunk reader mode for seniors | Chrome Extension/Vanilla JS | 58 |
 | 56 | bookcosmos | Physics-simulated reading cosmos | Three.js/GLSL/N-body | 0 |
+| 57 | shuukatsu-meikyuu | Roguelike job search dungeon crawler | Rust+WASM/Canvas | 47 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.
