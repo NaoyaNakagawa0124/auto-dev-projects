@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>星文 (Hoshifumi) - 星空タイピングゲーム</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --deep-blue: #0a0e27;
+  --mid-blue: #1a1a4e;
+  --gold: #f0c040;
+  --bright-gold: #ffd700;
+  --warm-orange: #ff8c00;
+  --star-white: #f0f0ff;
+  --glass-bg: rgba(10, 14, 39, 0.75);
+  --glass-border: rgba(240, 192, 64, 0.3);
+  --glass-border-bright: rgba(240, 192, 64, 0.6);
+  --text-primary: #ffffff;
+  --text-gold: #f0c040;
+  --combo-glow: #ffd700;
+  --error-red: #ff4444;
+  --success-green: #44ff88;
+  --font-jp: 'Noto Sans JP', sans-serif;
+  --font-num: 'Orbitron', sans-serif;
+}
+
+body {
+  overflow: hidden;
+  margin: 0;
+  background: var(--deep-blue);
+  font-family: var(--font-jp);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+canvas#bg {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: 0;
+}
+
+#ui-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#ui-overlay > * { pointer-events: auto; }
+
+/* === GLASS PANEL === */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+/* === BUTTONS === */
+.btn {
+  font-family: var(--font-jp);
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 12px 32px;
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  background: rgba(240, 192, 64, 0.1);
+  color: var(--text-gold);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+  position: relative;
+  overflow: hidden;
+}
+.btn:hover {
+  background: rgba(240, 192, 64, 0.25);
+  border-color: var(--glass-border-bright);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(240, 192, 64, 0.2);
+}
+.btn:active { transform: translateY(0); }
+.btn-primary {
+  background: linear-gradient(135deg, rgba(240,192,64,0.3), rgba(255,140,0,0.2));
+  border-color: var(--glass-border-bright);
+}
+
+/* === TITLE SCREEN === */
+#title-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+  animation: fadeIn 1.5s ease;
+}
+#title-screen h1 {
+  font-size: 4rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--gold), var(--warm-orange), var(--bright-gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+  filter: drop-shadow(0 0 20px rgba(240,192,64,0.4));
+  letter-spacing: 0.1em;
+}
+#title-screen .subtitle {
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 8px;
+  letter-spacing: 0.2em;
+}
+#title-screen .tagline {
+  font-size: 0.95rem;
+  color: rgba(240,192,64,0.7);
+  margin-bottom: 24px;
+  max-width: 360px;
+  line-height: 1.6;
+}
+.title-buttons { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.difficulty-select {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.diff-btn {
+  font-family: var(--font-jp);
+  font-size: 0.85rem;
+  padding: 8px 18px;
+  border: 1px solid rgba(240,192,64,0.2);
+  border-radius: 8px;
+  background: rgba(240,192,64,0.05);
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.diff-btn:hover, .diff-btn.active {
+  background: rgba(240,192,64,0.2);
+  color: var(--text-gold);
+  border-color: var(--glass-border-bright);
+}
+
+/* === HUD === */
+#hud {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  padding: 16px 24px;
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+  pointer-events: none;
+}
+#hud .stat {
+  text-align: center;
+}
+#hud .stat-label {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 2px;
+}
+#hud .stat-value {
+  font-family: var(--font-num);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-gold);
+}
+
+/* === COMBO DISPLAY === */
+#combo-display {
+  position: fixed;
+  top: 50%;
+  right: 40px;
+  transform: translateY(-50%);
+  text-align: center;
+  z-index: 20;
+  display: none;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+#combo-display .combo-count {
+  font-family: var(--font-num);
+  font-size: 3rem;
+  font-weight: 900;
+  color: var(--bright-gold);
+  text-shadow: 0 0 20px rgba(255,215,0,0.6);
+  transition: all 0.15s ease;
+}
+#combo-display .combo-multi {
+  font-family: var(--font-num);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--warm-orange);
+  text-shadow: 0 0 10px rgba(255,140,0,0.5);
+}
+#combo-display .combo-label {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 0.15em;
+}
+
+/* === TYPING AREA === */
+#typing-area {
+  position: fixed;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(90vw, 700px);
+  display: none;
+  z-index: 20;
+}
+#typing-area .prompt-panel {
+  padding: 28px 32px;
+  text-align: center;
+}
+#typing-area .sentence-progress {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 12px;
+}
+#typing-area .prompt-text {
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+  min-height: 2.7rem;
+}
+#typing-area .prompt-text .char {
+  display: inline-block;
+  transition: color 0.15s, transform 0.15s;
+}
+#typing-area .prompt-text .char.correct { color: var(--success-green); }
+#typing-area .prompt-text .char.incorrect { color: var(--error-red); text-decoration: underline; }
+#typing-area .prompt-text .char.current {
+  color: var(--bright-gold);
+  animation: pulse 1s infinite;
+  text-shadow: 0 0 10px rgba(255,215,0,0.5);
+}
+#typing-area .prompt-text .char.pending { color: rgba(255,255,255,0.35); }
+#typing-area .input-hint {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.3);
+  margin-top: 8px;
+}
+
+/* === LETTER MODE === */
+#letter-mode {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: min(90vw, 600px);
+}
+#letter-mode h2 {
+  font-size: 1.6rem;
+  color: var(--text-gold);
+}
+#letter-mode textarea {
+  width: 100%;
+  height: 180px;
+  background: rgba(10,14,39,0.6);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-family: var(--font-jp);
+  font-size: 1.1rem;
+  padding: 16px;
+  resize: none;
+  outline: none;
+  backdrop-filter: blur(8px);
+  transition: border-color 0.3s;
+  line-height: 1.8;
+}
+#letter-mode textarea:focus {
+  border-color: var(--glass-border-bright);
+}
+#letter-mode textarea::placeholder { color: rgba(255,255,255,0.3); }
+#letter-mode .letter-buttons { display: flex; gap: 12px; }
+
+/* === RESULTS SCREEN === */
+#results-screen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  animation: fadeIn 0.8s ease;
+}
+#results-screen h2 {
+  font-size: 2rem;
+  color: var(--text-gold);
+  letter-spacing: 0.1em;
+}
+#results-screen .results-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: min(90vw, 440px);
+}
+#results-screen .result-item {
+  padding: 16px;
+  text-align: center;
+}
+#results-screen .result-item .result-label {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 6px;
+}
+#results-screen .result-item .result-value {
+  font-family: var(--font-num);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--bright-gold);
+}
+#results-screen .result-item .result-unit {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.4);
+}
+.results-buttons { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+/* === SCREEN FLASH === */
+#screen-flash {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: 15;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.08s;
+}
+#screen-flash.red { background: rgba(255,60,60,0.15); opacity: 1; }
+#screen-flash.gold { background: rgba(255,215,0,0.1); opacity: 1; }
+
+/* === ANIMATIONS === */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+@keyframes comboPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+@keyframes comboBurst {
+  0% { transform: scale(1) rotate(0deg); opacity: 1; }
+  100% { transform: scale(2) rotate(15deg); opacity: 0; }
+}
+.combo-pop { animation: comboPop 0.25s ease; }
+.combo-burst { animation: comboBurst 0.4s ease forwards; }
+
+/* === RESPONSIVE === */
+@media (max-width: 600px) {
+  #title-screen h1 { font-size: 2.6rem; }
+  #typing-area .prompt-text { font-size: 1.3rem; }
+  #combo-display { right: 16px; }
+  #combo-display .combo-count { font-size: 2rem; }
+  #hud { padding: 10px 12px; }
+  #hud .stat-value { font-size: 1rem; }
+  #results-screen .results-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<div id="screen-flash"></div>
+
+<div id="ui-overlay">
+  <!-- TITLE SCREEN -->
+  <div id="title-screen">
+    <h1>星文</h1>
+    <div class="subtitle">H O S H I F U M I</div>
+    <div class="tagline">文字を打つたびに星が生まれ、<br>言葉が星座になる。</div>
+    <div class="difficulty-select">
+      <button class="diff-btn active" data-diff="easy">初級</button>
+      <button class="diff-btn" data-diff="normal">中級</button>
+      <button class="diff-btn" data-diff="hard">上級</button>
+    </div>
+    <div class="title-buttons">
+      <button class="btn btn-primary" id="btn-start">ゲーム開始</button>
+      <button class="btn" id="btn-letter">手紙モード</button>
+    </div>
+  </div>
+
+  <!-- HUD -->
+  <div id="hud">
+    <div class="stat">
+      <div class="stat-label">打鍵速度</div>
+      <div class="stat-value" id="hud-wpm">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">スコア</div>
+      <div class="stat-value" id="hud-score">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">正確率</div>
+      <div class="stat-value" id="hud-accuracy">100%</div>
+    </div>
+  </div>
+
+  <!-- COMBO -->
+  <div id="combo-display">
+    <div class="combo-label">コンボ</div>
+    <div class="combo-count" id="combo-count">0</div>
+    <div class="combo-multi" id="combo-multi">&times;1</div>
+  </div>
+
+  <!-- TYPING AREA -->
+  <div id="typing-area">
+    <div class="prompt-panel glass">
+      <div class="sentence-progress" id="sentence-progress"></div>
+      <div class="prompt-text" id="prompt-text"></div>
+      <div class="input-hint">キーボードで入力してください</div>
+    </div>
+  </div>
+
+  <!-- LETTER MODE -->
+  <div id="letter-mode" class="glass" style="padding:32px;">
+    <h2>手紙モード</h2>
+    <p style="color:rgba(255,255,255,0.5);font-size:0.9rem;text-align:center;">自由にメッセージを入力してください。<br>文字が星座になります。</p>
+    <textarea id="letter-input" placeholder="ここにメッセージを入力..."></textarea>
+    <div class="letter-buttons">
+      <button class="btn btn-primary" id="btn-send-letter">星にする</button>
+      <button class="btn" id="btn-back-title">戻る</button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results-screen">
+    <h2>結果発表</h2>
+    <div class="results-grid">
+      <div class="result-item glass">
+        <div class="result-label">スコア</div>
+        <div class="result-value" id="res-score">0</div>
+      </div>
+      <div class="result-item glass">
+        <div class="result-label">打鍵速度</div>
+        <div class="result-value" id="res-wpm">0</div>
+        <div class="result-unit">文字/分</div>
+      </div>
+      <div class="result-item glass">
+        <div class="result-label">正確率</div>
+        <div class="result-value" id="res-accuracy">0%</div>
+      </div>
+      <div class="result-item glass">
+        <div class="result-label">最大コンボ</div>
+        <div class="result-value" id="res-combo">0</div>
+      </div>
+      <div class="result-item glass">
+        <div class="result-label">生成した星の数</div>
+        <div class="result-value" id="res-stars">0</div>
+      </div>
+      <div class="result-item glass">
+        <div class="result-label">経過時間</div>
+        <div class="result-value" id="res-time">0</div>
+        <div class="result-unit">秒</div>
+      </div>
+    </div>
+    <div class="results-buttons">
+      <button class="btn btn-primary" id="btn-retry">もう一度</button>
+      <button class="btn" id="btn-letter2">手紙モード</button>
+      <button class="btn" id="btn-title">タイトルへ</button>
+    </div>
+  </div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.163.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+
+// ========== AUDIO (Web Audio API for simple SFX) ==========
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+function ensureAudio() {
+  if (!audioCtx) audioCtx = new AudioCtx();
+}
+function playHitSound(freq = 800, dur = 0.08) {
+  ensureAudio();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(freq * 1.5, audioCtx.currentTime + dur);
+  gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+  osc.connect(gain).connect(audioCtx.destination);
+  osc.start(); osc.stop(audioCtx.currentTime + dur);
+}
+function playMissSound() {
+  ensureAudio();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'sawtooth';
+  osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.15);
+  gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+  osc.connect(gain).connect(audioCtx.destination);
+  osc.start(); osc.stop(audioCtx.currentTime + 0.15);
+}
+function playComboUpSound() {
+  ensureAudio();
+  [600, 900, 1200].forEach((f, i) => {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(f, audioCtx.currentTime + i * 0.06);
+    gain.gain.setValueAtTime(0.06, audioCtx.currentTime + i * 0.06);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i * 0.06 + 0.1);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start(audioCtx.currentTime + i * 0.06);
+    osc.stop(audioCtx.currentTime + i * 0.06 + 0.1);
+  });
+}
+function playConstellationSound() {
+  ensureAudio();
+  [400, 500, 600, 800, 1000].forEach((f, i) => {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(f, audioCtx.currentTime + i * 0.1);
+    gain.gain.setValueAtTime(0.05, audioCtx.currentTime + i * 0.1);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i * 0.1 + 0.3);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start(audioCtx.currentTime + i * 0.1);
+    osc.stop(audioCtx.currentTime + i * 0.1 + 0.3);
+  });
+}
+
+// ========== SENTENCES ==========
+const allSentences = [
+  "星は夜空に輝く手紙のようだ",
+  "千里の道も一歩から始まる",
+  "花が咲くように言葉を紡ぐ",
+  "月明かりの下で夢を見る",
+  "風に乗って星屑が舞い散る",
+  "一期一会の出会いを大切に",
+  "雨上がりの空に虹がかかる",
+  "海の向こうに希望の光がある",
+  "桜の花びらが風に舞う季節",
+  "夜空の星は永遠に語りかける",
+  "心の中に小さな宇宙がある",
+  "時は流れても思い出は消えない",
+  "山の頂から世界を見渡す",
+  "夢を追いかける勇気を持とう",
+  "静かな夜に星の歌が聞こえる",
+];
+
+const difficultyConfig = {
+  easy: { count: 5, label: '初級' },
+  normal: { count: 10, label: '中級' },
+  hard: { count: 15, label: '上級' },
+};
+
+// ========== THREE.JS SCENE ==========
+const canvas = document.getElementById('bg');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a0e27);
+scene.fog = new THREE.FogExp2(0x0a0e27, 0.0008);
+
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
+camera.position.set(0, 30, 100);
+camera.lookAt(0, 20, 0);
+
+// Ambient light
+scene.add(new THREE.AmbientLight(0x334488, 0.5));
+
+// ---- Background starfield ----
+const starCount = 2000;
+const starGeo = new THREE.BufferGeometry();
+const starPos = new Float32Array(starCount * 3);
+const starSizes = new Float32Array(starCount);
+const starColors = new Float32Array(starCount * 3);
+for (let i = 0; i < starCount; i++) {
+  starPos[i * 3]     = (Math.random() - 0.5) * 800;
+  starPos[i * 3 + 1] = (Math.random() - 0.3) * 600;
+  starPos[i * 3 + 2] = (Math.random() - 0.5) * 800 - 100;
+  starSizes[i] = Math.random() * 3 + 0.5;
+  const c = new THREE.Color().setHSL(0.15 + Math.random() * 0.12, 0.3 + Math.random() * 0.4, 0.7 + Math.random() * 0.3);
+  starColors[i * 3] = c.r; starColors[i * 3 + 1] = c.g; starColors[i * 3 + 2] = c.b;
+}
+starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+starGeo.setAttribute('size', new THREE.BufferAttribute(starSizes, 1));
+starGeo.setAttribute('color', new THREE.BufferAttribute(starColors, 3));
+
+const starMat = new THREE.ShaderMaterial({
+  uniforms: { uTime: { value: 0 }, uPixelRatio: { value: renderer.getPixelRatio() } },
+  vertexShader: `
+    attribute float size;
+    attribute vec3 color;
+    varying vec3 vColor;
+    uniform float uTime;
+    uniform float uPixelRatio;
+    void main() {
+      vColor = color;
+      vec4 mv = modelViewMatrix * vec4(position, 1.0);
+      float twinkle = sin(uTime * 2.0 + position.x * 0.5 + position.y * 0.3) * 0.5 + 0.5;
+      gl_PointSize = size * (1.0 + twinkle * 0.6) * uPixelRatio * (200.0 / -mv.z);
+      gl_Position = projectionMatrix * mv;
+    }
+  `,
+  fragmentShader: `
+    varying vec3 vColor;
+    void main() {
+      float d = length(gl_PointCoord - 0.5) * 2.0;
+      float alpha = smoothstep(1.0, 0.0, d);
+      float glow = exp(-d * d * 3.0);
+      gl_FragColor = vec4(vColor, (alpha * 0.6 + glow * 0.8));
+    }
+  `,
+  transparent: true,
+  depthWrite: false,
+  blending: THREE.AdditiveBlending,
+});
+const starField = new THREE.Points(starGeo, starMat);
+scene.add(starField);
+
+// ---- Nebula clouds (large semi-transparent sprites) ----
+const nebulaGroup = new THREE.Group();
+scene.add(nebulaGroup);
+const nebulaColors = [0x1a1a6e, 0x2a1a5e, 0x0a2a5e, 0x3a1a4e, 0x1a2a3e];
+for (let i = 0; i < 8; i++) {
+  const size = 200 + Math.random() * 300;
+  const geo = new THREE.PlaneGeometry(size, size);
+  const mat = new THREE.MeshBasicMaterial({
+    color: nebulaColors[i % nebulaColors.length],
+    transparent: true,
+    opacity: 0.08 + Math.random() * 0.06,
+    side: THREE.DoubleSide,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.set((Math.random() - 0.5) * 400, (Math.random() - 0.3) * 300, -200 - Math.random() * 200);
+  mesh.rotation.z = Math.random() * Math.PI;
+  mesh.userData.rotSpeed = (Math.random() - 0.5) * 0.0003;
+  mesh.userData.driftSpeed = (Math.random() - 0.5) * 0.02;
+  nebulaGroup.add(mesh);
+}
+
+// ---- Swirl particle system (Van Gogh effect) ----
+const swirlCount = 600;
+const swirlGeo = new THREE.BufferGeometry();
+const swirlPos = new Float32Array(swirlCount * 3);
+const swirlSizes = new Float32Array(swirlCount);
+const swirlData = []; // angle, radius, speed, yOffset
+for (let i = 0; i < swirlCount; i++) {
+  const angle = Math.random() * Math.PI * 2;
+  const radius = 50 + Math.random() * 300;
+  const y = (Math.random() - 0.4) * 250;
+  swirlPos[i * 3] = Math.cos(angle) * radius;
+  swirlPos[i * 3 + 1] = y;
+  swirlPos[i * 3 + 2] = Math.sin(angle) * radius - 150;
+  swirlSizes[i] = Math.random() * 2 + 0.5;
+  swirlData.push({ angle, radius, speed: 0.0001 + Math.random() * 0.0004, yBase: y });
+}
+swirlGeo.setAttribute('position', new THREE.BufferAttribute(swirlPos, 3));
+swirlGeo.setAttribute('size', new THREE.BufferAttribute(swirlSizes, 1));
+const swirlMat = new THREE.ShaderMaterial({
+  uniforms: { uTime: { value: 0 }, uPixelRatio: { value: renderer.getPixelRatio() } },
+  vertexShader: `
+    attribute float size;
+    uniform float uTime;
+    uniform float uPixelRatio;
+    varying float vAlpha;
+    void main() {
+      vec4 mv = modelViewMatrix * vec4(position, 1.0);
+      float twinkle = sin(uTime * 1.5 + position.x * 0.3) * 0.5 + 0.5;
+      vAlpha = 0.3 + twinkle * 0.5;
+      gl_PointSize = size * uPixelRatio * (150.0 / -mv.z);
+      gl_Position = projectionMatrix * mv;
+    }
+  `,
+  fragmentShader: `
+    varying float vAlpha;
+    void main() {
+      float d = length(gl_PointCoord - 0.5) * 2.0;
+      float alpha = smoothstep(1.0, 0.0, d) * vAlpha;
+      gl_FragColor = vec4(0.4, 0.5, 0.9, alpha);
+    }
+  `,
+  transparent: true,
+  depthWrite: false,
+  blending: THREE.AdditiveBlending,
+});
+const swirlField = new THREE.Points(swirlGeo, swirlMat);
+scene.add(swirlField);
+
+// ---- Game stars (typed characters) ----
+const gameStars = []; // { mesh, constellation, targetPos, vel, age }
+const constellationLines = []; // { line, stars, age }
+const constellationGroup = new THREE.Group();
+scene.add(constellationGroup);
+
+// Particle burst pool
+const burstParticles = [];
+const burstGroup = new THREE.Group();
+scene.add(burstGroup);
+
+function createStarSprite(pos, size, brightness) {
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array([0, 0, 0]), 3));
+  geo.setAttribute('size', new THREE.BufferAttribute(new Float32Array([size]), 1));
+  const mat = new THREE.ShaderMaterial({
+    uniforms: {
+      uColor: { value: new THREE.Color().setHSL(0.12 + Math.random() * 0.08, 0.8, 0.6 + brightness * 0.3) },
+      uBrightness: { value: brightness },
+      uPixelRatio: { value: renderer.getPixelRatio() },
+    },
+    vertexShader: `
+      attribute float size;
+      uniform float uPixelRatio;
+      uniform float uBrightness;
+      void main() {
+        vec4 mv = modelViewMatrix * vec4(position, 1.0);
+        gl_PointSize = size * uPixelRatio * (200.0 / -mv.z) * (0.8 + uBrightness * 0.5);
+        gl_Position = projectionMatrix * mv;
+      }
+    `,
+    fragmentShader: `
+      uniform vec3 uColor;
+      uniform float uBrightness;
+      void main() {
+        float d = length(gl_PointCoord - 0.5) * 2.0;
+        float core = smoothstep(0.3, 0.0, d);
+        float glow = exp(-d * d * 2.5);
+        float outer = exp(-d * d * 0.8) * 0.3;
+        vec3 col = mix(uColor, vec3(1.0), core * 0.7);
+        float alpha = (core + glow * 0.8 + outer) * (0.7 + uBrightness * 0.3);
+        gl_FragColor = vec4(col, alpha);
+      }
+    `,
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+  });
+  const pts = new THREE.Points(geo, mat);
+  pts.position.copy(pos);
+  return pts;
+}
+
+function spawnGameStar(x, y, multiplier) {
+  const pos = new THREE.Vector3(
+    (x - 0.5) * 160,
+    (y - 0.3) * 120 + 20,
+    (Math.random() - 0.5) * 60 - 30
+  );
+  const size = 4 + multiplier * 1.5 + Math.random() * 2;
+  const brightness = Math.min(1.0, 0.3 + multiplier * 0.15);
+  const star = createStarSprite(pos, size, brightness);
+  constellationGroup.add(star);
+  const entry = { mesh: star, targetPos: pos.clone(), age: 0, size };
+  gameStars.push(entry);
+  // burst particles
+  spawnBurst(pos, multiplier);
+  return entry;
+}
+
+function spawnBurst(center, intensity) {
+  const count = 8 + intensity * 4;
+  for (let i = 0; i < count; i++) {
+    const vel = new THREE.Vector3(
+      (Math.random() - 0.5) * (2 + intensity),
+      (Math.random() - 0.5) * (2 + intensity),
+      (Math.random() - 0.5) * (2 + intensity)
+    );
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array([0,0,0]), 3));
+    geo.setAttribute('size', new THREE.BufferAttribute(new Float32Array([1.5 + Math.random() * 2]), 1));
+    const mat = new THREE.ShaderMaterial({
+      uniforms: {
+        uColor: { value: new THREE.Color().setHSL(0.1 + Math.random() * 0.1, 0.9, 0.7) },
+        uAlpha: { value: 1.0 },
+        uPixelRatio: { value: renderer.getPixelRatio() },
+      },
+      vertexShader: `
+        attribute float size;
+        uniform float uPixelRatio;
+        void main() {
+          vec4 mv = modelViewMatrix * vec4(position, 1.0);
+          gl_PointSize = size * uPixelRatio * (150.0 / -mv.z);
+          gl_Position = projectionMatrix * mv;
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 uColor;
+        uniform float uAlpha;
+        void main() {
+          float d = length(gl_PointCoord - 0.5) * 2.0;
+          float alpha = smoothstep(1.0, 0.0, d) * uAlpha;
+          gl_FragColor = vec4(uColor, alpha);
+        }
+      `,
+      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    });
+    const p = new THREE.Points(geo, mat);
+    p.position.copy(center);
+    burstGroup.add(p);
+    burstParticles.push({ mesh: p, vel, life: 1.0 });
+  }
+}
+
+function createConstellationLine(stars) {
+  if (stars.length < 2) return;
+  const points = stars.map(s => s.mesh.position.clone());
+  const geo = new THREE.BufferGeometry().setFromPoints(points);
+  const mat = new THREE.LineBasicMaterial({
+    color: 0xf0c040,
+    transparent: true,
+    opacity: 0,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+  });
+  const line = new THREE.Line(geo, mat);
+  constellationGroup.add(line);
+  constellationLines.push({ line, targetOpacity: 0.4, age: 0 });
+  playConstellationSound();
+}
+
+// ---- Letter mode constellation ----
+function createLetterConstellation(text) {
+  const chars = text.split('');
+  const stars = [];
+  const cx = (Math.random() - 0.5) * 80;
+  const cy = Math.random() * 60 + 20;
+  chars.forEach((ch, i) => {
+    if (ch === '\n' || ch === ' ') return;
+    const angle = (i / chars.length) * Math.PI * 2;
+    const r = 15 + Math.random() * 20;
+    const pos = new THREE.Vector3(cx + Math.cos(angle) * r, cy + Math.sin(angle) * r * 0.6, -30 + Math.random() * 20);
+    const star = createStarSprite(pos, 5 + Math.random() * 3, 0.7);
+    constellationGroup.add(star);
+    stars.push({ mesh: star, targetPos: pos.clone(), age: 0, size: 5 });
+    gameStars.push({ mesh: star, targetPos: pos.clone(), age: 0, size: 5 });
+  });
+  if (stars.length >= 2) {
+    setTimeout(() => createConstellationLine(stars), 500);
+  }
+}
+
+// ========== GAME STATE ==========
+let state = 'title'; // title, playing, results, letter
+let difficulty = 'easy';
+let sentences = [];
+let currentSentenceIdx = 0;
+let currentCharIdx = 0;
+let charStates = []; // 'pending' | 'correct' | 'incorrect'
+let currentSentenceStars = [];
+
+// Stats
+let score = 0;
+let combo = 0;
+let maxCombo = 0;
+let multiplier = 1;
+let totalKeystrokes = 0;
+let correctKeystrokes = 0;
+let starsCreated = 0;
+let startTime = 0;
+let wpm = 0;
+
+// DOM elements
+const titleScreen = document.getElementById('title-screen');
+const hudEl = document.getElementById('hud');
+const comboDisplay = document.getElementById('combo-display');
+const typingArea = document.getElementById('typing-area');
+const letterMode = document.getElementById('letter-mode');
+const resultsScreen = document.getElementById('results-screen');
+const screenFlash = document.getElementById('screen-flash');
+
+function showScreen(name) {
+  state = name;
+  titleScreen.style.display = name === 'title' ? 'flex' : 'none';
+  hudEl.style.display = name === 'playing' ? 'flex' : 'none';
+  comboDisplay.style.display = name === 'playing' ? 'block' : 'none';
+  typingArea.style.display = name === 'playing' ? 'block' : 'none';
+  letterMode.style.display = name === 'letter' ? 'flex' : 'none';
+  resultsScreen.style.display = name === 'results' ? 'flex' : 'none';
+}
+
+// ========== DIFFICULTY BUTTONS ==========
+document.querySelectorAll('.diff-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    difficulty = btn.dataset.diff;
+  });
+});
+
+// ========== START GAME ==========
+function startGame() {
+  const count = difficultyConfig[difficulty].count;
+  // Shuffle and pick sentences
+  const shuffled = [...allSentences].sort(() => Math.random() - 0.5);
+  sentences = shuffled.slice(0, count);
+  currentSentenceIdx = 0;
+  currentCharIdx = 0;
+  score = 0; combo = 0; maxCombo = 0; multiplier = 1;
+  totalKeystrokes = 0; correctKeystrokes = 0; starsCreated = 0;
+  startTime = performance.now();
+  wpm = 0;
+  loadSentence();
+  showScreen('playing');
+  updateHUD();
+}
+
+function loadSentence() {
+  const text = sentences[currentSentenceIdx];
+  charStates = text.split('').map(() => 'pending');
+  currentCharIdx = 0;
+  currentSentenceStars = [];
+  renderPrompt();
+  document.getElementById('sentence-progress').textContent =
+    `${currentSentenceIdx + 1} / ${sentences.length}`;
+}
+
+function renderPrompt() {
+  const text = sentences[currentSentenceIdx];
+  const container = document.getElementById('prompt-text');
+  container.innerHTML = '';
+  text.split('').forEach((ch, i) => {
+    const span = document.createElement('span');
+    span.className = 'char';
+    span.textContent = ch;
+    if (i < currentCharIdx) {
+      span.classList.add(charStates[i]);
+    } else if (i === currentCharIdx) {
+      span.classList.add('current');
+    } else {
+      span.classList.add('pending');
+    }
+    container.appendChild(span);
+  });
+}
+
+function updateHUD() {
+  const elapsed = (performance.now() - startTime) / 1000;
+  if (elapsed > 0 && correctKeystrokes > 0) {
+    wpm = Math.round((correctKeystrokes / elapsed) * 60);
+  }
+  document.getElementById('hud-wpm').textContent = wpm;
+  document.getElementById('hud-score').textContent = score;
+  const acc = totalKeystrokes > 0 ? Math.round((correctKeystrokes / totalKeystrokes) * 100) : 100;
+  document.getElementById('hud-accuracy').textContent = acc + '%';
+  document.getElementById('combo-count').textContent = combo;
+  document.getElementById('combo-multi').textContent = `\u00d7${multiplier}`;
+}
+
+function flashScreen(type) {
+  screenFlash.className = type;
+  setTimeout(() => { screenFlash.className = ''; }, 120);
+}
+
+function updateCombo(hit) {
+  if (hit) {
+    combo++;
+    if (combo > maxCombo) maxCombo = combo;
+    // Multiplier doubles every 10
+    const newMult = Math.min(16, Math.pow(2, Math.floor(combo / 10)));
+    if (newMult > multiplier) {
+      multiplier = newMult;
+      playComboUpSound();
+      const el = document.getElementById('combo-count');
+      el.classList.remove('combo-pop');
+      void el.offsetWidth;
+      el.classList.add('combo-pop');
+    }
+  } else {
+    if (combo > 5) {
+      // Combo break effect
+      const el = document.getElementById('combo-count');
+      el.classList.remove('combo-burst');
+      void el.offsetWidth;
+      el.classList.add('combo-burst');
+      setTimeout(() => el.classList.remove('combo-burst'), 400);
+    }
+    combo = 0;
+    multiplier = 1;
+  }
+}
+
+// ========== KEYBOARD INPUT ==========
+document.addEventListener('keydown', (e) => {
+  if (state === 'playing') {
+    handleTypingInput(e);
+  }
+});
+
+function handleTypingInput(e) {
+  if (e.key === 'Escape') {
+    showResults();
+    return;
+  }
+  // Ignore modifier keys, function keys, etc
+  if (e.key.length > 1 && e.key !== 'Backspace') return;
+  if (e.ctrlKey || e.altKey || e.metaKey) return;
+
+  e.preventDefault();
+  ensureAudio();
+
+  const text = sentences[currentSentenceIdx];
+
+  if (e.key === 'Backspace') {
+    // Allow going back
+    if (currentCharIdx > 0) {
+      currentCharIdx--;
+      charStates[currentCharIdx] = 'pending';
+      renderPrompt();
+    }
+    return;
+  }
+
+  // Compare typed key with current character
+  totalKeystrokes++;
+  const expected = text[currentCharIdx];
+
+  if (e.key === expected) {
+    // Correct
+    charStates[currentCharIdx] = 'correct';
+    correctKeystrokes++;
+    updateCombo(true);
+    score += 10 * multiplier;
+    starsCreated++;
+
+    // Spawn star
+    const xNorm = 0.2 + (currentCharIdx / text.length) * 0.6 + (Math.random() - 0.5) * 0.15;
+    const yNorm = 0.3 + Math.random() * 0.4;
+    const star = spawnGameStar(xNorm, yNorm, multiplier);
+    currentSentenceStars.push(star);
+
+    playHitSound(600 + combo * 5, 0.06);
+    flashScreen('gold');
+
+    currentCharIdx++;
+    if (currentCharIdx >= text.length) {
+      // Sentence complete
+      setTimeout(() => {
+        createConstellationLine(currentSentenceStars);
+        currentSentenceIdx++;
+        if (currentSentenceIdx >= sentences.length) {
+          showResults();
+        } else {
+          loadSentence();
+        }
+      }, 300);
+    }
+  } else {
+    // Incorrect
+    charStates[currentCharIdx] = 'incorrect';
+    updateCombo(false);
+    playMissSound();
+    flashScreen('red');
+    currentCharIdx++;
+    if (currentCharIdx >= text.length) {
+      setTimeout(() => {
+        createConstellationLine(currentSentenceStars);
+        currentSentenceIdx++;
+        if (currentSentenceIdx >= sentences.length) {
+          showResults();
+        } else {
+          loadSentence();
+        }
+      }, 300);
+    }
+  }
+
+  renderPrompt();
+  updateHUD();
+}
+
+// ========== RESULTS ==========
+function showResults() {
+  const elapsed = ((performance.now() - startTime) / 1000).toFixed(1);
+  const acc = totalKeystrokes > 0 ? Math.round((correctKeystrokes / totalKeystrokes) * 100) : 100;
+  document.getElementById('res-score').textContent = score;
+  document.getElementById('res-wpm').textContent = wpm;
+  document.getElementById('res-accuracy').textContent = acc + '%';
+  document.getElementById('res-combo').textContent = maxCombo;
+  document.getElementById('res-stars').textContent = starsCreated;
+  document.getElementById('res-time').textContent = elapsed;
+  showScreen('results');
+}
+
+// ========== BUTTONS ==========
+document.getElementById('btn-start').addEventListener('click', startGame);
+document.getElementById('btn-letter').addEventListener('click', () => {
+  showScreen('letter');
+  document.getElementById('letter-input').value = '';
+  document.getElementById('letter-input').focus();
+});
+document.getElementById('btn-send-letter').addEventListener('click', () => {
+  const text = document.getElementById('letter-input').value.trim();
+  if (text.length > 0) {
+    createLetterConstellation(text);
+    playConstellationSound();
+    showScreen('title');
+  }
+});
+document.getElementById('btn-back-title').addEventListener('click', () => showScreen('title'));
+document.getElementById('btn-retry').addEventListener('click', startGame);
+document.getElementById('btn-letter2').addEventListener('click', () => {
+  showScreen('letter');
+  document.getElementById('letter-input').value = '';
+  document.getElementById('letter-input').focus();
+});
+document.getElementById('btn-title').addEventListener('click', () => showScreen('title'));
+
+// ========== ANIMATION LOOP ==========
+const clock = new THREE.Clock();
+
+function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+  const dt = clock.getDelta();
+
+  // Update star twinkle
+  starMat.uniforms.uTime.value = t;
+  swirlMat.uniforms.uTime.value = t;
+
+  // Swirl rotation
+  const swirlPosAttr = swirlGeo.getAttribute('position');
+  for (let i = 0; i < swirlCount; i++) {
+    const d = swirlData[i];
+    d.angle += d.speed;
+    swirlPosAttr.array[i * 3]     = Math.cos(d.angle) * d.radius;
+    swirlPosAttr.array[i * 3 + 1] = d.yBase + Math.sin(t * 0.3 + d.angle) * 5;
+    swirlPosAttr.array[i * 3 + 2] = Math.sin(d.angle) * d.radius - 150;
+  }
+  swirlPosAttr.needsUpdate = true;
+
+  // Nebula drift
+  nebulaGroup.children.forEach(m => {
+    m.rotation.z += m.userData.rotSpeed;
+    m.position.x += m.userData.driftSpeed;
+    if (m.position.x > 500) m.position.x = -500;
+    if (m.position.x < -500) m.position.x = 500;
+  });
+
+  // Burst particles
+  for (let i = burstParticles.length - 1; i >= 0; i--) {
+    const p = burstParticles[i];
+    p.life -= 0.025;
+    if (p.life <= 0) {
+      burstGroup.remove(p.mesh);
+      p.mesh.geometry.dispose();
+      p.mesh.material.dispose();
+      burstParticles.splice(i, 1);
+      continue;
+    }
+    p.mesh.position.add(p.vel);
+    p.vel.multiplyScalar(0.95);
+    p.mesh.material.uniforms.uAlpha.value = p.life;
+  }
+
+  // Constellation line fade in
+  constellationLines.forEach(cl => {
+    if (cl.line.material.opacity < cl.targetOpacity) {
+      cl.line.material.opacity = Math.min(cl.targetOpacity, cl.line.material.opacity + 0.005);
+    }
+  });
+
+  // Gentle camera sway
+  camera.position.x = Math.sin(t * 0.1) * 5;
+  camera.position.y = 30 + Math.sin(t * 0.15) * 3;
+  camera.lookAt(0, 20, 0);
+
+  // Constellation group slow drift
+  constellationGroup.position.y += 0.003;
+  constellationGroup.position.x = Math.sin(t * 0.05) * 2;
+
+  renderer.render(scene, camera);
+}
+
+// ========== RESIZE ==========
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  starMat.uniforms.uPixelRatio.value = renderer.getPixelRatio();
+  swirlMat.uniforms.uPixelRatio.value = renderer.getPixelRatio();
+});
+
+// ========== INIT ==========
+showScreen('title');
+animate();
+
+</script>
+</body>
+</html>

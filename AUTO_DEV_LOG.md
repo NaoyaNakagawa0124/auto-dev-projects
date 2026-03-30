@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-30 10:00 | Total apps: 51 | Total tests: 8,363
+> Last updated: 2026-03-30 12:30 | Total apps: 52 | Total tests: 8,363
 
 ## Quick Overview
 
@@ -57,6 +57,7 @@
 | 49 | [oshimap](#oshimap) | Oshi tour map tracker | Rust+WASM/Canvas | 11 | complete | `wasm-pack build --target web` |
 | **50** | [**madorimystery**](#madorimystery) | **Floor plan mystery generator** | **Vanilla JS/Canvas/Vite** | **40** | **complete** | `npm run dev` |
 | 51 | [wasurenote](#wasurenote) | Anti-diary worry destroyer | Vanilla JS/Canvas/Vite | 38 | complete | `npm run dev` |
+| 52 | [hoshifumi](#hoshifumi) | Star constellation typing game | Three.js/GLSL/Vanilla JS | 0 | complete | `npx serve hoshifumi/` |
 
 ---
 
@@ -2299,3 +2300,48 @@ None — the conceptual opposite of most apps: designed to NOT save data.
 - Audio: crackling fire, rain drops, wind sounds per mode
 - Haptic feedback on mobile
 - Ceremonial "closing" animation after destruction
+
+---
+
+### <a id="hoshifumi"></a>52. hoshifumi - 2026-03-30 12:30
+
+**What is this?**
+A Three.js generative art typing game inspired by Van Gogh's birthday (March 30, 1853). Type Japanese sentences at speed — each correct keystroke spawns a glowing star. Completed sentences form constellations that drift through a Starry Night-inspired 3D sky. Combo multipliers make stars brighter and bigger.
+
+**Discovery Roll**
+Source: 28 (Historical "on this day" — Van Gogh born March 30, 1853) | Persona: 7 (効率厨のゲーマー) | Platform: 19 (p5.js/Three.js creative coding) | Wildcard: 37 (手紙・メッセージを送る/受け取る体験)
+
+**Features Built**
+- Typing game with 15 Japanese sentences across 3 difficulty levels (初級/中級/上級)
+- Constellation generation: typed characters → glowing stars → connected constellation lines
+- Combo system: ×1 → ×2 → ×4 → ×8 → ×16 with visual/audio feedback
+- Letter mode (手紙モード): free-type messages that become constellations
+- Three.js scene: 2000 twinkling stars, 8 nebula clouds, 600 swirling particles, custom GLSL shaders
+- Gamified stats: WPM, accuracy, score, max combo, stars created, elapsed time
+- Web Audio API synthesized sound effects
+
+**Tech Stack**
+Three.js / Custom GLSL Shaders / Web Audio API / Vanilla JS / HTML5 / CSS3 (Glassmorphism)
+
+**Key Files**
+```
+index.html — Complete single-file app (1221 lines)
+README.md  — Project overview and run instructions
+PLAN.md    — 5-phase implementation plan
+```
+
+**How to Run**
+```bash
+cd hoshifumi && npx serve .
+```
+
+**Tests**: 0 (single-file creative coding project) | **Files**: 4 | **LOC**: ~1221 | **Build time**: ~4 min
+
+**Challenges & Fixes**
+None — clean build with all features implemented in a single HTML file.
+
+**Potential Next Steps**
+- Online leaderboard with server-side WPM/score persistence
+- More sentence sets (poetry, news, custom text upload)
+- Share constellation screenshots (html2canvas integration)
+- Progressive difficulty (sentences get longer as you play)

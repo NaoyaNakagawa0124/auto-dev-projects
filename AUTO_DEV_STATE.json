@@ -1,5 +1,5 @@
 {
-  "apps_completed": 51,
+  "apps_completed": 52,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -309,6 +309,12 @@
       "persona": 31,
       "platform": 7,
       "wildcard": 2
+    },
+    {
+      "source": 28,
+      "persona": 7,
+      "platform": 19,
+      "wildcard": 37
     }
   ],
   "history": [
@@ -464,6 +470,9 @@
     },
     {
       "name": "wasurenote"
+    },
+    {
+      "name": "hoshifumi"
     }
   ]
 }

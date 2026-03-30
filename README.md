@@ -55,5 +55,6 @@
 | 49 | oshimap | Oshi tour map tracker | Rust+WASM/Canvas | 11 |
 | **50** | **madorimystery** | **Floor plan mystery generator** | **Vanilla JS/Canvas/Vite** | **40** |
 | 51 | wasurenote | Anti-diary worry destroyer | Vanilla JS/Canvas/Vite | 38 |
+| 52 | hoshifumi | Star constellation typing game | Three.js/GLSL/Vanilla JS | 0 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.
