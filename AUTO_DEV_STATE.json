@@ -1,5 +1,5 @@
 {
-  "apps_completed": 55,
+  "apps_completed": 56,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -333,6 +333,12 @@
       "persona": 3,
       "platform": 5,
       "wildcard": 29
+    },
+    {
+      "source": 12,
+      "persona": 38,
+      "platform": 19,
+      "wildcard": 22
     }
   ],
   "history": [
@@ -500,6 +506,9 @@
     },
     {
       "name": "neonreader"
+    },
+    {
+      "name": "bookcosmos"
     }
   ]
 }

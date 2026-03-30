@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-30 15:30 | Total apps: 55 | Total tests: 9,186
+> Last updated: 2026-03-30 16:30 | Total apps: 56 | Total tests: 9,186
 
 ## Quick Overview
 
@@ -61,6 +61,7 @@
 | 53 | [himamogura](#himamogura) | Hobby discovery Discord bot with mole mascot | Node.js/discord.js/SQLite | 710 | complete | `node src/bot.js` |
 | 54 | [netamemo](#netamemo) | Collaborative content idea clipboard for creators | Chrome Extension/Vanilla JS | 55 | complete | Load unpacked in `chrome://extensions` |
 | 55 | [neonreader](#neonreader) | Cyberpunk reader mode for seniors | Chrome Extension/Vanilla JS | 58 | complete | Load unpacked in `chrome://extensions` |
+| 56 | [bookcosmos](#bookcosmos) | Physics-simulated reading cosmos | Three.js/GLSL/N-body physics | 0 | complete | `npx serve bookcosmos/` |
 
 ---
 
@@ -2500,3 +2501,47 @@ None — clean build. Cyberpunk neon-on-dark aesthetic works perfectly for acces
 - Text-to-speech integration
 - Auto-simplify complex vocabulary
 - Furigana for difficult kanji
+
+---
+
+### <a id="bookcosmos"></a>56. bookcosmos - 2026-03-30 16:30
+
+**What is this?**
+A Three.js physics simulation that transforms a reader's library into a living cosmos. Each book is a glowing celestial body with real n-body gravitational physics. Books of similar genres attract each other, forming beautiful galaxy clusters. Adding a 500+ page book triggers a supernova with particle burst and audio. Inspired by Artemis II and JWST discoveries.
+
+**Discovery Roll**
+Source: 12 (Science/space news — Artemis II, JWST) | Persona: 38 (読書家 — 年100冊読む人) | Platform: 19 (Three.js creative coding) | Wildcard: 22 (物理シミュレーション)
+
+**Features Built**
+- N-body gravitational simulation with genre affinity (3x same-genre attraction)
+- 12 genres with distinct colors, 24 pre-populated Japanese/international books
+- 4000-star GLSL twinkling background + nebula clouds
+- Supernova effect for 500+ page books: camera zoom, flash, 200 particles, shockwave, Web Audio
+- Constellation lines connecting same-author books
+- Add/search/filter books, clickable star rating, statistics dashboard
+- Export/import JSON, localStorage persistence, OrbitControls
+
+**Tech Stack**
+Three.js / Custom GLSL Shaders / N-Body Physics (Euler) / Web Audio API / Vanilla JS
+
+**Key Files**
+```
+index.html — Complete single-file app (1321 lines, 45KB)
+README.md  — Project overview and run instructions
+PLAN.md    — 4-phase implementation plan
+```
+
+**How to Run**
+```bash
+cd bookcosmos && npx serve .
+```
+
+**Tests**: 0 (creative coding project) | **Files**: 5 | **LOC**: ~1,321 | **Build time**: ~4 min
+
+**Challenges & Fixes**
+None — clean build with all physics and visual effects working.
+
+**Potential Next Steps**
+- Reading timeline animation (watch cosmos grow over time)
+- Goodreads CSV import
+- Book recommendation from genre cluster analysis

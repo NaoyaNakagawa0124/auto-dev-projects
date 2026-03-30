@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ブックコスモス — Book Cosmos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-panel: rgba(10, 10, 30, 0.85);
+  --border-glass: rgba(255,255,255,0.1);
+  --border-hover: rgba(255,255,255,0.25);
+  --text: #e0e0f0;
+  --text-dim: #8888aa;
+  --accent: #00D4FF;
+}
+
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #050510;
+  color: var(--text);
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+}
+
+canvas { display: block; }
+
+#app-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+}
+
+/* Glassmorphism base */
+.glass {
+  background: var(--bg-panel);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  color: var(--text);
+}
+
+/* Top Bar */
+#topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: rgba(5, 5, 16, 0.7);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-glass);
+}
+
+#topbar h1 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#topbar h1 .cosmos-icon { font-size: 1.4rem; }
+#topbar h1 .title-en {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  margin-left: 6px;
+  letter-spacing: 2px;
+}
+
+.topbar-buttons { display: flex; gap: 8px; }
+
+.btn {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border-glass);
+  color: var(--text);
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.btn:hover { background: rgba(255,255,255,0.12); border-color: var(--border-hover); }
+.btn-primary { background: rgba(0, 212, 255, 0.15); border-color: rgba(0,212,255,0.3); }
+.btn-primary:hover { background: rgba(0, 212, 255, 0.25); }
+.btn-danger { background: rgba(255,80,80,0.15); border-color: rgba(255,80,80,0.3); color: #ff6b6b; }
+.btn-danger:hover { background: rgba(255,80,80,0.25); }
+.btn-small { padding: 4px 10px; font-size: 0.78rem; }
+
+/* Panels */
+.panel {
+  position: fixed;
+  z-index: 90;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  transition: transform 0.35s cubic-bezier(.4,0,.2,1), opacity 0.3s;
+}
+
+.panel::-webkit-scrollbar { width: 4px; }
+.panel::-webkit-scrollbar-track { background: transparent; }
+.panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+
+.panel-header {
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid var(--border-glass);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: sticky;
+  top: 0;
+  background: var(--bg-panel);
+  backdrop-filter: blur(16px);
+  z-index: 2;
+  border-radius: 12px 12px 0 0;
+}
+
+.panel-body { padding: 16px 18px; }
+
+/* Stats Panel */
+#stats-panel {
+  top: 60px; left: 16px;
+  width: 280px;
+}
+#stats-panel.hidden { transform: translateX(-320px); opacity: 0; pointer-events: none; }
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.stat-label { color: var(--text-dim); font-size: 0.85rem; }
+.stat-value { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; }
+
+.genre-bar-container { margin-top: 12px; }
+.genre-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 0.8rem;
+}
+.genre-bar-fill {
+  height: 8px;
+  border-radius: 4px;
+  transition: width 0.5s;
+  min-width: 4px;
+}
+.genre-bar-label { min-width: 90px; }
+.genre-bar-count { font-family: 'Orbitron', sans-serif; font-size: 0.75rem; color: var(--text-dim); min-width: 20px; text-align: right; }
+
+/* Add Panel */
+#add-panel {
+  top: 60px; left: 50%; transform: translateX(-50%);
+  width: 360px;
+}
+#add-panel.hidden { transform: translateX(-50%) translateY(-20px); opacity: 0; pointer-events: none; }
+
+.form-group { margin-bottom: 14px; }
+.form-group label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+.form-group input, .form-group select {
+  width: 100%;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border-glass);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 0.9rem;
+  transition: border-color 0.2s;
+}
+.form-group input:focus, .form-group select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.form-group select option { background: #151530; color: var(--text); }
+
+.star-rating {
+  display: flex;
+  gap: 4px;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+.star-rating span { color: #444; transition: color 0.15s; }
+.star-rating span.active { color: #FFD700; }
+.star-rating span:hover, .star-rating span:hover ~ span { color: #FFD700; }
+
+/* Book List Panel */
+#list-panel {
+  top: 60px; right: 16px;
+  width: 320px;
+  max-height: calc(100vh - 80px);
+}
+#list-panel.hidden { transform: translateX(360px); opacity: 0; pointer-events: none; }
+
+.search-bar {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.search-bar input {
+  flex: 1;
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border-glass);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 0.82rem;
+}
+.search-bar input:focus { outline: none; border-color: var(--accent); }
+.search-bar select {
+  padding: 6px 8px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border-glass);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 0.82rem;
+}
+.search-bar select option { background: #151530; }
+
+.book-list { max-height: calc(100vh - 300px); overflow-y: auto; }
+.book-list::-webkit-scrollbar { width: 3px; }
+.book-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+.book-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+.book-item:hover { background: rgba(255,255,255,0.05); }
+.book-genre-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+.book-item-info { flex: 1; min-width: 0; }
+.book-item-title { font-size: 0.88rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.book-item-meta { font-size: 0.75rem; color: var(--text-dim); margin-top: 2px; }
+
+.list-footer {
+  padding-top: 12px;
+  border-top: 1px solid var(--border-glass);
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 30px 10px;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+/* Tooltip */
+#tooltip {
+  position: fixed;
+  z-index: 200;
+  width: 260px;
+  padding: 16px;
+  pointer-events: auto;
+  transition: opacity 0.2s;
+}
+#tooltip.hidden { opacity: 0; pointer-events: none; }
+#tooltip .tt-title { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+#tooltip .tt-author { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 8px; }
+#tooltip .tt-meta { display: flex; gap: 10px; align-items: center; font-size: 0.8rem; flex-wrap: wrap; }
+#tooltip .tt-genre-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+}
+#tooltip .tt-stars { color: #FFD700; letter-spacing: 1px; }
+#tooltip .tt-pages { color: var(--text-dim); }
+#tooltip .tt-delete { margin-top: 12px; width: 100%; }
+
+/* Supernova flash overlay */
+#supernova-flash {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: white;
+  opacity: 0;
+  z-index: 500;
+  pointer-events: none;
+  transition: opacity 0.1s;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #stats-panel, #list-panel, #add-panel { width: calc(100vw - 32px); left: 16px; right: 16px; }
+  #add-panel { transform: none; }
+  #add-panel.hidden { transform: translateY(-20px); }
+  #list-panel { right: auto; }
+  #list-panel.hidden { transform: translateX(calc(100vw + 20px)); }
+  .topbar-buttons .btn span.btn-label { display: none; }
+}
+
+/* File input hidden */
+#import-input { display: none; }
+</style>
+</head>
+<body>
+
+<canvas id="app-canvas"></canvas>
+<div id="supernova-flash"></div>
+
+<!-- Top Bar -->
+<div id="topbar">
+  <h1>
+    <span class="cosmos-icon">&#11088;</span>
+    ブックコスモス
+    <span class="title-en">BOOK COSMOS</span>
+  </h1>
+  <div class="topbar-buttons">
+    <button class="btn" id="btn-stats" title="統計"><span>&#128202;</span><span class="btn-label">統計</span></button>
+    <button class="btn btn-primary" id="btn-add" title="本を追加"><span>&#10133;</span><span class="btn-label">追加</span></button>
+    <button class="btn" id="btn-list" title="本棚"><span>&#128218;</span><span class="btn-label">管理</span></button>
+  </div>
+</div>
+
+<!-- Stats Panel -->
+<div id="stats-panel" class="panel glass hidden">
+  <div class="panel-header">&#128202; 読書統計</div>
+  <div class="panel-body">
+    <div class="stat-row"><span class="stat-label">総冊数</span><span class="stat-value" id="stat-total">0</span></div>
+    <div class="stat-row"><span class="stat-label">総ページ数</span><span class="stat-value" id="stat-pages">0</span></div>
+    <div class="stat-row"><span class="stat-label">平均評価</span><span class="stat-value" id="stat-avg-rating">0</span></div>
+    <div class="stat-row"><span class="stat-label">総質量</span><span class="stat-value" id="stat-mass">0</span></div>
+    <div style="margin-top:16px; font-size:0.85rem; font-weight:500;">ジャンル分布</div>
+    <div class="genre-bar-container" id="genre-bars"></div>
+  </div>
+</div>
+
+<!-- Add Book Panel -->
+<div id="add-panel" class="panel glass hidden">
+  <div class="panel-header">&#128214; 本を追加</div>
+  <div class="panel-body">
+    <div class="form-group">
+      <label>タイトル</label>
+      <input type="text" id="add-title" placeholder="本のタイトル">
+    </div>
+    <div class="form-group">
+      <label>著者</label>
+      <input type="text" id="add-author" placeholder="著者名">
+    </div>
+    <div class="form-group">
+      <label>ページ数</label>
+      <input type="number" id="add-pages" placeholder="ページ数" min="1" max="5000">
+    </div>
+    <div class="form-group">
+      <label>ジャンル</label>
+      <select id="add-genre"></select>
+    </div>
+    <div class="form-group">
+      <label>評価</label>
+      <div class="star-rating" id="add-rating">
+        <span data-v="1">&#9734;</span>
+        <span data-v="2">&#9734;</span>
+        <span data-v="3">&#9734;</span>
+        <span data-v="4">&#9734;</span>
+        <span data-v="5">&#9734;</span>
+      </div>
+    </div>
+    <button class="btn btn-primary" style="width:100%" id="btn-submit-book">&#127775; コスモスに追加</button>
+  </div>
+</div>
+
+<!-- Book List Panel -->
+<div id="list-panel" class="panel glass hidden">
+  <div class="panel-header">&#128218; 本棚 (<span id="list-count">0</span>冊)</div>
+  <div class="panel-body">
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="検索...">
+      <select id="filter-genre"><option value="">全ジャンル</option></select>
+    </div>
+    <div class="book-list" id="book-list"></div>
+    <div class="list-footer">
+      <button class="btn btn-small" id="btn-export">&#128190; エクスポート</button>
+      <button class="btn btn-small" id="btn-import">&#128194; インポート</button>
+      <button class="btn btn-small btn-danger" id="btn-reset">&#128260; デモデータをリセット</button>
+    </div>
+  </div>
+</div>
+
+<!-- Tooltip -->
+<div id="tooltip" class="glass hidden"></div>
+
+<input type="file" id="import-input" accept=".json">
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// ===== GENRES =====
+const GENRES = {
+  fiction:    { label: "小説",        color: "#FF6B6B", emoji: "📖" },
+  mystery:   { label: "ミステリー",   color: "#A855F7", emoji: "🔍" },
+  scifi:     { label: "SF",          color: "#00D4FF", emoji: "🚀" },
+  fantasy:   { label: "ファンタジー", color: "#10B981", emoji: "🧙" },
+  nonfiction:{ label: "ノンフィクション", color: "#FFB347", emoji: "📚" },
+  history:   { label: "歴史",        color: "#D4A574", emoji: "🏛️" },
+  science:   { label: "科学",        color: "#00FF41", emoji: "🔬" },
+  philosophy:{ label: "哲学",        color: "#E0E0E0", emoji: "💭" },
+  art:       { label: "芸術",        color: "#FF69B4", emoji: "🎨" },
+  business:  { label: "ビジネス",     color: "#FFD700", emoji: "💼" },
+  selfhelp:  { label: "自己啓発",     color: "#FF8C00", emoji: "✨" },
+  poetry:    { label: "詩集",        color: "#DDA0DD", emoji: "🌸" },
+};
+
+// ===== DEMO BOOKS =====
+const DEMO_BOOKS = [
+  { title: "ノルウェイの森", author: "村上春樹", pages: 544, genre: "fiction", rating: 5 },
+  { title: "1Q84", author: "村上春樹", pages: 1055, genre: "fiction", rating: 4 },
+  { title: "容疑者Xの献身", author: "東野圭吾", pages: 394, genre: "mystery", rating: 5 },
+  { title: "三体", author: "劉慈欣", pages: 528, genre: "scifi", rating: 5 },
+  { title: "銀河ヒッチハイク・ガイド", author: "ダグラス・アダムス", pages: 224, genre: "scifi", rating: 4 },
+  { title: "ハリー・ポッター 賢者の石", author: "J.K.ローリング", pages: 464, genre: "fantasy", rating: 4 },
+  { title: "指輪物語 旅の仲間", author: "J.R.R.トールキン", pages: 576, genre: "fantasy", rating: 5 },
+  { title: "サピエンス全史", author: "ユヴァル・ノア・ハラリ", pages: 600, genre: "history", rating: 5 },
+  { title: "コスモス", author: "カール・セーガン", pages: 432, genre: "science", rating: 5 },
+  { title: "ホーキング 宇宙を語る", author: "スティーヴン・ホーキング", pages: 256, genre: "science", rating: 4 },
+  { title: "思考の整理学", author: "外山滋比古", pages: 224, genre: "philosophy", rating: 4 },
+  { title: "嫌われる勇気", author: "岸見一郎", pages: 296, genre: "selfhelp", rating: 4 },
+  { title: "ゼロ・トゥ・ワン", author: "ピーター・ティール", pages: 240, genre: "business", rating: 3 },
+  { title: "星の王子さま", author: "サン=テグジュペリ", pages: 136, genre: "fiction", rating: 5 },
+  { title: "人間失格", author: "太宰治", pages: 192, genre: "fiction", rating: 4 },
+  { title: "火花", author: "又吉直樹", pages: 152, genre: "fiction", rating: 3 },
+  { title: "風の名前", author: "パトリック・ロスファス", pages: 722, genre: "fantasy", rating: 5 },
+  { title: "アルジャーノンに花束を", author: "ダニエル・キイス", pages: 336, genre: "scifi", rating: 5 },
+  { title: "ダ・ヴィンチ・コード", author: "ダン・ブラウン", pages: 592, genre: "mystery", rating: 3 },
+  { title: "万葉集入門", author: "上野誠", pages: 280, genre: "poetry", rating: 4 },
+  { title: "美術の物語", author: "E.H.ゴンブリッチ", pages: 688, genre: "art", rating: 5 },
+  { title: "利己的な遺伝子", author: "リチャード・ドーキンス", pages: 416, genre: "science", rating: 4 },
+  { title: "罪と罰", author: "ドストエフスキー", pages: 720, genre: "fiction", rating: 5 },
+  { title: "7つの習慣", author: "スティーブン・コヴィー", pages: 560, genre: "selfhelp", rating: 3 },
+];
+
+// ===== STATE =====
+let books = [];
+let selectedBookId = null;
+let addRating = 3;
+
+// ===== PERSISTENCE =====
+const STORAGE_KEY = 'bookcosmos_library';
+
+function saveLibrary() {
+  const data = books.map(b => ({
+    id: b.id, title: b.title, author: b.author, pages: b.pages,
+    genre: b.genre, rating: b.rating, dateRead: b.dateRead
+  }));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function loadLibrary() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (raw) {
+    try { return JSON.parse(raw); } catch(e) {}
+  }
+  return null;
+}
+
+function uuid() {
+  return 'xxxx-xxxx-xxxx'.replace(/x/g, () => ((Math.random()*16)|0).toString(16));
+}
+
+function createBook(data) {
+  const angle1 = Math.random() * Math.PI * 2;
+  const angle2 = Math.random() * Math.PI * 2;
+  const r = 30 + Math.random() * 60;
+  return {
+    id: data.id || uuid(),
+    title: data.title,
+    author: data.author,
+    pages: data.pages,
+    genre: data.genre,
+    rating: data.rating || 3,
+    dateRead: data.dateRead || new Date().toISOString().slice(0,7),
+    mass: data.pages / 100,
+    pos: { x: Math.cos(angle1)*Math.cos(angle2)*r, y: Math.sin(angle2)*r*0.6, z: Math.sin(angle1)*Math.cos(angle2)*r },
+    vel: { x: (Math.random()-0.5)*0.3, y: (Math.random()-0.5)*0.3, z: (Math.random()-0.5)*0.3 },
+  };
+}
+
+function initBooks() {
+  const saved = loadLibrary();
+  const source = saved || DEMO_BOOKS;
+  books = source.map(d => createBook(d));
+  saveLibrary();
+}
+
+// ===== THREE.JS SCENE =====
+const canvas = document.getElementById('app-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(0x050510);
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x050510, 0.003);
+
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 2000);
+camera.position.set(0, 40, 120);
+
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.3;
+controls.minDistance = 20;
+controls.maxDistance = 500;
+controls.addEventListener('start', () => { controls.autoRotate = false; });
+let autoRotateTimer;
+controls.addEventListener('end', () => {
+  clearTimeout(autoRotateTimer);
+  autoRotateTimer = setTimeout(() => { controls.autoRotate = true; }, 5000);
+});
+
+// Ambient + point light
+scene.add(new THREE.AmbientLight(0x222244, 0.5));
+const centerLight = new THREE.PointLight(0x4466ff, 1, 300);
+scene.add(centerLight);
+
+// ===== STARFIELD =====
+function createStarfield() {
+  const count = 4000;
+  const positions = new Float32Array(count * 3);
+  const colors = new Float32Array(count * 3);
+  const sizes = new Float32Array(count);
+  const twinkle = new Float32Array(count);
+
+  const starColors = [
+    new THREE.Color(1, 1, 1),
+    new THREE.Color(0.8, 0.85, 1),
+    new THREE.Color(1, 0.95, 0.8),
+    new THREE.Color(0.7, 0.8, 1),
+  ];
+
+  for (let i = 0; i < count; i++) {
+    const r = 400 + Math.random() * 600;
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    positions[i*3]   = r * Math.sin(phi) * Math.cos(theta);
+    positions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+    positions[i*3+2] = r * Math.cos(phi);
+    const c = starColors[Math.floor(Math.random() * starColors.length)];
+    colors[i*3] = c.r; colors[i*3+1] = c.g; colors[i*3+2] = c.b;
+    sizes[i] = 0.5 + Math.random() * 2.0;
+    twinkle[i] = Math.random() * 6.28;
+  }
+
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  geo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+  geo.setAttribute('twinklePhase', new THREE.BufferAttribute(twinkle, 1));
+
+  const mat = new THREE.ShaderMaterial({
+    uniforms: { uTime: { value: 0 } },
+    vertexShader: `
+      attribute float size;
+      attribute float twinklePhase;
+      varying vec3 vColor;
+      varying float vTwinkle;
+      uniform float uTime;
+      void main() {
+        vColor = color;
+        vTwinkle = 0.5 + 0.5 * sin(uTime * 1.5 + twinklePhase);
+        vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
+        gl_PointSize = size * (200.0 / -mvPos.z);
+        gl_Position = projectionMatrix * mvPos;
+      }
+    `,
+    fragmentShader: `
+      varying vec3 vColor;
+      varying float vTwinkle;
+      void main() {
+        float d = length(gl_PointCoord - 0.5) * 2.0;
+        float alpha = smoothstep(1.0, 0.0, d) * vTwinkle;
+        gl_FragColor = vec4(vColor, alpha);
+      }
+    `,
+    transparent: true,
+    vertexColors: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+  });
+
+  return new THREE.Points(geo, mat);
+}
+
+const starfield = createStarfield();
+scene.add(starfield);
+
+// ===== NEBULA CLOUDS =====
+function createNebulae() {
+  const group = new THREE.Group();
+  const nebulaColors = [0x3322aa, 0xaa2255, 0x225588, 0x448833, 0x884422];
+  for (let i = 0; i < 8; i++) {
+    const geo = new THREE.PlaneGeometry(120 + Math.random()*100, 120 + Math.random()*100);
+    const mat = new THREE.MeshBasicMaterial({
+      color: nebulaColors[i % nebulaColors.length],
+      transparent: true,
+      opacity: 0.025 + Math.random()*0.02,
+      side: THREE.DoubleSide,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set((Math.random()-0.5)*200, (Math.random()-0.5)*80, (Math.random()-0.5)*200);
+    mesh.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
+    group.add(mesh);
+  }
+  return group;
+}
+scene.add(createNebulae());
+
+// ===== BOOK STARS RENDERING =====
+let bookPoints = null;
+let bookGeo = null;
+let bookMat = null;
+let constellationLines = null;
+
+function createBookStarsMaterial() {
+  return new THREE.ShaderMaterial({
+    uniforms: { uTime: { value: 0 } },
+    vertexShader: `
+      attribute float aSize;
+      attribute vec3 aColor;
+      attribute float aRating;
+      varying vec3 vColor;
+      varying float vRating;
+      uniform float uTime;
+      void main() {
+        vColor = aColor;
+        vRating = aRating;
+        float pulse = 1.0 + 0.08 * aRating * sin(uTime * 2.0 + aRating * 1.5);
+        vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
+        gl_PointSize = aSize * pulse * (300.0 / -mvPos.z);
+        gl_PointSize = clamp(gl_PointSize, 2.0, 80.0);
+        gl_Position = projectionMatrix * mvPos;
+      }
+    `,
+    fragmentShader: `
+      varying vec3 vColor;
+      varying float vRating;
+      void main() {
+        float d = length(gl_PointCoord - 0.5) * 2.0;
+        // Bright core
+        float core = exp(-d * d * 8.0);
+        // Soft glow
+        float glow = exp(-d * d * 2.0) * 0.6;
+        // Outer ring
+        float ring = exp(-pow(d - 0.7, 2.0) * 20.0) * 0.15;
+        float alpha = core + glow + ring;
+        vec3 col = mix(vec3(1.0), vColor, 0.5 + d * 0.5);
+        col += vec3(1.0) * core * 0.5;
+        gl_FragColor = vec4(col, alpha);
+      }
+    `,
+    transparent: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+  });
+}
+
+function rebuildBookVisuals() {
+  // Remove old
+  if (bookPoints) { scene.remove(bookPoints); bookGeo.dispose(); }
+  if (constellationLines) { scene.remove(constellationLines); }
+
+  if (books.length === 0) return;
+
+  const count = books.length;
+  const positions = new Float32Array(count * 3);
+  const colors = new Float32Array(count * 3);
+  const sizes = new Float32Array(count);
+  const ratings = new Float32Array(count);
+
+  for (let i = 0; i < count; i++) {
+    const b = books[i];
+    const gc = new THREE.Color(GENRES[b.genre]?.color || '#ffffff');
+    positions[i*3] = b.pos.x;
+    positions[i*3+1] = b.pos.y;
+    positions[i*3+2] = b.pos.z;
+    colors[i*3] = gc.r; colors[i*3+1] = gc.g; colors[i*3+2] = gc.b;
+    sizes[i] = 3 + Math.sqrt(b.pages) * 0.15;
+    ratings[i] = b.rating;
+  }
+
+  bookGeo = new THREE.BufferGeometry();
+  bookGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  bookGeo.setAttribute('aColor', new THREE.BufferAttribute(colors, 3));
+  bookGeo.setAttribute('aSize', new THREE.BufferAttribute(sizes, 1));
+  bookGeo.setAttribute('aRating', new THREE.BufferAttribute(ratings, 1));
+
+  if (!bookMat) bookMat = createBookStarsMaterial();
+  bookPoints = new THREE.Points(bookGeo, bookMat);
+  scene.add(bookPoints);
+
+  // Constellation lines (same author)
+  const authorBooks = {};
+  books.forEach((b, i) => {
+    if (!authorBooks[b.author]) authorBooks[b.author] = [];
+    authorBooks[b.author].push(i);
+  });
+
+  const linePositions = [];
+  const lineColors = [];
+  for (const author in authorBooks) {
+    const indices = authorBooks[author];
+    if (indices.length < 2) continue;
+    const gc = new THREE.Color(GENRES[books[indices[0]].genre]?.color || '#ffffff');
+    for (let a = 0; a < indices.length - 1; a++) {
+      for (let bIdx = a + 1; bIdx < indices.length; bIdx++) {
+        const ba = books[indices[a]], bb = books[indices[bIdx]];
+        linePositions.push(ba.pos.x, ba.pos.y, ba.pos.z, bb.pos.x, bb.pos.y, bb.pos.z);
+        lineColors.push(gc.r, gc.g, gc.b, gc.r, gc.g, gc.b);
+      }
+    }
+  }
+
+  if (linePositions.length > 0) {
+    const lineGeo = new THREE.BufferGeometry();
+    lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
+    lineGeo.setAttribute('color', new THREE.Float32BufferAttribute(lineColors, 3));
+    const lineMat = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.15, blending: THREE.AdditiveBlending, depthWrite: false });
+    constellationLines = new THREE.LineSegments(lineGeo, lineMat);
+    scene.add(constellationLines);
+  }
+}
+
+function updateBookPositions() {
+  if (!bookGeo || books.length === 0) return;
+  const pos = bookGeo.attributes.position.array;
+  for (let i = 0; i < books.length; i++) {
+    pos[i*3] = books[i].pos.x;
+    pos[i*3+1] = books[i].pos.y;
+    pos[i*3+2] = books[i].pos.z;
+  }
+  bookGeo.attributes.position.needsUpdate = true;
+
+  // Update constellation lines
+  if (constellationLines) {
+    const authorBooks = {};
+    books.forEach((b, i) => {
+      if (!authorBooks[b.author]) authorBooks[b.author] = [];
+      authorBooks[b.author].push(i);
+    });
+    const lp = constellationLines.geometry.attributes.position.array;
+    let idx = 0;
+    for (const author in authorBooks) {
+      const indices = authorBooks[author];
+      if (indices.length < 2) continue;
+      for (let a = 0; a < indices.length - 1; a++) {
+        for (let bIdx = a + 1; bIdx < indices.length; bIdx++) {
+          const ba = books[indices[a]], bb = books[indices[bIdx]];
+          lp[idx++] = ba.pos.x; lp[idx++] = ba.pos.y; lp[idx++] = ba.pos.z;
+          lp[idx++] = bb.pos.x; lp[idx++] = bb.pos.y; lp[idx++] = bb.pos.z;
+        }
+      }
+    }
+    constellationLines.geometry.attributes.position.needsUpdate = true;
+  }
+}
+
+// ===== N-BODY PHYSICS =====
+function updatePhysics(dt) {
+  const G = 0.5;
+  const GENRE_BONUS = 3.0;
+  const DAMPING = 0.995;
+  const MIN_DIST = 5;
+  const MAX_FORCE = 2.0;
+
+  for (let i = 0; i < books.length; i++) {
+    let fx = 0, fy = 0, fz = 0;
+    const bi = books[i];
+
+    // Central attraction
+    const distToCenter = Math.sqrt(bi.pos.x**2 + bi.pos.y**2 + bi.pos.z**2);
+    if (distToCenter > 100) {
+      const cf = 0.01;
+      fx -= bi.pos.x * cf;
+      fy -= bi.pos.y * cf;
+      fz -= bi.pos.z * cf;
+    }
+
+    for (let j = 0; j < books.length; j++) {
+      if (i === j) continue;
+      const bj = books[j];
+      const dx = bj.pos.x - bi.pos.x;
+      const dy = bj.pos.y - bi.pos.y;
+      const dz = bj.pos.z - bi.pos.z;
+      let dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+      if (dist < MIN_DIST) dist = MIN_DIST;
+
+      const sameGenre = bi.genre === bj.genre;
+      const genreMult = sameGenre ? GENRE_BONUS : 1.0;
+      const force = Math.min(MAX_FORCE, G * bi.mass * bj.mass * genreMult / (dist * dist));
+
+      fx += force * dx / dist;
+      fy += force * dy / dist;
+      fz += force * dz / dist;
+    }
+
+    bi.vel.x = (bi.vel.x + fx * dt) * DAMPING;
+    bi.vel.y = (bi.vel.y + fy * dt) * DAMPING;
+    bi.vel.z = (bi.vel.z + fz * dt) * DAMPING;
+  }
+
+  for (let i = 0; i < books.length; i++) {
+    books[i].pos.x += books[i].vel.x * dt;
+    books[i].pos.y += books[i].vel.y * dt;
+    books[i].pos.z += books[i].vel.z * dt;
+  }
+}
+
+// ===== SUPERNOVA EFFECT =====
+let supernovaParticles = null;
+let supernovaRing = null;
+let supernovaTimer = 0;
+
+function triggerSupernova(book) {
+  const pos = new THREE.Vector3(book.pos.x, book.pos.y, book.pos.z);
+
+  // Flash
+  const flash = document.getElementById('supernova-flash');
+  flash.style.opacity = '0.8';
+  setTimeout(() => { flash.style.transition = 'opacity 0.8s'; flash.style.opacity = '0'; }, 50);
+  setTimeout(() => { flash.style.transition = 'opacity 0.1s'; }, 900);
+
+  // Camera zoom
+  const targetPos = pos.clone().add(camera.position.clone().sub(pos).normalize().multiplyScalar(30));
+  const startPos = camera.position.clone();
+  const startTime = performance.now();
+  function animateCamera() {
+    const elapsed = (performance.now() - startTime) / 1000;
+    const t = Math.min(elapsed / 1.5, 1);
+    const ease = t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
+    camera.position.lerpVectors(startPos, targetPos, ease);
+    if (t < 1) requestAnimationFrame(animateCamera);
+  }
+  animateCamera();
+
+  // Particle burst
+  const pCount = 200;
+  const pPositions = new Float32Array(pCount * 3);
+  const pVelocities = [];
+  const pColors = new Float32Array(pCount * 3);
+  const gc = new THREE.Color(GENRES[book.genre]?.color || '#ffffff');
+
+  for (let i = 0; i < pCount; i++) {
+    pPositions[i*3] = pos.x; pPositions[i*3+1] = pos.y; pPositions[i*3+2] = pos.z;
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2*Math.random()-1);
+    const speed = 1 + Math.random() * 3;
+    pVelocities.push(
+      Math.sin(phi)*Math.cos(theta)*speed,
+      Math.sin(phi)*Math.sin(theta)*speed,
+      Math.cos(phi)*speed
+    );
+    const mix = Math.random();
+    pColors[i*3] = gc.r * mix + (1-mix);
+    pColors[i*3+1] = gc.g * mix + (1-mix);
+    pColors[i*3+2] = gc.b * mix + (1-mix);
+  }
+
+  const pGeo = new THREE.BufferGeometry();
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pPositions, 3));
+  pGeo.setAttribute('color', new THREE.BufferAttribute(pColors, 3));
+  const pMat = new THREE.PointsMaterial({ size: 1.5, vertexColors: true, transparent: true, opacity: 1, blending: THREE.AdditiveBlending, depthWrite: false });
+  supernovaParticles = new THREE.Points(pGeo, pMat);
+  supernovaParticles._velocities = pVelocities;
+  scene.add(supernovaParticles);
+
+  // Shockwave ring
+  const ringGeo = new THREE.RingGeometry(0.1, 1, 64);
+  const ringMat = new THREE.MeshBasicMaterial({ color: gc, transparent: true, opacity: 0.8, side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false });
+  supernovaRing = new THREE.Mesh(ringGeo, ringMat);
+  supernovaRing.position.copy(pos);
+  supernovaRing.lookAt(camera.position);
+  scene.add(supernovaRing);
+
+  supernovaTimer = 3.0;
+
+  // Sound effect (Web Audio)
+  try {
+    const actx = new (window.AudioContext || window.webkitAudioContext)();
+    // Deep rumble
+    const osc1 = actx.createOscillator();
+    const gain1 = actx.createGain();
+    osc1.type = 'sine'; osc1.frequency.setValueAtTime(60, actx.currentTime);
+    osc1.frequency.exponentialRampToValueAtTime(20, actx.currentTime + 1.5);
+    gain1.gain.setValueAtTime(0.3, actx.currentTime);
+    gain1.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + 2);
+    osc1.connect(gain1).connect(actx.destination);
+    osc1.start(); osc1.stop(actx.currentTime + 2);
+    // Sparkle
+    const osc2 = actx.createOscillator();
+    const gain2 = actx.createGain();
+    osc2.type = 'sine'; osc2.frequency.setValueAtTime(2000, actx.currentTime);
+    osc2.frequency.exponentialRampToValueAtTime(4000, actx.currentTime + 0.3);
+    gain2.gain.setValueAtTime(0.15, actx.currentTime);
+    gain2.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + 1);
+    osc2.connect(gain2).connect(actx.destination);
+    osc2.start(); osc2.stop(actx.currentTime + 1);
+  } catch(e) {}
+}
+
+function updateSupernova(dt) {
+  if (supernovaTimer <= 0) return;
+  supernovaTimer -= dt;
+
+  if (supernovaParticles) {
+    const pos = supernovaParticles.geometry.attributes.position.array;
+    const vel = supernovaParticles._velocities;
+    const count = vel.length / 3;
+    for (let i = 0; i < count; i++) {
+      pos[i*3] += vel[i*3] * dt;
+      pos[i*3+1] += vel[i*3+1] * dt;
+      pos[i*3+2] += vel[i*3+2] * dt;
+    }
+    supernovaParticles.geometry.attributes.position.needsUpdate = true;
+    supernovaParticles.material.opacity = Math.max(0, supernovaTimer / 3);
+  }
+
+  if (supernovaRing) {
+    const scale = (3 - supernovaTimer) * 15 + 1;
+    supernovaRing.scale.set(scale, scale, scale);
+    supernovaRing.material.opacity = Math.max(0, supernovaTimer / 3) * 0.5;
+    supernovaRing.lookAt(camera.position);
+  }
+
+  if (supernovaTimer <= 0) {
+    if (supernovaParticles) { scene.remove(supernovaParticles); supernovaParticles.geometry.dispose(); supernovaParticles = null; }
+    if (supernovaRing) { scene.remove(supernovaRing); supernovaRing.geometry.dispose(); supernovaRing = null; }
+  }
+}
+
+// ===== RAYCASTING (click/hover on books) =====
+const raycaster = new THREE.Raycaster();
+raycaster.params.Points.threshold = 3;
+const mouse = new THREE.Vector2();
+
+function getHoveredBookIndex(event) {
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  raycaster.setFromCamera(mouse, camera);
+  if (!bookPoints) return -1;
+  const intersects = raycaster.intersectObject(bookPoints);
+  if (intersects.length > 0) return intersects[0].index;
+  return -1;
+}
+
+canvas.addEventListener('click', (e) => {
+  const idx = getHoveredBookIndex(e);
+  if (idx >= 0 && idx < books.length) {
+    selectedBookId = books[idx].id;
+    showTooltip(books[idx], e.clientX, e.clientY);
+  } else {
+    hideTooltip();
+    selectedBookId = null;
+  }
+});
+
+canvas.style.cursor = 'grab';
+canvas.addEventListener('mousemove', (e) => {
+  const idx = getHoveredBookIndex(e);
+  canvas.style.cursor = idx >= 0 ? 'pointer' : 'grab';
+});
+
+// ===== TOOLTIP =====
+const tooltipEl = document.getElementById('tooltip');
+
+function showTooltip(book, cx, cy) {
+  const g = GENRES[book.genre] || { label: book.genre, color: '#fff', emoji: '' };
+  const stars = '★'.repeat(book.rating) + '☆'.repeat(5 - book.rating);
+  tooltipEl.innerHTML = `
+    <div class="tt-title">${book.title}</div>
+    <div class="tt-author">${book.author}</div>
+    <div class="tt-meta">
+      <span class="tt-genre-badge" style="background:${g.color}22; border:1px solid ${g.color}44; color:${g.color}">
+        ${g.emoji} ${g.label}
+      </span>
+      <span class="tt-stars">${stars}</span>
+      <span class="tt-pages">${book.pages}ページ</span>
+    </div>
+    <button class="btn btn-danger btn-small tt-delete" onclick="window._deleteBook('${book.id}')">この本を削除</button>
+  `;
+  let left = cx + 16;
+  let top = cy - 20;
+  if (left + 270 > window.innerWidth) left = cx - 276;
+  if (top + 180 > window.innerHeight) top = cy - 180;
+  tooltipEl.style.left = left + 'px';
+  tooltipEl.style.top = top + 'px';
+  tooltipEl.classList.remove('hidden');
+}
+
+function hideTooltip() {
+  tooltipEl.classList.add('hidden');
+}
+
+window._deleteBook = function(id) {
+  books = books.filter(b => b.id !== id);
+  saveLibrary();
+  rebuildBookVisuals();
+  updateUI();
+  hideTooltip();
+};
+
+// ===== UI LOGIC =====
+const statsPanel = document.getElementById('stats-panel');
+const addPanel = document.getElementById('add-panel');
+const listPanel = document.getElementById('list-panel');
+
+document.getElementById('btn-stats').addEventListener('click', () => {
+  statsPanel.classList.toggle('hidden');
+  addPanel.classList.add('hidden');
+  updateStats();
+});
+document.getElementById('btn-add').addEventListener('click', () => {
+  addPanel.classList.toggle('hidden');
+  statsPanel.classList.add('hidden');
+});
+document.getElementById('btn-list').addEventListener('click', () => {
+  listPanel.classList.toggle('hidden');
+  updateBookList();
+});
+
+// Populate genre selects
+const addGenreSelect = document.getElementById('add-genre');
+const filterGenreSelect = document.getElementById('filter-genre');
+for (const [key, val] of Object.entries(GENRES)) {
+  addGenreSelect.innerHTML += `<option value="${key}">${val.emoji} ${val.label}</option>`;
+  filterGenreSelect.innerHTML += `<option value="${key}">${val.emoji} ${val.label}</option>`;
+}
+
+// Star rating
+const ratingEl = document.getElementById('add-rating');
+ratingEl.querySelectorAll('span').forEach(s => {
+  s.addEventListener('click', () => {
+    addRating = parseInt(s.dataset.v);
+    updateRatingDisplay();
+  });
+  s.addEventListener('mouseenter', () => {
+    const v = parseInt(s.dataset.v);
+    ratingEl.querySelectorAll('span').forEach(ss => {
+      ss.textContent = parseInt(ss.dataset.v) <= v ? '★' : '☆';
+      ss.classList.toggle('active', parseInt(ss.dataset.v) <= v);
+    });
+  });
+});
+ratingEl.addEventListener('mouseleave', updateRatingDisplay);
+
+function updateRatingDisplay() {
+  ratingEl.querySelectorAll('span').forEach(s => {
+    const v = parseInt(s.dataset.v);
+    s.textContent = v <= addRating ? '★' : '☆';
+    s.classList.toggle('active', v <= addRating);
+  });
+}
+updateRatingDisplay();
+
+// Submit book
+document.getElementById('btn-submit-book').addEventListener('click', () => {
+  const title = document.getElementById('add-title').value.trim();
+  const author = document.getElementById('add-author').value.trim();
+  const pages = parseInt(document.getElementById('add-pages').value);
+  const genre = document.getElementById('add-genre').value;
+
+  if (!title) { alert('タイトルを入力してください'); return; }
+  if (!author) { alert('著者を入力してください'); return; }
+  if (!pages || pages < 1) { alert('正しいページ数を入力してください'); return; }
+
+  const newBook = createBook({ title, author, pages, genre, rating: addRating });
+  books.push(newBook);
+  saveLibrary();
+  rebuildBookVisuals();
+  updateUI();
+
+  // Clear form
+  document.getElementById('add-title').value = '';
+  document.getElementById('add-author').value = '';
+  document.getElementById('add-pages').value = '';
+  addRating = 3;
+  updateRatingDisplay();
+
+  // Supernova for 500+ pages
+  if (pages >= 500) {
+    setTimeout(() => triggerSupernova(newBook), 300);
+  }
+
+  addPanel.classList.add('hidden');
+});
+
+// Stats
+function updateStats() {
+  const total = books.length;
+  const totalPages = books.reduce((s, b) => s + b.pages, 0);
+  const avgRating = total > 0 ? (books.reduce((s, b) => s + b.rating, 0) / total).toFixed(1) : '0';
+  const totalMass = books.reduce((s, b) => s + b.mass, 0).toFixed(1);
+
+  document.getElementById('stat-total').textContent = total.toLocaleString();
+  document.getElementById('stat-pages').textContent = totalPages.toLocaleString();
+  document.getElementById('stat-avg-rating').textContent = avgRating + ' ⭐';
+  document.getElementById('stat-mass').textContent = totalMass;
+
+  // Genre bars
+  const genreCounts = {};
+  for (const b of books) genreCounts[b.genre] = (genreCounts[b.genre] || 0) + 1;
+  const sorted = Object.entries(genreCounts).sort((a, b) => b[1] - a[1]);
+  const maxCount = sorted.length > 0 ? sorted[0][1] : 1;
+
+  const barsEl = document.getElementById('genre-bars');
+  barsEl.innerHTML = sorted.map(([genre, count]) => {
+    const g = GENRES[genre] || { label: genre, color: '#888' };
+    const w = (count / maxCount * 100).toFixed(0);
+    return `<div class="genre-bar-row">
+      <span class="genre-bar-label" style="color:${g.color}">${g.emoji || ''} ${g.label}</span>
+      <div style="flex:1;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden">
+        <div class="genre-bar-fill" style="width:${w}%;background:${g.color}"></div>
+      </div>
+      <span class="genre-bar-count">${count}</span>
+    </div>`;
+  }).join('');
+}
+
+// Book list
+function updateBookList() {
+  const query = document.getElementById('search-input').value.toLowerCase();
+  const genreFilter = document.getElementById('filter-genre').value;
+  let filtered = books.filter(b => {
+    if (genreFilter && b.genre !== genreFilter) return false;
+    if (query && !b.title.toLowerCase().includes(query) && !b.author.toLowerCase().includes(query)) return false;
+    return true;
+  });
+  // Sort by rating desc then title
+  filtered.sort((a, b) => b.rating - a.rating || a.title.localeCompare(b.title));
+
+  document.getElementById('list-count').textContent = books.length;
+  const listEl = document.getElementById('book-list');
+
+  if (filtered.length === 0) {
+    listEl.innerHTML = `<div class="empty-state">${books.length === 0 ? '本がまだありません。<br>追加ボタンで宇宙に星を増やしましょう！' : '検索結果がありません。'}</div>`;
+    return;
+  }
+
+  listEl.innerHTML = filtered.map(b => {
+    const g = GENRES[b.genre] || { color: '#888', label: b.genre, emoji: '' };
+    const stars = '★'.repeat(b.rating);
+    return `<div class="book-item" data-id="${b.id}">
+      <div class="book-genre-dot" style="background:${g.color}"></div>
+      <div class="book-item-info">
+        <div class="book-item-title">${b.title}</div>
+        <div class="book-item-meta">${b.author} ${b.pages}p ${stars}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Click to focus
+  listEl.querySelectorAll('.book-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const book = books.find(b => b.id === el.dataset.id);
+      if (book) {
+        const target = new THREE.Vector3(book.pos.x, book.pos.y, book.pos.z);
+        const camTarget = target.clone().add(camera.position.clone().sub(new THREE.Vector3(book.pos.x, book.pos.y, book.pos.z)).normalize().multiplyScalar(25));
+        const startPos = camera.position.clone();
+        const startTime = performance.now();
+        function animate() {
+          const t = Math.min((performance.now() - startTime) / 1000, 1);
+          const ease = t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
+          camera.position.lerpVectors(startPos, camTarget, ease);
+          controls.target.lerp(target, ease * 0.1);
+          if (t < 1) requestAnimationFrame(animate);
+        }
+        animate();
+        selectedBookId = book.id;
+      }
+    });
+  });
+}
+
+document.getElementById('search-input').addEventListener('input', updateBookList);
+document.getElementById('filter-genre').addEventListener('change', updateBookList);
+
+// Export
+document.getElementById('btn-export').addEventListener('click', () => {
+  const data = books.map(b => ({
+    title: b.title, author: b.author, pages: b.pages,
+    genre: b.genre, rating: b.rating, dateRead: b.dateRead
+  }));
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'bookcosmos_library.json';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+// Import
+document.getElementById('btn-import').addEventListener('click', () => {
+  document.getElementById('import-input').click();
+});
+document.getElementById('import-input').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!Array.isArray(data)) throw new Error('invalid');
+      books = data.map(d => createBook(d));
+      saveLibrary();
+      rebuildBookVisuals();
+      updateUI();
+    } catch(err) {
+      alert('JSONファイルの読み込みに失敗しました。');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
+// Reset
+document.getElementById('btn-reset').addEventListener('click', () => {
+  if (!confirm('デモデータにリセットしますか？現在のライブラリは失われます。')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  books = DEMO_BOOKS.map(d => createBook(d));
+  saveLibrary();
+  rebuildBookVisuals();
+  updateUI();
+});
+
+function updateUI() {
+  updateStats();
+  updateBookList();
+}
+
+// ===== ANIMATION LOOP =====
+let lastTime = performance.now();
+
+function animate() {
+  requestAnimationFrame(animate);
+  const now = performance.now();
+  const dt = Math.min((now - lastTime) / 1000, 0.05);
+  lastTime = now;
+
+  const time = now / 1000;
+
+  // Physics
+  updatePhysics(dt);
+
+  // Update visuals
+  updateBookPositions();
+
+  // Update supernova
+  updateSupernova(dt);
+
+  // Shader time
+  starfield.material.uniforms.uTime.value = time;
+  if (bookMat) bookMat.uniforms.uTime.value = time;
+
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+// ===== RESIZE =====
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ===== INIT =====
+initBooks();
+rebuildBookVisuals();
+updateUI();
+animate();
+
+</script>
+</body>
+</html>

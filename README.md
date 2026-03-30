@@ -59,5 +59,6 @@
 | 53 | himamogura | Hobby discovery Discord bot with mole mascot | Node.js/discord.js/SQLite | 710 |
 | 54 | netamemo | Collaborative content idea clipboard for creators | Chrome Extension/Vanilla JS | 55 |
 | 55 | neonreader | Cyberpunk reader mode for seniors | Chrome Extension/Vanilla JS | 58 |
+| 56 | bookcosmos | Physics-simulated reading cosmos | Three.js/GLSL/N-body | 0 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.
