@@ -56,5 +56,6 @@
 | **50** | **madorimystery** | **Floor plan mystery generator** | **Vanilla JS/Canvas/Vite** | **40** |
 | 51 | wasurenote | Anti-diary worry destroyer | Vanilla JS/Canvas/Vite | 38 |
 | 52 | hoshifumi | Star constellation typing game | Three.js/GLSL/Vanilla JS | 0 |
+| 53 | himamogura | Hobby discovery Discord bot with mole mascot | Node.js/discord.js/SQLite | 710 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

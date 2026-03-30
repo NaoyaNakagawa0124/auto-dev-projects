@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-30 12:30 | Total apps: 52 | Total tests: 8,363
+> Last updated: 2026-03-30 13:30 | Total apps: 53 | Total tests: 9,073
 
 ## Quick Overview
 
@@ -58,6 +58,7 @@
 | **50** | [**madorimystery**](#madorimystery) | **Floor plan mystery generator** | **Vanilla JS/Canvas/Vite** | **40** | **complete** | `npm run dev` |
 | 51 | [wasurenote](#wasurenote) | Anti-diary worry destroyer | Vanilla JS/Canvas/Vite | 38 | complete | `npm run dev` |
 | 52 | [hoshifumi](#hoshifumi) | Star constellation typing game | Three.js/GLSL/Vanilla JS | 0 | complete | `npx serve hoshifumi/` |
+| 53 | [himamogura](#himamogura) | Hobby discovery Discord bot with mole mascot | Node.js/discord.js/SQLite | 710 | complete | `node src/bot.js` |
 
 ---
 
@@ -2345,3 +2346,53 @@ None — clean build with all features implemented in a single HTML file.
 - More sentence sets (poetry, news, custom text upload)
 - Share constellation screenshots (html2canvas integration)
 - Progressive difficulty (sentences get longer as you play)
+
+---
+
+### <a id="himamogura"></a>53. himamogura - 2026-03-30 13:30
+
+**What is this?**
+A Discord bot with a cute mole (モグラ) mascot that "digs up" hobby suggestions for bored adults. Inspired by 2026's "going analogue" meme trend. Features quiz-based personality matching, daily challenges with streak tracking, and a gamified hobby collection system with 108 hobbies.
+
+**Discovery Roll**
+Source: 5 (Viral memes/internet culture) | Persona: 29 (趣味がなくて退屈している大人) | Platform: 8 (Discord bot) | Wildcard: 9 (マスコットキャラ必須)
+
+**Features Built**
+- /dig: Random hobby suggestion with mole ASCII art, category-colored embeds, try/skip buttons
+- /quiz: 5-question interactive personality quiz → 3 matched hobby recommendations
+- /collection: Paginated tried-hobbies view with star ratings
+- /rate: Rate hobbies 1-5 stars with mole personality reactions
+- /challenge: Daily challenges with streak tracking and milestone celebrations
+- /stats: Personal stats with hobby level titles (初心者→伝説のモグラ)
+- /ranking: Server-wide leaderboard by hobbies collected and streak
+
+**Tech Stack**
+Node.js / discord.js v14 / better-sqlite3 / ES modules
+
+**Key Files**
+```
+src/bot.js          — Main entry, client setup, command routing
+src/database.js     — SQLite schema, seeding, all queries
+src/commands/dig.js — Random hobby with buttons
+src/commands/quiz.js — Interactive 5-question quiz
+src/data/hobbies.js — 108 hobbies across 5 categories
+src/data/mascot.js  — Mole ASCII art + personality lines
+tests/run.js        — 710 tests
+```
+
+**How to Run**
+```bash
+cd himamogura && npm install
+cp .env.example .env  # Add Discord bot token
+npm run deploy && npm start
+```
+
+**Tests**: 710 passing | **Files**: 14 | **LOC**: ~1,200 | **Build time**: ~8 min
+
+**Challenges & Fixes**
+None — clean build. All 710 tests pass including database CRUD, hobby data integrity, quiz scoring, streak logic, and edge cases.
+
+**Potential Next Steps**
+- Hobby recommendation engine based on rating patterns
+- Weather API integration for outdoor hobby suggestions
+- Server-specific hobby challenges and competitions

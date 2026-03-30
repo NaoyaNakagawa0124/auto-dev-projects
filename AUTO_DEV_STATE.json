@@ -1,5 +1,5 @@
 {
-  "apps_completed": 52,
+  "apps_completed": 53,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -315,6 +315,12 @@
       "persona": 7,
       "platform": 19,
       "wildcard": 37
+    },
+    {
+      "source": 5,
+      "persona": 29,
+      "platform": 8,
+      "wildcard": 9
     }
   ],
   "history": [
@@ -473,6 +479,9 @@
     },
     {
       "name": "hoshifumi"
+    },
+    {
+      "name": "himamogura"
     }
   ]
 }
