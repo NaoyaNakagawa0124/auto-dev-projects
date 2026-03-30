@@ -1,5 +1,5 @@
 {
-  "apps_completed": 57,
+  "apps_completed": 58,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -345,6 +345,12 @@
       "persona": 23,
       "platform": 10,
       "wildcard": 18
+    },
+    {
+      "source": 19,
+      "persona": 10,
+      "platform": 11,
+      "wildcard": 34
     }
   ],
   "history": [
@@ -518,6 +524,9 @@
     },
     {
       "name": "shuukatsu-meikyuu"
+    },
+    {
+      "name": "wancostar"
     }
   ]
 }
