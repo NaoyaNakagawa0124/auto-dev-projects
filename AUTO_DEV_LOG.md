@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-30 22:00 | Total apps: 59 | Total tests: 9,356
+> Last updated: 2026-03-30 23:00 | Total apps: 60 | Total tests: 9,356
 
 ## Quick Overview
 
@@ -65,6 +65,7 @@
 | 57 | [shuukatsu-meikyuu](#shuukatsu-meikyuu) | Roguelike job search dungeon crawler | Rust+WASM/Canvas | 47 | complete | `wasm-pack build --target web && cd www && python3 -m http.server` |
 | 58 | [wancostar](#wancostar) | Dog walk cosmic galaxy CLI | Swift 5.9/CLI/ANSI | 51 | complete | `swift run Wancostar galaxy` |
 | 59 | [tenkimeshi](#tenkimeshi) | Weather-based food recommender IoT | Python/OpenMeteo/RPi | 72 | complete | `python3 src/tenkimeshi.py --demo --once` |
+| **60** | [**kabuoto**](#kabuoto) | **Stock market data sonification** | **Web Audio API/Canvas/JS** | **0** | **complete** | `open kabuoto/index.html` |
 
 ---
 
@@ -2696,3 +2697,47 @@ None — clean build, no external dependencies.
 - Actual RPi display driver integration
 - Restaurant search API (Tabelog, Google Places)
 - Historical weather-food preference learning
+
+---
+
+### <a id="kabuoto"></a>60. kabuoto - 2026-03-30 23:00
+
+**What is this?**
+A web app that sonifies stock market data into ambient music. Each trading day becomes a musical note — price changes map to pitch, volatility controls tempo, trading volume affects amplitude. Features synchronized price chart, real-time waveform oscilloscope, and 6 musical scales including Japanese miyako-bushi.
+
+**Discovery Roll**
+Source: 15 (Economics/fintech/stock market) | Persona: 21 (誰でも — 一般向け) | Platform: 15 (Flutter/Dart → Web) | Wildcard: 17 (音・BGM・効果音が核心的)
+
+**Features Built**
+- Web Audio synthesizer: 3 oscillator types + sub-oscillator, reverb, delay, filter
+- 5 stocks × 180 days synthetic data (Toyota, Sony, SBG, NTT, Apple)
+- Sonification: price→pitch (C3-C6), volatility→tempo (60-160 BPM), volume→amplitude
+- 6 musical scales: major, minor, pentatonic, miyako-bushi, blues, chromatic
+- Canvas price chart with playback position, volume bars, grid
+- Real-time oscilloscope + note history display
+- Speed 1-10x, master volume, reverb/delay controls
+
+**Tech Stack**
+Web Audio API / Canvas 2D / Vanilla JavaScript / No dependencies
+
+**Key Files**
+```
+index.html — Complete single-file app (1167 lines)
+README.md  — Project overview
+PLAN.md    — 4-phase implementation plan
+```
+
+**How to Run**
+```bash
+cd kabuoto && open index.html
+```
+
+**Tests**: 0 (creative audio project) | **Files**: 5 | **LOC**: ~1,167 | **Build time**: ~3 min
+
+**Challenges & Fixes**
+Flutter SDK not available — adapted to pure web app while keeping the Dart-inspired architecture spirit.
+
+**Potential Next Steps**
+- Real-time API integration (Yahoo Finance)
+- Multi-stock harmony (simultaneous playback)
+- MIDI export of generated melodies

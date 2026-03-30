@@ -1,5 +1,5 @@
 {
-  "apps_completed": 59,
+  "apps_completed": 60,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -357,6 +357,12 @@
       "persona": 6,
       "platform": 16,
       "wildcard": 47
+    },
+    {
+      "source": 15,
+      "persona": 21,
+      "platform": 15,
+      "wildcard": 17
     }
   ],
   "history": [
@@ -536,6 +542,9 @@
     },
     {
       "name": "tenkimeshi"
+    },
+    {
+      "name": "kabuoto"
     }
   ]
 }

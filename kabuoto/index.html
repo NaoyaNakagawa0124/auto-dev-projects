@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>カブオト — 株価を音楽に</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0d1117;
+  --bg-secondary: #161b22;
+  --bg-tertiary: #21262d;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text-secondary: #8b949e;
+  --green: #00C853;
+  --red: #FF1744;
+  --blue: #2196F3;
+  --blue-dim: rgba(33, 150, 243, 0.15);
+  --glass: rgba(22, 27, 34, 0.75);
+  --glass-border: rgba(48, 54, 61, 0.6);
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans JP', sans-serif;
+  overflow-x: hidden;
+}
+
+body {
+  background-image:
+    linear-gradient(rgba(33, 150, 243, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(33, 150, 243, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.header h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--blue), #64B5F6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  white-space: nowrap;
+}
+
+.header .subtitle {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+/* Stock Tabs */
+.stock-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.stock-tab {
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-family: 'Noto Sans JP', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.stock-tab:hover {
+  border-color: var(--blue);
+  color: var(--text);
+}
+
+.stock-tab.active {
+  background: var(--blue-dim);
+  border-color: var(--blue);
+  color: var(--blue);
+  font-weight: 500;
+}
+
+/* Glass Panel */
+.panel {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  overflow: hidden;
+}
+
+/* Chart Area */
+.chart-container {
+  flex: 1;
+  min-height: 280px;
+  max-height: 420px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.chart-container canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Waveform + Note History */
+.wave-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  height: 100px;
+}
+
+.waveform-container {
+  flex: 2;
+  position: relative;
+}
+
+.waveform-container canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.note-history-container {
+  flex: 1;
+  position: relative;
+  min-width: 200px;
+}
+
+.note-history-container canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.panel-label {
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+  z-index: 2;
+}
+
+/* Controls */
+.controls-panel {
+  padding: 16px 20px;
+}
+
+.controls-row {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.control-group h3 {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 6px;
+  margin-bottom: 2px;
+}
+
+/* Transport buttons */
+.transport {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-tertiary);
+  color: var(--text);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn:hover {
+  border-color: var(--blue);
+  box-shadow: 0 0 12px rgba(33, 150, 243, 0.15);
+}
+
+.btn.playing {
+  background: rgba(0, 200, 83, 0.15);
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.btn.stop-btn:hover {
+  border-color: var(--red);
+  box-shadow: 0 0 12px rgba(255, 23, 68, 0.15);
+}
+
+/* Sliders */
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.slider-row label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  min-width: 70px;
+}
+
+.slider-row .val {
+  font-size: 0.8rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--blue);
+  min-width: 36px;
+  text-align: right;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--bg-tertiary);
+  outline: none;
+  flex: 1;
+  min-width: 100px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--blue);
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(33, 150, 243, 0.4);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--blue);
+  cursor: pointer;
+  border: none;
+}
+
+/* Select */
+select {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-tertiary);
+  color: var(--text);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 0.8rem;
+  cursor: pointer;
+  outline: none;
+}
+
+select:focus {
+  border-color: var(--blue);
+}
+
+.select-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.select-row label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  min-width: 50px;
+}
+
+/* Stock info */
+.stock-info {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.info-item .info-label {
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+}
+
+.info-item .info-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.info-value.up { color: var(--green); }
+.info-value.down { color: var(--red); }
+.info-value.neutral { color: var(--text); }
+
+/* Progress bar */
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  background: var(--bg-tertiary);
+  border-radius: 2px;
+  margin: 8px 0;
+  cursor: pointer;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--blue);
+  border-radius: 2px;
+  transition: width 0.1s;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .controls-row { flex-direction: column; gap: 16px; }
+  .wave-row { flex-direction: column; height: auto; }
+  .waveform-container, .note-history-container { height: 80px; min-width: unset; }
+  .stock-info { gap: 12px; }
+  .header h1 { font-size: 1.1rem; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- Header -->
+  <div class="header">
+    <h1>カブオト</h1>
+    <span class="subtitle">株価を音楽に</span>
+  </div>
+
+  <!-- Stock Tabs -->
+  <div class="stock-tabs" id="stockTabs"></div>
+
+  <!-- Price Chart -->
+  <div class="panel chart-container">
+    <span class="panel-label">株価チャート</span>
+    <canvas id="chartCanvas"></canvas>
+  </div>
+
+  <!-- Waveform + Note History -->
+  <div class="wave-row">
+    <div class="panel waveform-container">
+      <span class="panel-label">波形</span>
+      <canvas id="waveCanvas"></canvas>
+    </div>
+    <div class="panel note-history-container">
+      <span class="panel-label">ノート履歴</span>
+      <canvas id="noteCanvas"></canvas>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-bar" id="progressBar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <!-- Controls -->
+  <div class="panel controls-panel">
+    <div class="controls-row">
+      <!-- Transport -->
+      <div class="control-group">
+        <h3>再生コントロール</h3>
+        <div class="transport">
+          <button class="btn" id="playBtn" onclick="togglePlay()">&#9654; 再生</button>
+          <button class="btn stop-btn" id="stopBtn" onclick="stopPlayback()">&#9632; 停止</button>
+        </div>
+        <div class="slider-row">
+          <label>再生速度</label>
+          <input type="range" id="speedSlider" min="1" max="10" value="3" step="1">
+          <span class="val" id="speedVal">3x</span>
+        </div>
+        <div class="slider-row">
+          <label>音量</label>
+          <input type="range" id="volumeSlider" min="0" max="100" value="70" step="1">
+          <span class="val" id="volumeVal">70%</span>
+        </div>
+      </div>
+
+      <!-- Sound Settings -->
+      <div class="control-group">
+        <h3>音の設定</h3>
+        <div class="select-row">
+          <label>音階</label>
+          <select id="scaleSelect"></select>
+        </div>
+        <div class="select-row">
+          <label>音色</label>
+          <select id="waveSelect">
+            <option value="auto">自動（トレンド連動）</option>
+            <option value="sine">サイン波</option>
+            <option value="triangle">三角波</option>
+            <option value="sawtooth">ノコギリ波</option>
+          </select>
+        </div>
+        <div class="slider-row">
+          <label>リバーブ</label>
+          <input type="range" id="reverbSlider" min="0" max="100" value="40" step="1">
+          <span class="val" id="reverbVal">40%</span>
+        </div>
+        <div class="slider-row">
+          <label>ディレイ</label>
+          <input type="range" id="delaySlider" min="0" max="100" value="25" step="1">
+          <span class="val" id="delayVal">25%</span>
+        </div>
+      </div>
+
+      <!-- Stock Info -->
+      <div class="control-group" style="flex:1; min-width: 200px;">
+        <h3>株価情報</h3>
+        <div class="stock-info" id="stockInfo">
+          <div class="info-item">
+            <span class="info-label">現在値</span>
+            <span class="info-value neutral" id="infoPrice">---</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">変動</span>
+            <span class="info-value neutral" id="infoChange">---</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">出来高</span>
+            <span class="info-value neutral" id="infoVolume">---</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">20日ボラ</span>
+            <span class="info-value neutral" id="infoVola">---</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">トレンド</span>
+            <span class="info-value neutral" id="infoTrend">---</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Stock Data ──────────────────────────────────────────
+function generateStockData(startPrice, volatility, days) {
+  const data = [];
+  let price = startPrice;
+  const baseVolume = 1000000 + Math.random() * 5000000;
+  // Use seeded-ish random for consistency per call
+  for (let i = 0; i < days; i++) {
+    const date = new Date(2025, 9, 1);
+    date.setDate(date.getDate() + i);
+    if (date.getDay() === 0 || date.getDay() === 6) continue;
+    const change = (Math.random() - 0.48) * volatility * price;
+    price = Math.max(startPrice * 0.5, price + change);
+    const volume = baseVolume * (0.5 + Math.random() * 1.5) * (1 + Math.abs(change / price) * 10);
+    const absC = Math.abs(change);
+    data.push({
+      date: date.toISOString().slice(0, 10),
+      open: +(price - Math.random() * absC).toFixed(2),
+      high: +(price + absC * Math.random()).toFixed(2),
+      low: +(price - absC * Math.random()).toFixed(2),
+      close: +price.toFixed(2),
+      volume: Math.round(volume),
+    });
+  }
+  return data;
+}
+
+const STOCKS = {
+  "7203": { name: "トヨタ自動車", ticker: "7203.T", data: generateStockData(2800, 0.015, 180) },
+  "9984": { name: "ソフトバンクグループ", ticker: "9984.T", data: generateStockData(8500, 0.025, 180) },
+  "6758": { name: "ソニーグループ", ticker: "6758.T", data: generateStockData(15000, 0.018, 180) },
+  "9432": { name: "NTT", ticker: "9432.T", data: generateStockData(150, 0.012, 180) },
+  "AAPL": { name: "アップル", ticker: "AAPL", data: generateStockData(230, 0.02, 180) },
+};
+
+const SCALES = {
+  major:      { name: "メジャー",        notes: [0, 2, 4, 5, 7, 9, 11] },
+  minor:      { name: "マイナー",        notes: [0, 2, 3, 5, 7, 8, 10] },
+  pentatonic: { name: "ペンタトニック",  notes: [0, 2, 4, 7, 9] },
+  japanese:   { name: "日本音階（都節）", notes: [0, 1, 5, 7, 8] },
+  blues:      { name: "ブルース",        notes: [0, 3, 5, 6, 7, 10] },
+  chromatic:  { name: "クロマチック",    notes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
+};
+
+// ── State ───────────────────────────────────────────────
+let currentStockId = "7203";
+let playing = false;
+let playIndex = 0;
+let playTimer = null;
+let noteHistory = []; // {pitch, up}
+
+// ── Audio Engine ────────────────────────────────────────
+let audioCtx = null;
+let masterGain = null;
+let reverbGain = null;
+let dryGain = null;
+let delayNode = null;
+let delayFeedback = null;
+let delayGain = null;
+let convolver = null;
+let analyser = null;
+let filterNode = null;
+
+function initAudio() {
+  if (audioCtx) return;
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+  masterGain = audioCtx.createGain();
+  masterGain.gain.value = 0.7;
+
+  analyser = audioCtx.createAnalyser();
+  analyser.fftSize = 2048;
+
+  // Filter
+  filterNode = audioCtx.createBiquadFilter();
+  filterNode.type = 'lowpass';
+  filterNode.frequency.value = 4000;
+  filterNode.Q.value = 1;
+
+  // Reverb
+  convolver = audioCtx.createConvolver();
+  convolver.buffer = createImpulseResponse(2, 2, false);
+  reverbGain = audioCtx.createGain();
+  reverbGain.gain.value = 0.4;
+  dryGain = audioCtx.createGain();
+  dryGain.gain.value = 0.7;
+
+  // Delay
+  delayNode = audioCtx.createDelay(1.0);
+  delayNode.delayTime.value = 0.3;
+  delayFeedback = audioCtx.createGain();
+  delayFeedback.gain.value = 0.25;
+  delayGain = audioCtx.createGain();
+  delayGain.gain.value = 0.25;
+
+  // Routing: filter -> dry -> master, filter -> convolver -> reverbGain -> master
+  // filter -> delay -> delayFeedback -> delay, delay -> delayGain -> master
+  filterNode.connect(dryGain);
+  filterNode.connect(convolver);
+  convolver.connect(reverbGain);
+  reverbGain.connect(masterGain);
+  dryGain.connect(masterGain);
+
+  filterNode.connect(delayNode);
+  delayNode.connect(delayFeedback);
+  delayFeedback.connect(delayNode);
+  delayNode.connect(delayGain);
+  delayGain.connect(masterGain);
+
+  masterGain.connect(analyser);
+  analyser.connect(audioCtx.destination);
+}
+
+function createImpulseResponse(duration, decay, reverse) {
+  const rate = audioCtx.sampleRate;
+  const length = rate * duration;
+  const impulse = audioCtx.createBuffer(2, length, rate);
+  for (let ch = 0; ch < 2; ch++) {
+    const data = impulse.getChannelData(ch);
+    for (let i = 0; i < length; i++) {
+      const n = reverse ? length - i : i;
+      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - n / length, decay);
+    }
+  }
+  return impulse;
+}
+
+function quantizeToScale(midiNote, scaleKey) {
+  const scale = SCALES[scaleKey] || SCALES.pentatonic;
+  const noteInOctave = ((midiNote % 12) + 12) % 12;
+  const octave = Math.floor(midiNote / 12);
+  let closest = scale.notes[0];
+  let minDist = 99;
+  for (const s of scale.notes) {
+    const d = Math.min(Math.abs(noteInOctave - s), 12 - Math.abs(noteInOctave - s));
+    if (d < minDist) { minDist = d; closest = s; }
+  }
+  return octave * 12 + closest;
+}
+
+function midiToFreq(midi) {
+  return 440 * Math.pow(2, (midi - 69) / 12);
+}
+
+function playNote(freq, amplitude, oscType, duration) {
+  if (!audioCtx) return;
+  const now = audioCtx.currentTime;
+
+  // Main osc
+  const osc = audioCtx.createOscillator();
+  osc.type = oscType;
+  osc.frequency.setValueAtTime(freq, now);
+
+  // Sub osc (one octave lower, quieter)
+  const subOsc = audioCtx.createOscillator();
+  subOsc.type = 'sine';
+  subOsc.frequency.setValueAtTime(freq / 2, now);
+
+  const env = audioCtx.createGain();
+  env.gain.setValueAtTime(0, now);
+  env.gain.linearRampToValueAtTime(amplitude, now + 0.05);
+  env.gain.setValueAtTime(amplitude, now + duration * 0.4);
+  env.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+  const subEnv = audioCtx.createGain();
+  subEnv.gain.setValueAtTime(0, now);
+  subEnv.gain.linearRampToValueAtTime(amplitude * 0.3, now + 0.05);
+  subEnv.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+  osc.connect(env);
+  subOsc.connect(subEnv);
+  env.connect(filterNode);
+  subEnv.connect(filterNode);
+
+  osc.start(now);
+  osc.stop(now + duration + 0.1);
+  subOsc.start(now);
+  subOsc.stop(now + duration + 0.1);
+}
+
+// ── Sonification Logic ──────────────────────────────────
+function getChangePercent(data, index) {
+  if (index <= 0) return 0;
+  return ((data[index].close - data[index - 1].close) / data[index - 1].close) * 100;
+}
+
+function getVolatility20(data, index) {
+  const start = Math.max(0, index - 19);
+  const slice = data.slice(start, index + 1);
+  if (slice.length < 2) return 0;
+  const returns = [];
+  for (let i = 1; i < slice.length; i++) {
+    returns.push((slice[i].close - slice[i - 1].close) / slice[i - 1].close);
+  }
+  const mean = returns.reduce((a, b) => a + b, 0) / returns.length;
+  const variance = returns.reduce((a, r) => a + (r - mean) ** 2, 0) / returns.length;
+  return Math.sqrt(variance) * 100;
+}
+
+function getTrend(data, index) {
+  const lookback = 10;
+  const start = Math.max(0, index - lookback);
+  if (index - start < 2) return 'sideways';
+  const first = data[start].close;
+  const last = data[index].close;
+  const pctChange = (last - first) / first * 100;
+  if (pctChange > 1.5) return 'up';
+  if (pctChange < -1.5) return 'down';
+  return 'sideways';
+}
+
+function getRelativeVolume(data, index) {
+  const start = Math.max(0, index - 19);
+  const slice = data.slice(start, index + 1);
+  const avgVol = slice.reduce((a, d) => a + d.volume, 0) / slice.length;
+  return data[index].volume / avgVol;
+}
+
+function changeToPitch(changePct) {
+  // Map change% to MIDI note range 48 (C3) to 84 (C6)
+  // Clamp to +-5%
+  const clamped = Math.max(-5, Math.min(5, changePct));
+  const normalized = (clamped + 5) / 10; // 0..1
+  return 48 + Math.round(normalized * 36);
+}
+
+function volatilityToTempo(vol) {
+  // vol typically 0-5%
+  const clamped = Math.max(0, Math.min(5, vol));
+  return 60 + (clamped / 5) * 100; // 60-160 BPM
+}
+
+function relativeVolumeToAmplitude(relVol) {
+  const clamped = Math.max(0.2, Math.min(3, relVol));
+  return 0.1 + (clamped - 0.2) / 2.8 * 0.4; // 0.1-0.5
+}
+
+function trendToOscType(trend) {
+  const waveSelect = document.getElementById('waveSelect').value;
+  if (waveSelect !== 'auto') return waveSelect;
+  if (trend === 'up') return 'sine';
+  if (trend === 'down') return 'triangle';
+  return 'sawtooth';
+}
+
+function sonifyDay(index) {
+  const data = STOCKS[currentStockId].data;
+  if (index >= data.length) { stopPlayback(); return; }
+
+  const changePct = getChangePercent(data, index);
+  const vol = getVolatility20(data, index);
+  const trend = getTrend(data, index);
+  const relVol = getRelativeVolume(data, index);
+
+  const rawMidi = changeToPitch(changePct);
+  const scaleKey = document.getElementById('scaleSelect').value;
+  const midi = quantizeToScale(rawMidi, scaleKey);
+  const freq = midiToFreq(midi);
+  const amplitude = relativeVolumeToAmplitude(relVol);
+  const oscType = trendToOscType(trend);
+  const bpm = volatilityToTempo(vol);
+  const noteDuration = 60 / bpm; // duration in seconds
+
+  // Update filter based on price trend
+  if (filterNode) {
+    const filterFreq = 1000 + changePct * 600; // opens with positive change
+    filterNode.frequency.setTargetAtTime(Math.max(500, Math.min(8000, filterFreq)), audioCtx.currentTime, 0.1);
+  }
+
+  playNote(freq, amplitude * (masterGain ? masterGain.gain.value : 0.7), oscType, noteDuration * 1.5);
+
+  // Note history
+  noteHistory.push({ pitch: midi, up: changePct >= 0 });
+  if (noteHistory.length > 20) noteHistory.shift();
+
+  // Update info
+  updateStockInfo(index);
+
+  return bpm;
+}
+
+// ── Playback Control ────────────────────────────────────
+function togglePlay() {
+  if (!audioCtx) initAudio();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+
+  if (playing) {
+    playing = false;
+    clearTimeout(playTimer);
+    document.getElementById('playBtn').innerHTML = '&#9654; 再生';
+    document.getElementById('playBtn').classList.remove('playing');
+  } else {
+    const data = STOCKS[currentStockId].data;
+    if (playIndex >= data.length) playIndex = 0;
+    playing = true;
+    document.getElementById('playBtn').innerHTML = '&#10074;&#10074; 一時停止';
+    document.getElementById('playBtn').classList.add('playing');
+    scheduleNext();
+  }
+}
+
+function scheduleNext() {
+  if (!playing) return;
+  const data = STOCKS[currentStockId].data;
+  if (playIndex >= data.length) { stopPlayback(); return; }
+
+  const bpm = sonifyDay(playIndex);
+  playIndex++;
+
+  const speed = parseInt(document.getElementById('speedSlider').value);
+  const interval = (60 / (bpm || 100)) * 1000 / speed;
+
+  // Update progress
+  const pct = (playIndex / data.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+
+  playTimer = setTimeout(scheduleNext, Math.max(80, interval));
+}
+
+function stopPlayback() {
+  playing = false;
+  clearTimeout(playTimer);
+  playIndex = 0;
+  noteHistory = [];
+  document.getElementById('playBtn').innerHTML = '&#9654; 再生';
+  document.getElementById('playBtn').classList.remove('playing');
+  document.getElementById('progressFill').style.width = '0%';
+  updateStockInfo(0);
+}
+
+// ── Progress bar click ──────────────────────────────────
+document.getElementById('progressBar').addEventListener('click', function(e) {
+  const rect = this.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  const data = STOCKS[currentStockId].data;
+  playIndex = Math.floor(pct * data.length);
+  document.getElementById('progressFill').style.width = (pct * 100) + '%';
+  updateStockInfo(playIndex);
+  drawChart();
+});
+
+// ── UI Updates ──────────────────────────────────────────
+function updateStockInfo(index) {
+  const data = STOCKS[currentStockId].data;
+  if (!data[index]) return;
+  const d = data[index];
+  const changePct = getChangePercent(data, index);
+  const vol = getVolatility20(data, index);
+  const trend = getTrend(data, index);
+
+  const priceEl = document.getElementById('infoPrice');
+  const isJP = currentStockId !== 'AAPL';
+  priceEl.textContent = isJP ? '¥' + d.close.toLocaleString('ja-JP') : '$' + d.close.toLocaleString('en-US');
+  priceEl.className = 'info-value ' + (changePct >= 0 ? 'up' : 'down');
+
+  const changeEl = document.getElementById('infoChange');
+  changeEl.textContent = (changePct >= 0 ? '+' : '') + changePct.toFixed(2) + '%';
+  changeEl.className = 'info-value ' + (changePct >= 0 ? 'up' : 'down');
+
+  const volEl = document.getElementById('infoVolume');
+  const volM = (d.volume / 1000000).toFixed(1);
+  volEl.textContent = volM + 'M';
+
+  document.getElementById('infoVola').textContent = vol.toFixed(2) + '%';
+
+  const trendEl = document.getElementById('infoTrend');
+  const trendLabels = { up: '上昇↑', down: '下降↓', sideways: '横ばい→' };
+  trendEl.textContent = trendLabels[trend];
+  trendEl.className = 'info-value ' + (trend === 'up' ? 'up' : trend === 'down' ? 'down' : 'neutral');
+}
+
+// ── Slider listeners ────────────────────────────────────
+document.getElementById('speedSlider').addEventListener('input', function() {
+  document.getElementById('speedVal').textContent = this.value + 'x';
+});
+
+document.getElementById('volumeSlider').addEventListener('input', function() {
+  document.getElementById('volumeVal').textContent = this.value + '%';
+  if (masterGain) masterGain.gain.setTargetAtTime(this.value / 100, audioCtx.currentTime, 0.05);
+});
+
+document.getElementById('reverbSlider').addEventListener('input', function() {
+  document.getElementById('reverbVal').textContent = this.value + '%';
+  if (reverbGain) reverbGain.gain.setTargetAtTime(this.value / 100, audioCtx.currentTime, 0.05);
+  if (dryGain) dryGain.gain.setTargetAtTime(1 - this.value / 200, audioCtx.currentTime, 0.05);
+});
+
+document.getElementById('delaySlider').addEventListener('input', function() {
+  document.getElementById('delayVal').textContent = this.value + '%';
+  if (delayGain) delayGain.gain.setTargetAtTime(this.value / 100 * 0.5, audioCtx.currentTime, 0.05);
+  if (delayFeedback) delayFeedback.gain.setTargetAtTime(this.value / 100 * 0.5, audioCtx.currentTime, 0.05);
+});
+
+// ── Build UI ────────────────────────────────────────────
+function buildStockTabs() {
+  const container = document.getElementById('stockTabs');
+  container.innerHTML = '';
+  for (const [id, stock] of Object.entries(STOCKS)) {
+    const btn = document.createElement('button');
+    btn.className = 'stock-tab' + (id === currentStockId ? ' active' : '');
+    btn.textContent = stock.name;
+    btn.onclick = () => selectStock(id);
+    container.appendChild(btn);
+  }
+}
+
+function buildScaleSelect() {
+  const sel = document.getElementById('scaleSelect');
+  for (const [key, scale] of Object.entries(SCALES)) {
+    const opt = document.createElement('option');
+    opt.value = key;
+    opt.textContent = scale.name;
+    if (key === 'pentatonic') opt.selected = true;
+    sel.appendChild(opt);
+  }
+}
+
+function selectStock(id) {
+  const wasPlaying = playing;
+  if (playing) stopPlayback();
+  currentStockId = id;
+  buildStockTabs();
+  drawChart();
+  updateStockInfo(0);
+}
+
+// ── Chart Drawing ───────────────────────────────────────
+const chartCanvas = document.getElementById('chartCanvas');
+const chartCtx = chartCanvas.getContext('2d');
+
+function drawChart() {
+  const rect = chartCanvas.parentElement.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  chartCanvas.width = rect.width * dpr;
+  chartCanvas.height = rect.height * dpr;
+  chartCtx.scale(dpr, dpr);
+  const W = rect.width;
+  const H = rect.height;
+
+  const data = STOCKS[currentStockId].data;
+  if (!data.length) return;
+
+  chartCtx.clearRect(0, 0, W, H);
+
+  const padding = { top: 30, right: 60, bottom: 40, left: 10 };
+  const cW = W - padding.left - padding.right;
+  const cH = H - padding.top - padding.bottom;
+
+  const closes = data.map(d => d.close);
+  const volumes = data.map(d => d.volume);
+  const minP = Math.min(...closes) * 0.995;
+  const maxP = Math.max(...closes) * 1.005;
+  const maxV = Math.max(...volumes);
+  const startP = data[0].close;
+
+  const xScale = cW / (data.length - 1);
+  const yScale = (p) => padding.top + cH - ((p - minP) / (maxP - minP)) * cH;
+  const xPos = (i) => padding.left + i * xScale;
+
+  // Volume bars
+  const volH = cH * 0.2;
+  chartCtx.globalAlpha = 0.15;
+  for (let i = 0; i < data.length; i++) {
+    const h = (data[i].volume / maxV) * volH;
+    const up = i === 0 || data[i].close >= data[i - 1].close;
+    chartCtx.fillStyle = up ? '#00C853' : '#FF1744';
+    chartCtx.fillRect(xPos(i) - xScale * 0.3, padding.top + cH - h, xScale * 0.6, h);
+  }
+  chartCtx.globalAlpha = 1;
+
+  // Price line with gradient fill
+  chartCtx.beginPath();
+  chartCtx.moveTo(xPos(0), yScale(closes[0]));
+  for (let i = 1; i < closes.length; i++) {
+    chartCtx.lineTo(xPos(i), yScale(closes[i]));
+  }
+  // Stroke
+  const lineGrad = chartCtx.createLinearGradient(0, yScale(maxP), 0, yScale(minP));
+  lineGrad.addColorStop(0, '#00C853');
+  lineGrad.addColorStop(1, '#FF1744');
+  chartCtx.strokeStyle = lineGrad;
+  chartCtx.lineWidth = 2;
+  chartCtx.stroke();
+
+  // Fill
+  chartCtx.lineTo(xPos(closes.length - 1), padding.top + cH);
+  chartCtx.lineTo(xPos(0), padding.top + cH);
+  chartCtx.closePath();
+  const fillGrad = chartCtx.createLinearGradient(0, yScale(maxP), 0, padding.top + cH);
+  fillGrad.addColorStop(0, 'rgba(0, 200, 83, 0.08)');
+  fillGrad.addColorStop(1, 'rgba(255, 23, 68, 0.02)');
+  chartCtx.fillStyle = fillGrad;
+  chartCtx.fill();
+
+  // Starting price line
+  chartCtx.setLineDash([4, 4]);
+  chartCtx.strokeStyle = 'rgba(255,255,255,0.12)';
+  chartCtx.lineWidth = 1;
+  chartCtx.beginPath();
+  chartCtx.moveTo(padding.left, yScale(startP));
+  chartCtx.lineTo(W - padding.right, yScale(startP));
+  chartCtx.stroke();
+  chartCtx.setLineDash([]);
+
+  // Playback position
+  if (playIndex > 0 && playIndex < data.length) {
+    const px = xPos(playIndex);
+    // Glow
+    const glowGrad = chartCtx.createLinearGradient(px, padding.top, px, padding.top + cH);
+    glowGrad.addColorStop(0, 'rgba(33, 150, 243, 0)');
+    glowGrad.addColorStop(0.5, 'rgba(33, 150, 243, 0.15)');
+    glowGrad.addColorStop(1, 'rgba(33, 150, 243, 0)');
+    chartCtx.fillStyle = glowGrad;
+    chartCtx.fillRect(px - 15, padding.top, 30, cH);
+
+    chartCtx.strokeStyle = '#2196F3';
+    chartCtx.lineWidth = 2;
+    chartCtx.beginPath();
+    chartCtx.moveTo(px, padding.top);
+    chartCtx.lineTo(px, padding.top + cH);
+    chartCtx.stroke();
+
+    // Dot
+    chartCtx.beginPath();
+    chartCtx.arc(px, yScale(closes[playIndex]), 5, 0, Math.PI * 2);
+    chartCtx.fillStyle = '#2196F3';
+    chartCtx.fill();
+    chartCtx.strokeStyle = '#fff';
+    chartCtx.lineWidth = 1.5;
+    chartCtx.stroke();
+  }
+
+  // Y axis labels
+  chartCtx.fillStyle = '#8b949e';
+  chartCtx.font = '11px "JetBrains Mono", monospace';
+  chartCtx.textAlign = 'left';
+  const ySteps = 5;
+  for (let i = 0; i <= ySteps; i++) {
+    const p = minP + (maxP - minP) * (i / ySteps);
+    const y = yScale(p);
+    chartCtx.fillText(p.toFixed(0), W - padding.right + 6, y + 4);
+    // Grid line
+    chartCtx.strokeStyle = 'rgba(255,255,255,0.04)';
+    chartCtx.lineWidth = 1;
+    chartCtx.beginPath();
+    chartCtx.moveTo(padding.left, y);
+    chartCtx.lineTo(W - padding.right, y);
+    chartCtx.stroke();
+  }
+
+  // X axis date labels
+  chartCtx.textAlign = 'center';
+  const labelInterval = Math.max(1, Math.floor(data.length / 6));
+  for (let i = 0; i < data.length; i += labelInterval) {
+    const d = data[i].date.slice(5); // MM-DD
+    chartCtx.fillText(d, xPos(i), padding.top + cH + 20);
+  }
+}
+
+// ── Waveform Drawing ────────────────────────────────────
+const waveCanvas = document.getElementById('waveCanvas');
+const waveCtx = waveCanvas.getContext('2d');
+const noteCanvas = document.getElementById('noteCanvas');
+const noteCtx = noteCanvas.getContext('2d');
+
+function drawWaveform() {
+  const rect = waveCanvas.parentElement.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  waveCanvas.width = rect.width * dpr;
+  waveCanvas.height = rect.height * dpr;
+  waveCtx.scale(dpr, dpr);
+  const W = rect.width;
+  const H = rect.height;
+
+  waveCtx.clearRect(0, 0, W, H);
+
+  if (!analyser) {
+    // Draw flat line
+    waveCtx.strokeStyle = 'rgba(33, 150, 243, 0.3)';
+    waveCtx.lineWidth = 1;
+    waveCtx.beginPath();
+    waveCtx.moveTo(0, H / 2);
+    waveCtx.lineTo(W, H / 2);
+    waveCtx.stroke();
+    return;
+  }
+
+  const bufferLength = analyser.frequencyBinCount;
+  const dataArray = new Uint8Array(bufferLength);
+  analyser.getByteTimeDomainData(dataArray);
+
+  // Determine color from current trend
+  const data = STOCKS[currentStockId].data;
+  const trend = playIndex > 0 && playIndex < data.length ? getTrend(data, playIndex) : 'sideways';
+  const color = trend === 'up' ? '#00C853' : trend === 'down' ? '#FF1744' : '#2196F3';
+
+  // Glow
+  waveCtx.shadowColor = color;
+  waveCtx.shadowBlur = playing ? 8 : 0;
+
+  waveCtx.lineWidth = 2;
+  waveCtx.strokeStyle = color;
+  waveCtx.beginPath();
+
+  const sliceWidth = W / bufferLength;
+  let x = 0;
+  for (let i = 0; i < bufferLength; i++) {
+    const v = dataArray[i] / 128.0;
+    const y = (v * H) / 2;
+    if (i === 0) waveCtx.moveTo(x, y);
+    else waveCtx.lineTo(x, y);
+    x += sliceWidth;
+  }
+  waveCtx.lineTo(W, H / 2);
+  waveCtx.stroke();
+  waveCtx.shadowBlur = 0;
+}
+
+function drawNoteHistory() {
+  const rect = noteCanvas.parentElement.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  noteCanvas.width = rect.width * dpr;
+  noteCanvas.height = rect.height * dpr;
+  noteCtx.scale(dpr, dpr);
+  const W = rect.width;
+  const H = rect.height;
+
+  noteCtx.clearRect(0, 0, W, H);
+
+  if (noteHistory.length === 0) return;
+
+  const barW = W / 20;
+  const minMidi = 48;
+  const maxMidi = 84;
+
+  for (let i = 0; i < noteHistory.length; i++) {
+    const n = noteHistory[i];
+    const normPitch = (n.pitch - minMidi) / (maxMidi - minMidi);
+    const barH = Math.max(4, normPitch * (H - 16));
+    const x = i * barW + barW * 0.15;
+    const y = H - 8 - barH;
+    const color = n.up ? '#00C853' : '#FF1744';
+
+    noteCtx.fillStyle = color;
+    noteCtx.globalAlpha = 0.4 + (i / noteHistory.length) * 0.6;
+    noteCtx.beginPath();
+    noteCtx.roundRect(x, y, barW * 0.7, barH, 3);
+    noteCtx.fill();
+
+    // Dot at top
+    noteCtx.beginPath();
+    noteCtx.arc(x + barW * 0.35, y, 3, 0, Math.PI * 2);
+    noteCtx.fillStyle = color;
+    noteCtx.globalAlpha = 0.6 + (i / noteHistory.length) * 0.4;
+    noteCtx.fill();
+  }
+  noteCtx.globalAlpha = 1;
+}
+
+// ── Animation Loop ──────────────────────────────────────
+function animationLoop() {
+  drawChart();
+  drawWaveform();
+  drawNoteHistory();
+  requestAnimationFrame(animationLoop);
+}
+
+// ── Init ────────────────────────────────────────────────
+buildStockTabs();
+buildScaleSelect();
+updateStockInfo(0);
+animationLoop();
+
+// Resize
+window.addEventListener('resize', () => { drawChart(); });
+</script>
+</body>
+</html>
