@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-04-01 01:00 | Total apps: 68 | Total tests: 9,628
+> Last updated: 2026-04-01 02:00 | Total apps: 69 | Total tests: 9,674
 
 ## Quick Overview
 
@@ -74,6 +74,7 @@
 | 66 | [idolhistoria](#idolhistoria) | 50-year Japanese idol culture data viz | Python/Jupyter/Plotly | 42 | complete | `jupyter notebook idolhistoria.ipynb` |
 | 67 | [eigamichi](#eigamichi) | Visual-novel branching movie recommender | Vanilla JS/HTML/CSS | 31 | complete | `open index.html` |
 | 68 | [otonoha](#otonoha) | Music chart generative flower garden | p5.js/iTunes API | 44 | complete | `open index.html` |
+| 69 | [sekaiquest](#sekaiquest) | ASCII world map TUI explorer | Python/Textual/Rich | 46 | complete | `python3 app.py` |
 
 ---
 
@@ -3111,3 +3112,46 @@ None — clean implementation.
 - Click flower to play song preview (iTunes preview URL)
 - Season-based garden themes
 - Multiple chart regions (US, UK, Japan)
+
+---
+
+### <a id="sekaiquest"></a>69. sekaiquest - 2026-04-01
+
+**What is this?**
+A Textual TUI world map explorer where you navigate an ASCII map, discover 25 travel destinations across 7 regions, collect passport stamps, and learn fun facts. Rich terminal UI with map panel, destination info, progress tracking, and modal passport viewer. Map-centric design for bored teenagers to explore the world from their terminal.
+
+**Discovery Roll**
+Source: 13 (Travel destinations) | Persona: 1 (暇な10代の学生) | Platform: 3 (Python TUI) | Wildcard: 33 (地図/マップ中心)
+
+**Features Built**
+- 80x20 ASCII world map with continent outlines and 25 destination markers
+- 7 regions: Asia (8), Europe (7), N.America (2), S.America (2), Africa (3), Middle East (2), Oceania (1)
+- Passport stamp collection with persistent JSON state
+- Fun facts and 2026 travel trends for each city
+- Modal passport table with Rich formatting
+- Progress bar and region counter in stats bar
+- Proximity-based destination detection
+
+**Tech Stack**
+Python 3 / Textual TUI / Rich / JSON persistence
+
+**Key Files**
+```
+app.py  — Full TUI app (~350 LOC)
+test.py — 46 unit tests
+```
+
+**How to Run**
+```bash
+cd sekaiquest && python3 app.py
+```
+
+**Tests**: 46 passing | **Files**: 4 | **LOC**: ~350 | **Build time**: ~2 min
+
+**Challenges & Fixes**
+None — clean implementation.
+
+**Potential Next Steps**
+- Quiz mode: guess the city from facts
+- Flight path animation between visited cities
+- Real travel advisory API integration

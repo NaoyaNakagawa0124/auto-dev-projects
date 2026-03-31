@@ -1,5 +1,5 @@
 {
-  "apps_completed": 68,
+  "apps_completed": 69,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -411,6 +411,12 @@
       "persona": 36,
       "platform": 19,
       "wildcard": 28
+    },
+    {
+      "source": 13,
+      "persona": 1,
+      "platform": 3,
+      "wildcard": 33
     }
   ],
   "history": [
@@ -617,6 +623,9 @@
     },
     {
       "name": "otonoha"
+    },
+    {
+      "name": "sekaiquest"
     }
   ]
 }

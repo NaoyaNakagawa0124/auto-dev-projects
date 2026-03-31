@@ -72,5 +72,6 @@
 | 66 | idolhistoria | 50-year Japanese idol culture data viz | Python/Jupyter/Plotly | 42 |
 | 67 | eigamichi | Visual-novel branching movie recommender | Vanilla JS/HTML/CSS | 31 |
 | 68 | otonoha | Music chart generative flower garden | p5.js/iTunes API | 44 |
+| 69 | sekaiquest | ASCII world map TUI explorer | Python/Textual/Rich | 46 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.
