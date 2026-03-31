@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-04-01 00:30 | Total apps: 67 | Total tests: 9,584
+> Last updated: 2026-04-01 01:00 | Total apps: 68 | Total tests: 9,628
 
 ## Quick Overview
 
@@ -73,6 +73,7 @@
 | 65 | [namioto](#namioto) | One-hand ocean breathing meditation | C/Raylib 5.5 | 27 | complete | `make && ./namioto` |
 | 66 | [idolhistoria](#idolhistoria) | 50-year Japanese idol culture data viz | Python/Jupyter/Plotly | 42 | complete | `jupyter notebook idolhistoria.ipynb` |
 | 67 | [eigamichi](#eigamichi) | Visual-novel branching movie recommender | Vanilla JS/HTML/CSS | 31 | complete | `open index.html` |
+| 68 | [otonoha](#otonoha) | Music chart generative flower garden | p5.js/iTunes API | 44 | complete | `open index.html` |
 
 ---
 
@@ -3066,3 +3067,47 @@ Duplicate "メッセージ" (Arrival) in two branches — replaced one with "コ
 - Expand to 100+ movies with deeper trees
 - "Similar movies" after result
 - Share path as image
+
+---
+
+### <a id="otonoha"></a>68. otonoha - 2026-04-01
+
+**What is this?**
+A generative flower garden built with p5.js where each bloom represents a song from the iTunes Japan music chart. Genre determines flower shape (Pop=round, Rock=spiky, Hip-Hop=angular), ranking determines size and stem height, and hue maps to genre. Real chart data from iTunes RSS API with 25-song curated fallback. Ambient, wind-blown garden perfect for seniors exploring music trends.
+
+**Discovery Roll**
+Source: 8 (Music charts) | Persona: 36 (老後を楽しんでいるシニア) | Platform: 19 (p5.js generative art) | Wildcard: 28 (実在Web API連携)
+
+**Features Built**
+- iTunes Japan RSS API for real top-25 chart data
+- 7+ genre-to-flower-shape/color mappings
+- Rank-based sizing (1st place = biggest bloom)
+- Staggered growth animation from seed to full bloom
+- Wind simulation on stems, leaves, background grass
+- Floating petal particle system
+- Hover to reveal song info (title, artist, rank, genre)
+- Controls: wind toggle, regrow, label toggle
+
+**Tech Stack**
+p5.js 1.9 / iTunes RSS API / Vanilla JS / HTML / CSS / Google Fonts
+
+**Key Files**
+```
+index.html — Full app (single file, ~500 LOC)
+test.js    — 44 unit tests
+```
+
+**How to Run**
+```bash
+open otonoha/index.html
+```
+
+**Tests**: 44 passing | **Files**: 4 | **LOC**: ~500 | **Build time**: ~2 min
+
+**Challenges & Fixes**
+None — clean implementation.
+
+**Potential Next Steps**
+- Click flower to play song preview (iTunes preview URL)
+- Season-based garden themes
+- Multiple chart regions (US, UK, Japan)

@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>音の葉 - Otonoha</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: #1a2a1a;
+  font-family: 'Zen Maru Gothic', sans-serif;
+  overflow: hidden;
+}
+canvas { display: block; }
+
+.overlay {
+  position: fixed;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.title-bar {
+  top: 0; left: 0; right: 0;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.title-bar h1 {
+  font-size: 24px;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 3px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+.title-bar .sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  margin-top: 2px;
+}
+
+.info-panel {
+  bottom: 0; left: 0; right: 0;
+  padding: 12px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.song-info {
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 10px 16px;
+  max-width: 400px;
+  pointer-events: auto;
+}
+
+.song-title {
+  font-size: 14px;
+  color: rgba(255,255,255,0.9);
+  font-weight: 500;
+}
+
+.song-artist {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  margin-top: 2px;
+}
+
+.song-rank {
+  font-size: 10px;
+  color: rgba(255,215,0,0.7);
+  margin-top: 4px;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.ctrl-btn {
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 8px 14px;
+  color: rgba(255,255,255,0.7);
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.ctrl-btn:hover {
+  background: rgba(255,255,255,0.15);
+  color: white;
+}
+
+.loading {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(255,255,255,0.6);
+  font-size: 16px;
+  z-index: 100;
+}
+
+.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="overlay title-bar">
+  <div>
+    <h1>音の葉</h1>
+    <div class="sub">音楽チャートから咲く花の庭</div>
+  </div>
+  <div class="sub" id="chart-info" style="text-align:right"></div>
+</div>
+
+<div class="overlay info-panel">
+  <div class="song-info hidden" id="song-info">
+    <div class="song-title" id="hover-title"></div>
+    <div class="song-artist" id="hover-artist"></div>
+    <div class="song-rank" id="hover-rank"></div>
+  </div>
+  <div class="controls">
+    <button class="ctrl-btn" onclick="toggleWind()">🍃 風</button>
+    <button class="ctrl-btn" onclick="regrow()">🌱 再生成</button>
+    <button class="ctrl-btn" onclick="toggleLabels()">🏷️ 名前</button>
+  </div>
+</div>
+
+<div class="loading" id="loading">🌸 チャートデータを読み込み中...</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  音の葉 (Otonoha) - Generative Music Chart Garden
+// ═══════════════════════════════════════════════════
+
+let flowers = [];
+let particles = [];
+let songs = [];
+let hoveredFlower = null;
+let windEnabled = true;
+let labelsVisible = false;
+let gardenReady = false;
+let bgGrass = [];
+
+// ─── Genre → Color/Shape Mapping ───────────────────
+const genreStyles = {
+  'Pop':       { hue: 330, petals: 5, shape: 'round' },
+  'ポップ':    { hue: 330, petals: 5, shape: 'round' },
+  'J-Pop':     { hue: 340, petals: 6, shape: 'round' },
+  'Hip-Hop':   { hue: 270, petals: 4, shape: 'angular' },
+  'ヒップホップ': { hue: 270, petals: 4, shape: 'angular' },
+  'R&B':       { hue: 290, petals: 5, shape: 'round' },
+  'Rock':      { hue: 15, petals: 7, shape: 'spiky' },
+  'ロック':    { hue: 15, petals: 7, shape: 'spiky' },
+  'Alternative': { hue: 180, petals: 6, shape: 'angular' },
+  'Dance':     { hue: 200, petals: 8, shape: 'round' },
+  'ダンス':    { hue: 200, petals: 8, shape: 'round' },
+  'Electronic': { hue: 210, petals: 8, shape: 'angular' },
+  'Country':   { hue: 40, petals: 5, shape: 'round' },
+  'Latin':     { hue: 10, petals: 6, shape: 'round' },
+  'K-Pop':     { hue: 310, petals: 5, shape: 'round' },
+  'Anime':     { hue: 280, petals: 7, shape: 'round' },
+  'アニメ':    { hue: 280, petals: 7, shape: 'round' },
+  'default':   { hue: 120, petals: 5, shape: 'round' },
+};
+
+function getGenreStyle(genre) {
+  for (const [key, style] of Object.entries(genreStyles)) {
+    if (genre && genre.toLowerCase().includes(key.toLowerCase())) return style;
+  }
+  return genreStyles['default'];
+}
+
+// ─── Fallback Chart Data ───────────────────────────
+const fallbackSongs = [
+  { name: "アイドル", artist: "YOASOBI", genre: "J-Pop", rank: 1 },
+  { name: "Cruel Summer", artist: "Taylor Swift", genre: "Pop", rank: 2 },
+  { name: "Seven", artist: "Jung Kook", genre: "K-Pop", rank: 3 },
+  { name: "Flowers", artist: "Miley Cyrus", genre: "Pop", rank: 4 },
+  { name: "Kill Bill", artist: "SZA", genre: "R&B", rank: 5 },
+  { name: "怪獣の花唄", artist: "Vaundy", genre: "J-Pop", rank: 6 },
+  { name: "Last Night", artist: "Morgan Wallen", genre: "Country", rank: 7 },
+  { name: "Vampire", artist: "Olivia Rodrigo", genre: "Pop", rank: 8 },
+  { name: "Paint The Town Red", artist: "Doja Cat", genre: "Hip-Hop", rank: 9 },
+  { name: "祝福", artist: "YOASOBI", genre: "J-Pop", rank: 10 },
+  { name: "Snooze", artist: "SZA", genre: "R&B", rank: 11 },
+  { name: "喜劇", artist: "星野源", genre: "J-Pop", rank: 12 },
+  { name: "As It Was", artist: "Harry Styles", genre: "Pop", rank: 13 },
+  { name: "ケセラセラ", artist: "Mrs. GREEN APPLE", genre: "Rock", rank: 14 },
+  { name: "Anti-Hero", artist: "Taylor Swift", genre: "Pop", rank: 15 },
+  { name: "Butter", artist: "BTS", genre: "K-Pop", rank: 16 },
+  { name: "残響散歌", artist: "Aimer", genre: "Anime", rank: 17 },
+  { name: "Blinding Lights", artist: "The Weeknd", genre: "Dance", rank: 18 },
+  { name: "夜に駆ける", artist: "YOASOBI", genre: "J-Pop", rank: 19 },
+  { name: "Shape of You", artist: "Ed Sheeran", genre: "Pop", rank: 20 },
+  { name: "踊", artist: "Ado", genre: "J-Pop", rank: 21 },
+  { name: "Dynamite", artist: "BTS", genre: "K-Pop", rank: 22 },
+  { name: "うっせぇわ", artist: "Ado", genre: "J-Pop", rank: 23 },
+  { name: "Levitating", artist: "Dua Lipa", genre: "Dance", rank: 24 },
+  { name: "群青", artist: "YOASOBI", genre: "J-Pop", rank: 25 },
+];
+
+// ─── Fetch Chart Data ──────────────────────────────
+async function fetchChartData() {
+  try {
+    // iTunes RSS top songs (Japan)
+    const url = 'https://itunes.apple.com/jp/rss/topsongs/limit=25/json';
+    const res = await fetch(url);
+    const data = await res.json();
+    const entries = data.feed.entry || [];
+
+    songs = entries.map((entry, i) => ({
+      name: entry['im:name']?.label || 'Unknown',
+      artist: entry['im:artist']?.label || 'Unknown',
+      genre: entry.category?.attributes?.label || 'Pop',
+      rank: i + 1,
+    }));
+
+    document.getElementById('chart-info').textContent = `iTunes Japan トップ25 • ${new Date().toLocaleDateString('ja-JP')}`;
+  } catch (e) {
+    console.log('iTunes API fetch failed, using fallback data');
+    songs = fallbackSongs;
+    document.getElementById('chart-info').textContent = '人気楽曲（サンプルデータ）';
+  }
+
+  document.getElementById('loading').classList.add('hidden');
+  gardenReady = true;
+  createGarden();
+}
+
+// ─── Flower Class ──────────────────────────────────
+class Flower {
+  constructor(song, x, y) {
+    this.song = song;
+    this.x = x;
+    this.y = y;
+    this.targetY = y;
+
+    const style = getGenreStyle(song.genre);
+    this.hue = style.hue + random(-15, 15);
+    this.petalCount = style.petals;
+    this.shape = style.shape;
+
+    // Size based on rank (1=biggest)
+    this.size = map(song.rank, 1, 25, 40, 18);
+    this.stemHeight = map(song.rank, 1, 25, 120, 50) + random(-15, 15);
+
+    this.growth = 0;
+    this.growSpeed = random(0.005, 0.015);
+    this.swayPhase = random(TWO_PI);
+    this.swayAmount = random(2, 6);
+    this.petalRotation = random(TWO_PI);
+
+    // Leaf
+    this.leafAngle = random(-0.5, 0.5);
+    this.leafHeight = random(0.3, 0.6);
+    this.leafSize = random(8, 16);
+  }
+
+  update() {
+    if (this.growth < 1) {
+      this.growth += this.growSpeed;
+      if (this.growth > 1) this.growth = 1;
+    }
+
+    this.swayPhase += 0.02;
+  }
+
+  draw() {
+    const g = this.growth;
+    if (g <= 0) return;
+
+    push();
+    translate(this.x, this.y);
+
+    const sway = windEnabled ? sin(this.swayPhase + this.x * 0.01) * this.swayAmount * g : 0;
+
+    // Stem
+    const stemH = this.stemHeight * g;
+    stroke(80, 140, 60, 200);
+    strokeWeight(2);
+    noFill();
+    beginShape();
+    vertex(0, 0);
+    quadraticVertex(sway * 0.5, -stemH * 0.5, sway, -stemH);
+    endShape();
+
+    // Leaf
+    if (g > 0.3) {
+      const leafY = -stemH * this.leafHeight;
+      const leafSway = sway * this.leafHeight;
+      push();
+      translate(leafSway * 0.5, leafY);
+      rotate(this.leafAngle + sway * 0.02);
+      fill(70, 150, 50, 180);
+      noStroke();
+      ellipse(this.leafSize * 0.5, 0, this.leafSize * g, this.leafSize * 0.4 * g);
+      pop();
+    }
+
+    // Flower head
+    if (g > 0.5) {
+      const flowerG = map(g, 0.5, 1, 0, 1);
+      push();
+      translate(sway, -stemH);
+      rotate(this.petalRotation + sway * 0.01);
+
+      const sz = this.size * flowerG;
+
+      // Petals
+      for (let i = 0; i < this.petalCount; i++) {
+        const angle = (TWO_PI / this.petalCount) * i;
+        push();
+        rotate(angle);
+
+        const sat = 60 + flowerG * 30;
+        const bri = 80 + flowerG * 20;
+        colorMode(HSB, 360, 100, 100, 100);
+        fill(this.hue, sat, bri, 80);
+        noStroke();
+
+        if (this.shape === 'round') {
+          ellipse(sz * 0.4, 0, sz * 0.7, sz * 0.4);
+        } else if (this.shape === 'angular') {
+          beginShape();
+          vertex(0, -sz * 0.15);
+          vertex(sz * 0.7, 0);
+          vertex(0, sz * 0.15);
+          vertex(sz * 0.1, 0);
+          endShape(CLOSE);
+        } else { // spiky
+          beginShape();
+          vertex(0, -sz * 0.1);
+          vertex(sz * 0.8, 0);
+          vertex(0, sz * 0.1);
+          endShape(CLOSE);
+        }
+
+        colorMode(RGB, 255);
+        pop();
+      }
+
+      // Center
+      colorMode(HSB, 360, 100, 100);
+      fill((this.hue + 30) % 360, 40, 95);
+      noStroke();
+      circle(0, 0, sz * 0.3);
+      colorMode(RGB, 255);
+
+      pop();
+    }
+
+    pop();
+
+    // Label
+    if (labelsVisible && g > 0.8) {
+      push();
+      fill(255, 255, 255, 150);
+      noStroke();
+      textSize(9);
+      textAlign(CENTER);
+      text(this.song.name, this.x + sway, this.y - this.stemHeight * g - this.size * 0.7);
+      pop();
+    }
+  }
+
+  isHovered(mx, my) {
+    const sway = windEnabled ? sin(this.swayPhase + this.x * 0.01) * this.swayAmount * this.growth : 0;
+    const fx = this.x + sway;
+    const fy = this.y - this.stemHeight * this.growth;
+    return dist(mx, my, fx, fy) < this.size;
+  }
+}
+
+// ─── Particle (petal drift) ────────────────────────
+class Petal {
+  constructor() {
+    this.reset();
+  }
+
+  reset() {
+    this.x = random(-50, width + 50);
+    this.y = random(-20, -100);
+    this.vx = random(0.2, 1);
+    this.vy = random(0.3, 0.8);
+    this.rotation = random(TWO_PI);
+    this.rotSpeed = random(-0.03, 0.03);
+    this.size = random(4, 8);
+    this.hue = random([330, 340, 10, 280, 200]);
+    this.alpha = random(40, 80);
+  }
+
+  update() {
+    if (windEnabled) {
+      this.x += this.vx + sin(frameCount * 0.02 + this.y * 0.01) * 0.5;
+    }
+    this.y += this.vy;
+    this.rotation += this.rotSpeed;
+
+    if (this.y > height + 20 || this.x > width + 50) this.reset();
+  }
+
+  draw() {
+    push();
+    translate(this.x, this.y);
+    rotate(this.rotation);
+    colorMode(HSB, 360, 100, 100, 100);
+    fill(this.hue, 50, 90, this.alpha);
+    noStroke();
+    ellipse(0, 0, this.size, this.size * 0.5);
+    colorMode(RGB, 255);
+    pop();
+  }
+}
+
+// ─── Garden Creation ───────────────────────────────
+function createGarden() {
+  flowers = [];
+
+  // Layout: scatter flowers across the bottom portion
+  const margin = 60;
+  const cols = 5;
+  const rows = 5;
+  const cellW = (width - margin * 2) / cols;
+  const cellH = 140;
+  const startY = height - 30;
+
+  for (let i = 0; i < songs.length && i < 25; i++) {
+    const col = i % cols;
+    const row = floor(i / cols);
+    const x = margin + col * cellW + cellW / 2 + random(-cellW * 0.25, cellW * 0.25);
+    const y = startY - row * cellH * 0.2 + random(-10, 10);
+
+    flowers.push(new Flower(songs[i], x, y));
+  }
+
+  // Stagger growth
+  flowers.forEach((f, i) => {
+    f.growSpeed = map(i, 0, flowers.length, 0.015, 0.005);
+  });
+
+  // Create background grass
+  bgGrass = [];
+  for (let i = 0; i < 200; i++) {
+    bgGrass.push({
+      x: random(width),
+      y: random(height * 0.5, height),
+      h: random(10, 35),
+      phase: random(TWO_PI),
+      shade: random(40, 80),
+    });
+  }
+
+  // Petals
+  particles = [];
+  for (let i = 0; i < 20; i++) {
+    particles.push(new Petal());
+  }
+}
+
+// ─── p5.js Setup & Draw ────────────────────────────
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  textFont('Zen Maru Gothic');
+  fetchChartData();
+}
+
+function draw() {
+  // Sky gradient (evening garden feel)
+  for (let y = 0; y < height; y++) {
+    const t = y / height;
+    const r = lerp(25, 30, t);
+    const g = lerp(35, 50, t);
+    const b = lerp(60, 35, t);
+    stroke(r, g, b);
+    line(0, y, width, y);
+  }
+
+  if (!gardenReady) return;
+
+  // Ground
+  noStroke();
+  fill(35, 55, 30);
+  rect(0, height * 0.75, width, height * 0.25);
+
+  // Ground gradient
+  for (let y = height * 0.72; y < height * 0.78; y++) {
+    const t = (y - height * 0.72) / (height * 0.06);
+    fill(lerp(30, 35, t), lerp(50, 55, t), lerp(35, 30, t), t * 255);
+    rect(0, y, width, 1);
+  }
+
+  // Background grass
+  stroke(60, 120, 45, 100);
+  strokeWeight(1);
+  for (const g of bgGrass) {
+    const sway = windEnabled ? sin(frameCount * 0.03 + g.phase) * 3 : 0;
+    stroke(g.shade, g.shade + 40, g.shade - 10, 120);
+    line(g.x, g.y, g.x + sway, g.y - g.h);
+  }
+
+  // Update and draw flowers (back to front for depth)
+  noStroke();
+  const sortedFlowers = [...flowers].sort((a, b) => a.y - b.y);
+  for (const f of sortedFlowers) {
+    f.update();
+    f.draw();
+  }
+
+  // Particles
+  for (const p of particles) {
+    p.update();
+    p.draw();
+  }
+
+  // Hover detection
+  hoveredFlower = null;
+  for (const f of flowers) {
+    if (f.growth > 0.5 && f.isHovered(mouseX, mouseY)) {
+      hoveredFlower = f;
+      break;
+    }
+  }
+
+  const infoEl = document.getElementById('song-info');
+  if (hoveredFlower) {
+    infoEl.classList.remove('hidden');
+    document.getElementById('hover-title').textContent = hoveredFlower.song.name;
+    document.getElementById('hover-artist').textContent = hoveredFlower.song.artist;
+    document.getElementById('hover-rank').textContent = `#${hoveredFlower.song.rank} • ${hoveredFlower.song.genre}`;
+    cursor(HAND);
+  } else {
+    infoEl.classList.add('hidden');
+    cursor(ARROW);
+  }
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  if (gardenReady) createGarden();
+}
+
+// ─── Controls ──────────────────────────────────────
+function toggleWind() { windEnabled = !windEnabled; }
+function toggleLabels() { labelsVisible = !labelsVisible; }
+function regrow() {
+  if (gardenReady) {
+    flowers.forEach(f => { f.growth = 0; f.growSpeed = random(0.005, 0.015); });
+  }
+}
+</script>
+</body>
+</html>

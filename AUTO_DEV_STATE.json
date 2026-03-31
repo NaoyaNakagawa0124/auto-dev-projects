@@ -1,5 +1,5 @@
 {
-  "apps_completed": 67,
+  "apps_completed": 68,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -405,6 +405,12 @@
       "persona": 13,
       "platform": 17,
       "wildcard": 43
+    },
+    {
+      "source": 8,
+      "persona": 36,
+      "platform": 19,
+      "wildcard": 28
     }
   ],
   "history": [
@@ -608,6 +614,9 @@
     },
     {
       "name": "eigamichi"
+    },
+    {
+      "name": "otonoha"
     }
   ]
 }
