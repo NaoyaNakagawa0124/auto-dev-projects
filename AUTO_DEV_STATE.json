@@ -1,5 +1,5 @@
 {
-  "apps_completed": 63,
+  "apps_completed": 64,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -381,6 +381,12 @@
       "persona": 35,
       "platform": 5,
       "wildcard": 37
+    },
+    {
+      "source": 6,
+      "persona": 27,
+      "platform": 1,
+      "wildcard": 23
     }
   ],
   "history": [
@@ -572,6 +578,9 @@
     },
     {
       "name": "miraipost"
+    },
+    {
+      "name": "oshizora"
     }
   ]
 }

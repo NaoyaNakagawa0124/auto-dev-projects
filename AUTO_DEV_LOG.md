@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-31 02:00 | Total apps: 63 | Total tests: 9,424
+> Last updated: 2026-03-31 03:00 | Total apps: 64 | Total tests: 9,484
 
 ## Quick Overview
 
@@ -69,6 +69,7 @@
 | 61 | [nyantokashite](#nyantokashite) | Cat cleanup Sokoban puzzle game | Canvas 2D/Web Audio/JS | 0 | complete | `open nyantokashite/index.html` |
 | 62 | [tenaoshi](#tenaoshi) | Cozy neighborhood renovation game | C/Raylib 5.5 | 32 | complete | `make && ./tenaoshi` |
 | 63 | [miraipost](#miraipost) | Future self letter Chrome extension | Chrome Ext/Vanilla JS | 36 | complete | Load unpacked in `chrome://extensions` |
+| 64 | [oshizora](#oshizora) | Living oshi-colored sky with real weather | Canvas/Vanilla JS/OpenMeteo | 60 | complete | `open index.html` |
 
 ---
 
@@ -2886,3 +2887,48 @@ None — clean implementation.
 - Dark mode for nighttime writing
 - Letter templates and writing prompts
 - Gratitude letter mode
+
+---
+
+### <a id="oshizora"></a>64. oshizora - 2026-03-31
+
+**What is this?**
+A mesmerizing living sky web app that blends your oshi's representative color with real weather data, time of day, and season. Cherry blossom petals in spring, fireflies in summer, falling leaves in autumn, snow in winter — all tinted in your oshi's color. Every visit looks different.
+
+**Discovery Roll**
+Source: 6 (Weather/Natural phenomena) | Persona: 27 (推し活に全力の人) | Platform: 1 (Web app) | Wildcard: 23 (使うたびに変化する)
+
+**Features Built**
+- Canvas-based dynamic sky with time-of-day gradients (dawn/day/dusk/night)
+- Oshi color blending into sky, stars, clouds, particles
+- OpenMeteo API for real weather + geolocation
+- 4 seasonal particle systems: cherry blossoms, fireflies, falling leaves, snow
+- Weather effects: rain streaks, cloud density, fog
+- Sun/moon with glow, twinkling star field
+- Setup modal with 10 preset oshi colors + custom picker
+- Ambient oshi-themed messages rotating by weather/time
+
+**Tech Stack**
+HTML5 Canvas / Vanilla JS / OpenMeteo API / Geolocation API / Google Fonts (Zen Maru Gothic) / CSS glassmorphism
+
+**Key Files**
+```
+index.html — Full app (single file, ~500 LOC)
+test.js    — 60 unit tests
+```
+
+**How to Run**
+```bash
+open oshizora/index.html
+```
+
+**Tests**: 60 passing | **Files**: 6 | **LOC**: ~500 | **Build time**: ~3 min
+
+**Challenges & Fixes**
+None — clean implementation.
+
+**Potential Next Steps**
+- Multiple oshi profiles with swipe-to-switch
+- Screenshot/wallpaper export
+- Background music that changes with weather
+- Share "my sky right now" as image

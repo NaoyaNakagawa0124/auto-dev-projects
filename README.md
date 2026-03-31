@@ -67,5 +67,6 @@
 | 61 | nyantokashite | Cat cleanup Sokoban puzzle game | Canvas 2D/Web Audio/JS | 0 |
 | 62 | tenaoshi | Cozy neighborhood renovation game | C/Raylib 5.5 | 32 |
 | 63 | miraipost | Future self letter Chrome extension | Chrome Ext/Vanilla JS | 36 |
+| 64 | oshizora | Living oshi-colored sky with real weather | Canvas/JS/OpenMeteo | 60 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.
