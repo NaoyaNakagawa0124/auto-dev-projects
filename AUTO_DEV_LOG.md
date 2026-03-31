@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-31 00:00 | Total apps: 61 | Total tests: 9,356
+> Last updated: 2026-03-31 01:00 | Total apps: 62 | Total tests: 9,388
 
 ## Quick Overview
 
@@ -67,6 +67,7 @@
 | 59 | [tenkimeshi](#tenkimeshi) | Weather-based food recommender IoT | Python/OpenMeteo/RPi | 72 | complete | `python3 src/tenkimeshi.py --demo --once` |
 | **60** | [**kabuoto**](#kabuoto) | **Stock market data sonification** | **Web Audio API/Canvas/JS** | **0** | **complete** | `open kabuoto/index.html` |
 | 61 | [nyantokashite](#nyantokashite) | Cat cleanup Sokoban puzzle game | Canvas 2D/Web Audio/JS | 0 | complete | `open nyantokashite/index.html` |
+| 62 | [tenaoshi](#tenaoshi) | Cozy neighborhood renovation game | C/Raylib 5.5 | 32 | complete | `make && ./tenaoshi` |
 
 ---
 
@@ -2787,3 +2788,50 @@ Unreal Engine not available — adapted to web Canvas while keeping the 3D game 
 - Level editor for user-created puzzles
 - More room themes and cat personality types
 - Online level sharing via URL encoding
+
+---
+
+### <a id="tenaoshi"></a>62. tenaoshi - 2026-03-31
+
+**What is this?**
+A cozy top-down neighborhood renovation game built with Raylib in C. You play as a retired craftsperson walking around a tile-based town, discovering and fixing broken fences, overgrown gardens, peeling walls, and leaky roofs. The neighborhood visually transforms as you complete repairs — relaxing, satisfying gameplay designed for seniors who love DIY.
+
+**Discovery Roll**
+Source: 26 (Home improvement/DIY/Maker community) | Persona: 36 (老後を楽しんでいるシニア) | Platform: 20 (Raylib/SDL game) | Wildcard: 33 (地図やマップが中心要素)
+
+**Features Built**
+- 24x20 tile-based neighborhood map with roads, sidewalks, houses, gardens, water, bridge, trees, flowers
+- 16 repair sites across 6 buildings: broken fences, overgrown gardens, peeling walls, leaky roofs
+- 4 tools with correct-tool-for-the-job matching: hammer, paintbrush, shears, wrench
+- Visual before/after transformation on repair completion
+- Particle effects celebration system
+- Smooth camera following with lerp interpolation
+- Japanese font rendering (Hiragino) with full CJK codepoint support
+- Title screen, victory screen, happiness meter, repair progress UI
+- Animated water ripples, dripping roof leaks, pulsing repair highlights
+
+**Tech Stack**
+C11 / Raylib 5.5 / Makefile / macOS (no external assets — all procedural graphics)
+
+**Key Files**
+```
+main.c      — Full game (~1000 LOC)
+test_game.c — 32 unit tests for game logic
+Makefile    — Build system
+```
+
+**How to Run**
+```bash
+cd tenaoshi && make && ./tenaoshi
+```
+
+**Tests**: 32 passing | **Files**: 7 | **LOC**: ~1,000 | **Build time**: ~2 min
+
+**Challenges & Fixes**
+None — clean build on first attempt after minor unused variable warnings.
+
+**Potential Next Steps**
+- Neighbor NPC characters with dialogue
+- Seasonal visual changes (cherry blossoms, snow)
+- Sound effects for tools and repair completion
+- Save/load game state

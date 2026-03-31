@@ -65,5 +65,6 @@
 | 59 | tenkimeshi | Weather-based food recommender IoT | Python/OpenMeteo/RPi | 72 |
 | **60** | **kabuoto** | **Stock market data sonification** | **Web Audio/Canvas/JS** | **0** |
 | 61 | nyantokashite | Cat cleanup Sokoban puzzle game | Canvas 2D/Web Audio/JS | 0 |
+| 62 | tenaoshi | Cozy neighborhood renovation game | C/Raylib 5.5 | 32 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.
