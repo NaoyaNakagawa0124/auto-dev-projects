@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-31 03:00 | Total apps: 64 | Total tests: 9,484
+> Last updated: 2026-03-31 04:00 | Total apps: 65 | Total tests: 9,511
 
 ## Quick Overview
 
@@ -70,6 +70,7 @@
 | 62 | [tenaoshi](#tenaoshi) | Cozy neighborhood renovation game | C/Raylib 5.5 | 32 | complete | `make && ./tenaoshi` |
 | 63 | [miraipost](#miraipost) | Future self letter Chrome extension | Chrome Ext/Vanilla JS | 36 | complete | Load unpacked in `chrome://extensions` |
 | 64 | [oshizora](#oshizora) | Living oshi-colored sky with real weather | Canvas/Vanilla JS/OpenMeteo | 60 | complete | `open index.html` |
+| 65 | [namioto](#namioto) | One-hand ocean breathing meditation | C/Raylib 5.5 | 27 | complete | `make && ./namioto` |
 
 ---
 
@@ -2932,3 +2933,47 @@ None — clean implementation.
 - Screenshot/wallpaper export
 - Background music that changes with weather
 - Share "my sky right now" as image
+
+---
+
+### <a id="namioto"></a>65. namioto - 2026-03-31
+
+**What is this?**
+A one-hand ocean meditation game where you control waves with your breathing. Hold spacebar to inhale (waves rise), release to exhale (waves fall). Steady breathing calms the ocean and clears the sky. Erratic breathing creates storms. 5-minute sessions with rhythm scoring — a stress-relief experience for busy couples.
+
+**Discovery Roll**
+Source: 14 (Fitness/Wellness) | Persona: 26 (共働き夫婦) | Platform: 20 (Raylib) | Wildcard: 5 (片手操作のみ)
+
+**Features Built**
+- Spacebar-only breathing control (hold=inhale, release=exhale)
+- 3-layer procedural ocean waves with foam, responsive to breath rhythm
+- Dynamic storm/clear sky transitions based on calmness
+- Breath rhythm scoring: cycle length, balance, deviation from ideal 4s
+- Calm time accumulation and session rating (3 tiers)
+- Rising bubbles on inhale, birds appearing in calm weather
+- Breathing circle indicator, HUD with calm meter, session timer
+
+**Tech Stack**
+C11 / Raylib 5.5 / Makefile / macOS (no external assets)
+
+**Key Files**
+```
+main.c      — Full game (~530 LOC)
+test_game.c — 27 unit tests
+Makefile    — Build system
+```
+
+**How to Run**
+```bash
+cd namioto && make && ./namioto
+```
+
+**Tests**: 27 passing | **Files**: 6 | **LOC**: ~530 | **Build time**: ~1 min
+
+**Challenges & Fixes**
+Missing stdlib.h include — fixed immediately.
+
+**Potential Next Steps**
+- Two-player alternating mode for couples
+- Background wave audio generation
+- Multiple environments (forest, mountain, space)

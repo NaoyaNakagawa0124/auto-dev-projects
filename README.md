@@ -68,5 +68,6 @@
 | 62 | tenaoshi | Cozy neighborhood renovation game | C/Raylib 5.5 | 32 |
 | 63 | miraipost | Future self letter Chrome extension | Chrome Ext/Vanilla JS | 36 |
 | 64 | oshizora | Living oshi-colored sky with real weather | Canvas/JS/OpenMeteo | 60 |
+| 65 | namioto | One-hand ocean breathing meditation | C/Raylib 5.5 | 27 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

@@ -1,5 +1,5 @@
 {
-  "apps_completed": 64,
+  "apps_completed": 65,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -387,6 +387,12 @@
       "persona": 27,
       "platform": 1,
       "wildcard": 23
+    },
+    {
+      "source": 14,
+      "persona": 26,
+      "platform": 20,
+      "wildcard": 5
     }
   ],
   "history": [
@@ -581,6 +587,9 @@
     },
     {
       "name": "oshizora"
+    },
+    {
+      "name": "namioto"
     }
   ]
 }
