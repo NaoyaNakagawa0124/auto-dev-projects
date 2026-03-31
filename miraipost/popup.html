@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>未来ポスト</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-icon">📮</div>
+      <h1 class="header-title">未来ポスト</h1>
+      <p class="header-subtitle">未来の自分への手紙</p>
+    </header>
+
+    <!-- Tab Navigation -->
+    <nav class="tabs">
+      <button class="tab active" data-tab="write">
+        <span class="tab-icon">✉️</span>
+        <span class="tab-label">書く</span>
+      </button>
+      <button class="tab" data-tab="mailbox">
+        <span class="tab-icon">📬</span>
+        <span class="tab-label">届いた手紙</span>
+        <span class="tab-badge" id="unread-badge" style="display:none">0</span>
+      </button>
+      <button class="tab" data-tab="worry">
+        <span class="tab-icon">🕊️</span>
+        <span class="tab-label">不安ポスト</span>
+      </button>
+      <button class="tab" data-tab="pending">
+        <span class="tab-icon">⏳</span>
+        <span class="tab-label">配達待ち</span>
+      </button>
+    </nav>
+
+    <!-- Write Tab -->
+    <section class="tab-content active" id="tab-write">
+      <div class="letter-paper">
+        <div class="letter-to">未来の自分へ</div>
+        <textarea
+          id="letter-body"
+          class="letter-textarea"
+          placeholder="今の気持ちや、未来の自分に伝えたいことを書いてみましょう..."
+          rows="8"
+        ></textarea>
+        <div class="letter-from">
+          <span id="today-date"></span>の自分より
+        </div>
+      </div>
+
+      <div class="delivery-section">
+        <label class="delivery-label">届ける日を選ぶ</label>
+        <div class="delivery-options">
+          <button class="delivery-btn" data-days="7">1週間後</button>
+          <button class="delivery-btn active" data-days="30">1ヶ月後</button>
+          <button class="delivery-btn" data-days="90">3ヶ月後</button>
+          <button class="delivery-btn" data-days="365">1年後</button>
+        </div>
+        <div class="delivery-custom">
+          <input type="date" id="custom-date" class="custom-date-input">
+        </div>
+        <div class="delivery-info" id="delivery-info">
+          届く日: <span id="delivery-date-display"></span>
+        </div>
+      </div>
+
+      <button class="seal-btn" id="seal-btn">
+        <span class="seal-icon">🔴</span>
+        <span>封をする</span>
+      </button>
+
+      <!-- Seal Animation Overlay -->
+      <div class="seal-overlay" id="seal-overlay">
+        <div class="seal-animation">
+          <div class="wax-seal">
+            <div class="seal-stamp">♥</div>
+          </div>
+          <div class="seal-text">手紙を封印しました</div>
+          <div class="seal-subtext" id="seal-subtext"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mailbox Tab (Delivered Letters) -->
+    <section class="tab-content" id="tab-mailbox">
+      <div class="mailbox-header">
+        <h2 class="section-title">届いた手紙</h2>
+      </div>
+      <div id="delivered-list" class="letter-list">
+        <div class="empty-state">
+          <div class="empty-icon">📭</div>
+          <p class="empty-text">まだ届いた手紙はありません</p>
+          <p class="empty-hint">手紙を書いて、届くのを楽しみに待ちましょう</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Worry Post Tab -->
+    <section class="tab-content" id="tab-worry">
+      <div class="worry-intro">
+        <p class="worry-desc">今の不安や心配を書いて、封筒に入れましょう。<br>時間が経ってから開けると、意外と解決していることが多いものです。</p>
+      </div>
+      <div class="letter-paper worry-paper">
+        <div class="letter-to">今の不安へ</div>
+        <textarea
+          id="worry-body"
+          class="letter-textarea"
+          placeholder="今、何が心配ですか？正直に書いてみてください..."
+          rows="6"
+        ></textarea>
+      </div>
+      <div class="delivery-section">
+        <label class="delivery-label">振り返る日</label>
+        <div class="delivery-options">
+          <button class="worry-delivery-btn active" data-days="14">2週間後</button>
+          <button class="worry-delivery-btn" data-days="30">1ヶ月後</button>
+          <button class="worry-delivery-btn" data-days="90">3ヶ月後</button>
+        </div>
+      </div>
+      <button class="seal-btn worry-seal-btn" id="worry-seal-btn">
+        <span class="seal-icon">🕊️</span>
+        <span>不安を封じる</span>
+      </button>
+
+      <div class="worry-history">
+        <h3 class="worry-history-title">過去の不安</h3>
+        <div id="worry-list" class="letter-list">
+          <div class="empty-state">
+            <div class="empty-icon">🕊️</div>
+            <p class="empty-text">不安ポストはまだ空です</p>
+            <p class="empty-hint">不安を書いて、後で振り返ってみましょう</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pending Tab -->
+    <section class="tab-content" id="tab-pending">
+      <div class="mailbox-header">
+        <h2 class="section-title">配達待ちの手紙</h2>
+      </div>
+      <div id="pending-list" class="letter-list">
+        <div class="empty-state">
+          <div class="empty-icon">✉️</div>
+          <p class="empty-text">配達待ちの手紙はありません</p>
+          <p class="empty-hint">手紙を書いてみましょう</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Letter Reading Overlay -->
+    <div class="read-overlay" id="read-overlay">
+      <div class="read-letter">
+        <button class="read-close" id="read-close">✕</button>
+        <div class="read-seal" id="read-seal">
+          <div class="wax-seal clickable">
+            <div class="seal-stamp">♥</div>
+          </div>
+          <p class="read-seal-hint">封蝋をクリックして開封</p>
+        </div>
+        <div class="read-content" id="read-content" style="display:none">
+          <div class="read-date" id="read-date"></div>
+          <div class="read-body" id="read-body"></div>
+          <div class="read-from" id="read-from"></div>
+          <div class="read-worry-check" id="read-worry-check" style="display:none">
+            <p class="worry-question">この不安は解決しましたか？</p>
+            <div class="worry-buttons">
+              <button class="worry-resolved-btn" data-resolved="yes">😊 解決した！</button>
+              <button class="worry-resolved-btn" data-resolved="partial">🤔 まだ少し...</button>
+              <button class="worry-resolved-btn" data-resolved="no">😟 まだ不安</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Footer -->
+    <footer class="stats-footer">
+      <div class="stat">
+        <span class="stat-num" id="stat-sent">0</span>
+        <span class="stat-label">送った手紙</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="stat-delivered">0</span>
+        <span class="stat-label">届いた手紙</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="stat-resolved">0</span>
+        <span class="stat-label">解決した不安</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

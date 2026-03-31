@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head><title>Icon Generator</title></head>
+<body>
+<canvas id="c16" width="16" height="16"></canvas>
+<canvas id="c48" width="48" height="48"></canvas>
+<canvas id="c128" width="128" height="128"></canvas>
+<script>
+function drawIcon(canvas) {
+  const s = canvas.width;
+  const ctx = canvas.getContext('2d');
+  // Background circle
+  ctx.fillStyle = '#F5E6D3';
+  ctx.beginPath();
+  ctx.arc(s/2, s/2, s/2-1, 0, Math.PI*2);
+  ctx.fill();
+  // Envelope
+  const ex = s*0.2, ey = s*0.3, ew = s*0.6, eh = s*0.4;
+  ctx.fillStyle = '#FFF8F0';
+  ctx.fillRect(ex, ey, ew, eh);
+  ctx.strokeStyle = '#C4956A';
+  ctx.lineWidth = Math.max(1, s*0.02);
+  ctx.strokeRect(ex, ey, ew, eh);
+  // Envelope flap
+  ctx.beginPath();
+  ctx.moveTo(ex, ey);
+  ctx.lineTo(ex+ew/2, ey+eh*0.5);
+  ctx.lineTo(ex+ew, ey);
+  ctx.strokeStyle = '#C4956A';
+  ctx.stroke();
+  // Wax seal
+  ctx.fillStyle = '#C0392B';
+  ctx.beginPath();
+  ctx.arc(s/2, ey+eh*0.35, s*0.1, 0, Math.PI*2);
+  ctx.fill();
+  // Heart on seal
+  if (s >= 48) {
+    ctx.fillStyle = '#E74C3C';
+    ctx.font = `${s*0.1}px serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText('♥', s/2, ey+eh*0.38+s*0.03);
+  }
+}
+[16,48,128].forEach(size => {
+  const c = document.getElementById('c'+size);
+  drawIcon(c);
+  const link = document.createElement('a');
+  link.download = `icon${size}.png`;
+  link.href = c.toDataURL();
+  link.textContent = `Download ${size}x${size}`;
+  document.body.appendChild(link);
+  document.body.appendChild(document.createElement('br'));
+});
+</script>
+</body>
+</html>

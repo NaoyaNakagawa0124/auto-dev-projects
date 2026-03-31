@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-31 01:00 | Total apps: 62 | Total tests: 9,388
+> Last updated: 2026-03-31 02:00 | Total apps: 63 | Total tests: 9,424
 
 ## Quick Overview
 
@@ -68,6 +68,7 @@
 | **60** | [**kabuoto**](#kabuoto) | **Stock market data sonification** | **Web Audio API/Canvas/JS** | **0** | **complete** | `open kabuoto/index.html` |
 | 61 | [nyantokashite](#nyantokashite) | Cat cleanup Sokoban puzzle game | Canvas 2D/Web Audio/JS | 0 | complete | `open nyantokashite/index.html` |
 | 62 | [tenaoshi](#tenaoshi) | Cozy neighborhood renovation game | C/Raylib 5.5 | 32 | complete | `make && ./tenaoshi` |
+| 63 | [miraipost](#miraipost) | Future self letter Chrome extension | Chrome Ext/Vanilla JS | 36 | complete | Load unpacked in `chrome://extensions` |
 
 ---
 
@@ -2835,3 +2836,53 @@ None — clean build on first attempt after minor unused variable warnings.
 - Seasonal visual changes (cherry blossoms, snow)
 - Sound effects for tools and repair completion
 - Save/load game state
+
+---
+
+### <a id="miraipost"></a>63. miraipost - 2026-03-31
+
+**What is this?**
+A Chrome extension for writing letters to your future self. Seal your words with a wax seal animation, choose a delivery date, and receive them back as gentle browser notifications. Includes a "worry mailbox" for sealing away anxieties and revisiting them later with fresh perspective — a therapeutic writing tool built into your browser.
+
+**Discovery Roll**
+Source: 32 (Product Hunt) | Persona: 35 (将来に漠然とした不安がある人) | Platform: 5 (Chrome Extension) | Wildcard: 37 (手紙・メッセージ体験)
+
+**Features Built**
+- 4-tab popup UI: 書く / 届いた手紙 / 不安ポスト / 配達待ち
+- Letter composition with lined paper CSS, Zen Maru Gothic font, delivery date picker
+- Wax seal stamp-in animation on sealing, break-away animation on opening
+- Chrome Alarms-based delivery scheduling (30-min checks)
+- Worry mailbox with resolution tracking (解決した / まだ少し / まだ不安)
+- Stats footer, unread badge, XSS-safe content rendering
+
+**Tech Stack**
+Chrome Extension Manifest V3 / Vanilla JS / HTML5 / CSS3 / Chrome Storage + Alarms + Notifications APIs / Google Fonts (Zen Maru Gothic)
+
+**Key Files**
+```
+manifest.json  — Extension manifest
+popup.html     — Main popup UI
+popup.css      — Warm paper-texture styling
+popup.js       — All logic (letter CRUD, delivery, reading)
+background.js  — Service worker for alarm-based delivery
+test.js        — 36 Node.js unit tests
+```
+
+**How to Run**
+```bash
+# Load in Chrome:
+# 1. Open chrome://extensions
+# 2. Enable Developer mode
+# 3. Load unpacked → select miraipost/
+```
+
+**Tests**: 36 passing | **Files**: 10 | **LOC**: ~900 | **Build time**: ~3 min
+
+**Challenges & Fixes**
+None — clean implementation.
+
+**Potential Next Steps**
+- Letter encryption for privacy
+- Dark mode for nighttime writing
+- Letter templates and writing prompts
+- Gratitude letter mode

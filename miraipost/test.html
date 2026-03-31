@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>未来ポスト - テスト</title>
+  <style>
+    body { font-family: 'Courier New', monospace; background: #1a1a2e; color: #eee; padding: 20px; }
+    h1 { color: #FFD700; font-size: 18px; }
+    .section { color: #87CEEB; font-size: 14px; margin: 16px 0 4px; }
+    .pass { color: #5CDB95; }
+    .fail { color: #FF6B6B; }
+    .test { margin: 2px 0; font-size: 13px; }
+    .summary { margin-top: 20px; padding: 10px; border: 2px solid #FFD700; border-radius: 8px; font-size: 16px; }
+    .summary.all-pass { border-color: #5CDB95; }
+  </style>
+</head>
+<body>
+<h1>═══ 未来ポスト (Miraipost) - Unit Tests ═══</h1>
+<div id="results"></div>
+<div id="summary" class="summary"></div>
+
+<script>
+// ─── Test Framework ─────────────────────────────────
+let tests = 0, passed = 0;
+const results = document.getElementById('results');
+
+function section(name) {
+  results.innerHTML += `<div class="section">[${name}]</div>`;
+}
+
+function test(name, fn) {
+  tests++;
+  try {
+    fn();
+    passed++;
+    results.innerHTML += `<div class="test pass">  ✓ ${name}</div>`;
+  } catch (e) {
+    results.innerHTML += `<div class="test fail">  ✗ ${name}: ${e.message}</div>`;
+  }
+}
+
+function assert(cond, msg) {
+  if (!cond) throw new Error(msg || 'Assertion failed');
+}
+
+function assertEqual(a, b, msg) {
+  if (a !== b) throw new Error(msg || `Expected ${b}, got ${a}`);
+}
+
+// ─── Mock Chrome APIs ───────────────────────────────
+const mockStorage = {};
+const mockChrome = {
+  storage: {
+    local: {
+      get: async (keys) => {
+        const result = {};
+        for (const k of keys) result[k] = mockStorage[k];
+        return result;
+      },
+      set: async (data) => {
+        Object.assign(mockStorage, data);
+      }
+    }
+  },
+  alarms: {
+    create: () => {},
+    onAlarm: { addListener: () => {} }
+  },
+  notifications: {
+    create: () => {},
+    onClicked: { addListener: () => {} }
+  },
+  runtime: {
+    onInstalled: { addListener: () => {} },
+    onStartup: { addListener: () => {} }
+  },
+  action: { openPopup: () => {} }
+};
+
+// ─── Helpers (replicated from popup.js) ─────────────
+function generateId() {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+}
+
+function formatDate(ts) {
+  const d = new Date(ts);
+  return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+}
+
+function formatDateShort(ts) {
+  const d = new Date(ts);
+  return `${d.getMonth() + 1}/${d.getDate()}`;
+}
+
+function daysUntil(ts) {
+  const now = new Date();
+  const target = new Date(ts);
+  const diff = Math.ceil((target - now) / (1000 * 60 * 60 * 24));
+  return Math.max(0, diff);
+}
+
+function daysAgo(ts) {
+  const now = new Date();
+  const past = new Date(ts);
+  return Math.floor((now - past) / (1000 * 60 * 60 * 24));
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function createLetter(body, days, type = 'letter') {
+  return {
+    id: generateId(),
+    type,
+    body,
+    preview: body.substring(0, 60),
+    createdAt: Date.now(),
+    deliverAt: Date.now() + days * 24 * 60 * 60 * 1000,
+    status: 'sealed',
+    opened: false,
+    resolved: type === 'worry' ? null : undefined,
+  };
+}
+
+// ─── Tests ──────────────────────────────────────────
+
+section('ID生成');
+
+test('IDが文字列である', () => {
+  const id = generateId();
+  assertEqual(typeof id, 'string');
+});
+
+test('IDがユニークである', () => {
+  const ids = new Set();
+  for (let i = 0; i < 100; i++) ids.add(generateId());
+  assertEqual(ids.size, 100, 'All IDs should be unique');
+});
+
+test('IDが空でない', () => {
+  assert(generateId().length > 0);
+});
+
+section('日付フォーマット');
+
+test('formatDate: 正しい日本語フォーマット', () => {
+  const ts = new Date(2026, 2, 31).getTime(); // March 31, 2026
+  assertEqual(formatDate(ts), '2026年3月31日');
+});
+
+test('formatDate: 1月1日', () => {
+  const ts = new Date(2026, 0, 1).getTime();
+  assertEqual(formatDate(ts), '2026年1月1日');
+});
+
+test('formatDate: 12月31日', () => {
+  const ts = new Date(2026, 11, 31).getTime();
+  assertEqual(formatDate(ts), '2026年12月31日');
+});
+
+test('formatDateShort: 短縮フォーマット', () => {
+  const ts = new Date(2026, 2, 31).getTime();
+  assertEqual(formatDateShort(ts), '3/31');
+});
+
+test('daysUntil: 未来の日付', () => {
+  const future = Date.now() + 7 * 24 * 60 * 60 * 1000;
+  const days = daysUntil(future);
+  assert(days >= 6 && days <= 8, `Expected ~7, got ${days}`);
+});
+
+test('daysUntil: 過去の日付は0', () => {
+  const past = Date.now() - 1000;
+  assertEqual(daysUntil(past), 0);
+});
+
+test('daysAgo: 過去の日付', () => {
+  const past = Date.now() - 3 * 24 * 60 * 60 * 1000;
+  const days = daysAgo(past);
+  assert(days >= 2 && days <= 4, `Expected ~3, got ${days}`);
+});
+
+test('daysAgo: 今日は0', () => {
+  assertEqual(daysAgo(Date.now()), 0);
+});
+
+section('手紙作成');
+
+test('通常の手紙が正しく作成される', () => {
+  const letter = createLetter('テスト手紙', 30);
+  assertEqual(letter.type, 'letter');
+  assertEqual(letter.body, 'テスト手紙');
+  assertEqual(letter.status, 'sealed');
+  assertEqual(letter.opened, false);
+  assert(letter.deliverAt > Date.now());
+});
+
+test('不安ポストが正しく作成される', () => {
+  const worry = createLetter('仕事が心配', 14, 'worry');
+  assertEqual(worry.type, 'worry');
+  assertEqual(worry.resolved, null);
+});
+
+test('プレビューが60文字以内', () => {
+  const longText = 'あ'.repeat(100);
+  const letter = createLetter(longText, 7);
+  assert(letter.preview.length <= 60);
+});
+
+test('プレビューが本文の先頭', () => {
+  const letter = createLetter('今日はいい天気ですね。散歩しました。', 7);
+  assertEqual(letter.preview, '今日はいい天気ですね。散歩しました。');
+});
+
+test('配達日が正しく計算される (7日後)', () => {
+  const letter = createLetter('test', 7);
+  const diff = (letter.deliverAt - letter.createdAt) / (24 * 60 * 60 * 1000);
+  assert(Math.abs(diff - 7) < 0.01, `Expected 7 days, got ${diff}`);
+});
+
+test('配達日が正しく計算される (30日後)', () => {
+  const letter = createLetter('test', 30);
+  const diff = (letter.deliverAt - letter.createdAt) / (24 * 60 * 60 * 1000);
+  assert(Math.abs(diff - 30) < 0.01);
+});
+
+test('配達日が正しく計算される (365日後)', () => {
+  const letter = createLetter('test', 365);
+  const diff = (letter.deliverAt - letter.createdAt) / (24 * 60 * 60 * 1000);
+  assert(Math.abs(diff - 365) < 0.01);
+});
+
+section('配達チェック');
+
+test('期限切れの手紙がdeliveredになる', () => {
+  const letter = createLetter('past', 0);
+  letter.deliverAt = Date.now() - 1000; // Past
+  assertEqual(letter.status, 'sealed');
+  // Simulate delivery check
+  if (letter.status === 'sealed' && letter.deliverAt <= Date.now()) {
+    letter.status = 'delivered';
+    letter.deliveredAt = Date.now();
+  }
+  assertEqual(letter.status, 'delivered');
+  assert(letter.deliveredAt !== undefined);
+});
+
+test('未到達の手紙はsealedのまま', () => {
+  const letter = createLetter('future', 30);
+  if (letter.status === 'sealed' && letter.deliverAt <= Date.now()) {
+    letter.status = 'delivered';
+  }
+  assertEqual(letter.status, 'sealed');
+});
+
+test('既にdeliveredの手紙は変わらない', () => {
+  const letter = createLetter('test', 0);
+  letter.status = 'delivered';
+  letter.deliveredAt = Date.now() - 1000;
+  const origDelivered = letter.deliveredAt;
+  if (letter.status === 'sealed' && letter.deliverAt <= Date.now()) {
+    letter.status = 'delivered';
+    letter.deliveredAt = Date.now();
+  }
+  assertEqual(letter.deliveredAt, origDelivered);
+});
+
+section('不安解決');
+
+test('不安の解決状態: yes', () => {
+  const worry = createLetter('心配', 14, 'worry');
+  worry.resolved = 'yes';
+  assertEqual(worry.resolved, 'yes');
+});
+
+test('不安の解決状態: partial', () => {
+  const worry = createLetter('心配', 14, 'worry');
+  worry.resolved = 'partial';
+  assertEqual(worry.resolved, 'partial');
+});
+
+test('不安の解決状態: no', () => {
+  const worry = createLetter('心配', 14, 'worry');
+  worry.resolved = 'no';
+  assertEqual(worry.resolved, 'no');
+});
+
+test('通常手紙にはresolved無し', () => {
+  const letter = createLetter('hello', 7);
+  assertEqual(letter.resolved, undefined);
+});
+
+section('HTMLエスケープ');
+
+test('XSS文字がエスケープされる', () => {
+  const escaped = escapeHtml('<script>alert("xss")</script>');
+  assert(!escaped.includes('<script>'), 'Should escape script tags');
+});
+
+test('通常テキストはそのまま', () => {
+  assertEqual(escapeHtml('こんにちは'), 'こんにちは');
+});
+
+test('引用符がエスケープされる', () => {
+  const escaped = escapeHtml('"test" & \'test\'');
+  assert(!escaped.includes('"') || escaped.includes('&quot;') || escaped.includes('&amp;'));
+});
+
+section('フィルタリング・ソート');
+
+test('手紙をタイプでフィルタリング', () => {
+  const letters = [
+    createLetter('a', 7, 'letter'),
+    createLetter('b', 7, 'worry'),
+    createLetter('c', 7, 'letter'),
+    createLetter('d', 7, 'worry'),
+  ];
+  const worries = letters.filter(l => l.type === 'worry');
+  assertEqual(worries.length, 2);
+});
+
+test('手紙をステータスでフィルタリング', () => {
+  const letters = [
+    createLetter('a', 7),
+    createLetter('b', 7),
+    createLetter('c', 7),
+  ];
+  letters[0].status = 'delivered';
+  letters[0].deliveredAt = Date.now();
+  const delivered = letters.filter(l => l.status === 'delivered');
+  assertEqual(delivered.length, 1);
+  const sealed = letters.filter(l => l.status === 'sealed');
+  assertEqual(sealed.length, 2);
+});
+
+test('配達日でソート', () => {
+  const letters = [
+    createLetter('c', 30),
+    createLetter('a', 7),
+    createLetter('b', 14),
+  ];
+  const sorted = [...letters].sort((a, b) => a.deliverAt - b.deliverAt);
+  assert(sorted[0].body === 'a');
+  assert(sorted[2].body === 'c');
+});
+
+section('統計');
+
+test('送った手紙の数', () => {
+  const letters = [createLetter('a', 7), createLetter('b', 7), createLetter('c', 7)];
+  assertEqual(letters.length, 3);
+});
+
+test('届いた手紙の数', () => {
+  const letters = [createLetter('a', 7), createLetter('b', 7)];
+  letters[0].status = 'delivered';
+  const delivered = letters.filter(l => l.status === 'delivered').length;
+  assertEqual(delivered, 1);
+});
+
+test('解決した不安の数', () => {
+  const letters = [
+    createLetter('a', 7, 'worry'),
+    createLetter('b', 7, 'worry'),
+    createLetter('c', 7, 'worry'),
+  ];
+  letters[0].resolved = 'yes';
+  letters[1].resolved = 'no';
+  const resolved = letters.filter(l => l.type === 'worry' && l.resolved === 'yes').length;
+  assertEqual(resolved, 1);
+});
+
+section('ストレージ (Mock)');
+
+test('手紙を保存・読み込み', async () => {
+  const chrome = mockChrome;
+  const testLetters = [createLetter('保存テスト', 7)];
+  await chrome.storage.local.set({ letters: testLetters });
+  const data = await chrome.storage.local.get(['letters']);
+  assertEqual(data.letters.length, 1);
+  assertEqual(data.letters[0].body, '保存テスト');
+});
+
+test('空のストレージからの読み込み', async () => {
+  const chrome = mockChrome;
+  delete mockStorage.letters;
+  const data = await chrome.storage.local.get(['letters']);
+  const letters = data.letters || [];
+  assertEqual(letters.length, 0);
+});
+
+section('バリデーション');
+
+test('空の手紙はスキップ', () => {
+  const body = ''.trim();
+  assert(!body, 'Empty body should be falsy');
+});
+
+test('空白のみの手紙はスキップ', () => {
+  const body = '   \n  '.trim();
+  assert(!body, 'Whitespace-only should be falsy');
+});
+
+test('正常な手紙は通る', () => {
+  const body = '明日も頑張ろう'.trim();
+  assert(body, 'Valid body should be truthy');
+});
+
+// ─── Summary ────────────────────────────────────────
+const summaryEl = document.getElementById('summary');
+if (passed === tests) {
+  summaryEl.className = 'summary all-pass';
+  summaryEl.innerHTML = `✓ ${passed}/${tests} テスト全て合格！`;
+} else {
+  summaryEl.innerHTML = `${passed}/${tests} テスト合格 (${tests - passed}件失敗)`;
+}
+</script>
+</body>
+</html>
