@@ -1,5 +1,5 @@
 {
-  "apps_completed": 65,
+  "apps_completed": 66,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -393,6 +393,12 @@
       "persona": 26,
       "platform": 20,
       "wildcard": 5
+    },
+    {
+      "source": 28,
+      "persona": 27,
+      "platform": 12,
+      "wildcard": 39
     }
   ],
   "history": [
@@ -590,6 +596,9 @@
     },
     {
       "name": "namioto"
+    },
+    {
+      "name": "idolhistoria"
     }
   ]
 }

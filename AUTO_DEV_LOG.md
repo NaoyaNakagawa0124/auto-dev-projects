@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-31 04:00 | Total apps: 65 | Total tests: 9,511
+> Last updated: 2026-03-31 05:00 | Total apps: 66 | Total tests: 9,553
 
 ## Quick Overview
 
@@ -71,6 +71,7 @@
 | 63 | [miraipost](#miraipost) | Future self letter Chrome extension | Chrome Ext/Vanilla JS | 36 | complete | Load unpacked in `chrome://extensions` |
 | 64 | [oshizora](#oshizora) | Living oshi-colored sky with real weather | Canvas/Vanilla JS/OpenMeteo | 60 | complete | `open index.html` |
 | 65 | [namioto](#namioto) | One-hand ocean breathing meditation | C/Raylib 5.5 | 27 | complete | `make && ./namioto` |
+| 66 | [idolhistoria](#idolhistoria) | 50-year Japanese idol culture data viz | Python/Jupyter/Plotly | 42 | complete | `jupyter notebook idolhistoria.ipynb` |
 
 ---
 
@@ -2977,3 +2978,47 @@ Missing stdlib.h include — fixed immediately.
 - Two-player alternating mode for couples
 - Background wave audio generation
 - Multiple environments (forest, mountain, space)
+
+---
+
+### <a id="idolhistoria"></a>66. idolhistoria - 2026-03-31
+
+**What is this?**
+A rich Jupyter notebook visualizing 50+ years of Japanese idol culture history. From the birth of the idol concept in 1971 through AKB48, VTubers, and "Oshi no Ko" — 31 milestones across 7 eras with 5 interactive Plotly charts. Includes a "March 31" special section on idol graduation culture. A data-driven love letter to oshi-katsu fans.
+
+**Discovery Roll**
+Source: 28 (Historical "on this day") | Persona: 27 (推し活に全力の人) | Platform: 12 (Jupyter notebook) | Wildcard: 39 (歴史を追体験する)
+
+**Features Built**
+- Interactive milestone timeline (31 events, 7 color-coded eras, 3 event categories)
+- Era comparison radar charts (7 eras × 5 dimensions)
+- Decade debut pattern stacked bar chart (solo/group/virtual)
+- Genre evolution area chart (6 genres over 50 years)
+- "March 31" special events timeline
+- Fan culture 4-panel metrics (distance, participation, spending, diversity)
+- Rich Japanese narrative throughout
+
+**Tech Stack**
+Python 3 / Jupyter Notebook / Plotly / Pandas / NumPy / Matplotlib
+
+**Key Files**
+```
+idolhistoria.ipynb — Main notebook (executed, with outputs)
+build_notebook.py  — Notebook generator script
+test.py            — 42 unit tests
+```
+
+**How to Run**
+```bash
+cd idolhistoria && jupyter notebook idolhistoria.ipynb
+```
+
+**Tests**: 42 passing | **Files**: 5 | **LOC**: ~600 | **Build time**: ~3 min
+
+**Challenges & Fixes**
+Plotly fillcolor format — hex colors used directly instead of rgba string manipulation.
+
+**Potential Next Steps**
+- User input for personal oshi milestones
+- Real-time Oricon chart data integration
+- "Relive an era" quiz/trivia within notebook
