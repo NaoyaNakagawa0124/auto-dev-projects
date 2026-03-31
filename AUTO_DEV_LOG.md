@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-03-31 05:00 | Total apps: 66 | Total tests: 9,553
+> Last updated: 2026-04-01 00:30 | Total apps: 67 | Total tests: 9,584
 
 ## Quick Overview
 
@@ -72,6 +72,7 @@
 | 64 | [oshizora](#oshizora) | Living oshi-colored sky with real weather | Canvas/Vanilla JS/OpenMeteo | 60 | complete | `open index.html` |
 | 65 | [namioto](#namioto) | One-hand ocean breathing meditation | C/Raylib 5.5 | 27 | complete | `make && ./namioto` |
 | 66 | [idolhistoria](#idolhistoria) | 50-year Japanese idol culture data viz | Python/Jupyter/Plotly | 42 | complete | `jupyter notebook idolhistoria.ipynb` |
+| 67 | [eigamichi](#eigamichi) | Visual-novel branching movie recommender | Vanilla JS/HTML/CSS | 31 | complete | `open index.html` |
 
 ---
 
@@ -3022,3 +3023,46 @@ Plotly fillcolor format — hex colors used directly instead of rgba string mani
 - User input for personal oshi milestones
 - Real-time Oricon chart data integration
 - "Relive an era" quiz/trivia within notebook
+
+---
+
+### <a id="eigamichi"></a>67. eigamichi - 2026-04-01
+
+**What is this?**
+A visual-novel style movie recommender where you navigate branching mood questions to discover your perfect film. 66 nodes form a decision tree with 45 unique movie destinations. Choose your mood → narrow your taste → arrive at a curated recommendation with your "cinema path" visualized as a tree. Beautiful dark UI with glassmorphism and smooth animations.
+
+**Discovery Roll**
+Source: 33 (Hacker News) | Persona: 13 (映画オタク) | Platform: 17 (Tauri → Web) | Wildcard: 43 (選択肢で分岐する)
+
+**Features Built**
+- 66-node decision tree (21 branch + 45 movie leaves)
+- 5 mood branches: ワクワク / 泣きたい / 考えたい / 笑いたい / ゾクゾク
+- 45 unique movies (1952-2019) with full JP metadata
+- Path visualization as branching tree
+- Persistent stats (localStorage)
+- Back/reset navigation
+- Dark glassmorphism UI with gradient background
+
+**Tech Stack**
+Vanilla JS / HTML5 / CSS3 (single file, no dependencies)
+
+**Key Files**
+```
+index.html — Full app (~700 LOC, 66-node tree + UI)
+test.js    — 31 tests (tree integrity, reachability, data quality)
+```
+
+**How to Run**
+```bash
+open eigamichi/index.html
+```
+
+**Tests**: 31 passing | **Files**: 4 | **LOC**: ~700 | **Build time**: ~3 min
+
+**Challenges & Fixes**
+Duplicate "メッセージ" (Arrival) in two branches — replaced one with "コンタクト" (Contact).
+
+**Potential Next Steps**
+- Expand to 100+ movies with deeper trees
+- "Similar movies" after result
+- Share path as image

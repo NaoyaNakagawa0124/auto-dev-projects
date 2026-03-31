@@ -70,5 +70,6 @@
 | 64 | oshizora | Living oshi-colored sky with real weather | Canvas/JS/OpenMeteo | 60 |
 | 65 | namioto | One-hand ocean breathing meditation | C/Raylib 5.5 | 27 |
 | 66 | idolhistoria | 50-year Japanese idol culture data viz | Python/Jupyter/Plotly | 42 |
+| 67 | eigamichi | Visual-novel branching movie recommender | Vanilla JS/HTML/CSS | 31 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

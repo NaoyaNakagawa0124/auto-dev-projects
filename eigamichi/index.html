@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>映画道 - Eigamichi</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
+
+:root {
+  --bg: #0c0c1a;
+  --card: rgba(20,20,40,0.9);
+  --card-border: rgba(255,255,255,0.08);
+  --text: #e8e4f0;
+  --text-dim: #8a8598;
+  --accent: #b48efa;
+  --accent2: #fa8eb4;
+  --gold: #ffd700;
+  --shadow: rgba(0,0,0,0.4);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Zen Maru Gothic', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── Background ─────────────────────────────── */
+.bg-gradient {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(180,142,250,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(250,142,180,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(100,180,250,0.05) 0%, transparent 50%),
+    var(--bg);
+  z-index: -1;
+}
+
+/* ─── Container ──────────────────────────────── */
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── Header ─────────────────────────────────── */
+.header {
+  text-align: center;
+  padding: 30px 0 20px;
+}
+
+.header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 4px;
+}
+
+.header .sub {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+/* ─── Progress Path ──────────────────────────── */
+.path-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 16px;
+  margin-bottom: 16px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  overflow-x: auto;
+  flex-wrap: wrap;
+}
+
+.path-node {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(180,142,250,0.15);
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.path-arrow {
+  color: var(--text-dim);
+  font-size: 10px;
+}
+
+/* ─── Scene (VN-style) ───────────────────────── */
+.scene {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.scene-text {
+  font-size: 20px;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.scene-hint {
+  font-size: 13px;
+  color: var(--text-dim);
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+/* ─── Choices ────────────────────────────────── */
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.choice-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  background: var(--card);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  backdrop-filter: blur(10px);
+}
+
+.choice-btn:hover {
+  border-color: var(--accent);
+  background: rgba(180,142,250,0.1);
+  transform: translateX(6px);
+  box-shadow: 0 4px 20px rgba(180,142,250,0.15);
+}
+
+.choice-btn .emoji {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.choice-btn .label {
+  font-weight: 500;
+}
+
+.choice-btn .desc {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+/* ─── Result Card ────────────────────────────── */
+.result {
+  animation: fadeIn 0.6s ease;
+}
+
+.movie-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 28px;
+  text-align: center;
+  margin-bottom: 16px;
+  backdrop-filter: blur(10px);
+}
+
+.movie-genre {
+  font-size: 12px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.movie-title {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.movie-original {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+
+.movie-meta {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+}
+
+.movie-meta span { display: flex; align-items: center; gap: 4px; }
+
+.movie-desc {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text);
+  text-align: left;
+  border-top: 1px solid var(--card-border);
+  padding-top: 16px;
+}
+
+.movie-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255,215,0,0.15);
+  color: var(--gold);
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+/* ─── Path Tree ──────────────────────────────── */
+.path-tree {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.path-tree h3 {
+  font-size: 14px;
+  color: var(--accent);
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.tree-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tree-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tree-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.tree-dot::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 12px;
+  width: 2px;
+  height: 20px;
+  background: rgba(180,142,250,0.3);
+}
+
+.tree-step:last-child .tree-dot::after { display: none; }
+.tree-step:last-child .tree-dot {
+  background: var(--gold);
+  box-shadow: 0 0 10px rgba(255,215,0,0.4);
+}
+
+.tree-label {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+/* ─── Buttons ────────────────────────────────── */
+.action-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.btn {
+  padding: 10px 24px;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn:hover {
+  border-color: var(--accent);
+  background: rgba(180,142,250,0.1);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none;
+  color: white;
+  font-weight: 700;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+/* ─── Title Screen ───────────────────────────── */
+.title-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  animation: fadeIn 0.8s ease;
+}
+
+.title-screen .big-icon { font-size: 64px; margin-bottom: 16px; }
+
+.title-screen h1 {
+  font-size: 42px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 6px;
+  margin-bottom: 8px;
+}
+
+.title-screen .tagline {
+  font-size: 16px;
+  color: var(--text-dim);
+  margin-bottom: 40px;
+}
+
+.title-screen .start-hint {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-top: 16px;
+}
+
+/* ─── Stats ──────────────────────────────────── */
+.stats-row {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-num {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.stat-label {
+  font-size: 10px;
+  color: var(--text-dim);
+}
+
+/* ─── Footer ─────────────────────────────────── */
+.footer {
+  text-align: center;
+  padding: 20px 0;
+  font-size: 10px;
+  color: var(--text-dim);
+}
+</style>
+</head>
+<body>
+<div class="bg-gradient"></div>
+
+<div class="container">
+  <div id="app"></div>
+  <div class="footer">映画道 — あなたの気分が導く、映画との出会い</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  映画道 (Eigamichi) - Branching Movie Recommender
+// ═══════════════════════════════════════════════════
+
+// ─── Decision Tree ─────────────────────────────────
+// Each node has: text, hint, choices[] → each choice has label, emoji, desc, next (node id)
+// Leaf nodes have: movie recommendation
+
+const tree = {
+  root: {
+    text: "今夜、どんな気分？",
+    hint: "直感で選んでください",
+    choices: [
+      { emoji: "✨", label: "ワクワクしたい", desc: "冒険、アクション、ファンタジー", next: "exciting" },
+      { emoji: "😢", label: "泣きたい", desc: "感動、ドラマ、人間模様", next: "emotional" },
+      { emoji: "🤔", label: "考えさせられたい", desc: "哲学的、ミステリー、SF", next: "think" },
+      { emoji: "😂", label: "笑いたい", desc: "コメディ、ほのぼの、癒し", next: "laugh" },
+      { emoji: "😱", label: "ゾクゾクしたい", desc: "ホラー、サスペンス、スリラー", next: "thrill" },
+    ]
+  },
+
+  // ─── Exciting Branch ─────────────────────────────
+  exciting: {
+    text: "どんなワクワクがいい？",
+    hint: "冒険の種類を選ぼう",
+    choices: [
+      { emoji: "⚔️", label: "壮大な冒険", desc: "世界を救う、運命に立ち向かう", next: "epic" },
+      { emoji: "🚀", label: "未知の世界", desc: "SF、宇宙、異世界", next: "scifi_exciting" },
+      { emoji: "🥊", label: "手に汗握るアクション", desc: "戦闘、カーチェイス、スパイ", next: "action" },
+    ]
+  },
+  epic: {
+    text: "どの時代がいい？",
+    choices: [
+      { emoji: "🏰", label: "ファンタジー世界", next: "m_lotr" },
+      { emoji: "🗡️", label: "歴史・時代劇", next: "m_gladiator" },
+      { emoji: "🌍", label: "現代の冒険", next: "m_indiana" },
+    ]
+  },
+  scifi_exciting: {
+    text: "宇宙の旅か、未来の地球か？",
+    choices: [
+      { emoji: "🌌", label: "宇宙への旅", next: "m_interstellar_ex" },
+      { emoji: "🤖", label: "未来のテクノロジー", next: "m_readyplayer" },
+      { emoji: "👽", label: "異星人との遭遇", next: "m_arrival_ex" },
+    ]
+  },
+  action: {
+    text: "アクションのスタイルは？",
+    choices: [
+      { emoji: "🕶️", label: "スタイリッシュ", next: "m_john_wick" },
+      { emoji: "💥", label: "爆発と破壊", next: "m_mad_max" },
+      { emoji: "🕵️", label: "スパイ・諜報", next: "m_mission" },
+    ]
+  },
+
+  // ─── Emotional Branch ────────────────────────────
+  emotional: {
+    text: "どんな涙がいい？",
+    choices: [
+      { emoji: "💕", label: "恋愛の切なさ", desc: "ロマンス、純愛、別れ", next: "romance" },
+      { emoji: "👨‍👩‍👧", label: "家族の絆", desc: "親子、きょうだい、故郷", next: "family" },
+      { emoji: "🌸", label: "人生の美しさ", desc: "成長、出会い、別れ", next: "life" },
+    ]
+  },
+  romance: {
+    text: "恋の結末は？",
+    choices: [
+      { emoji: "💍", label: "ハッピーエンド", next: "m_lalaland" },
+      { emoji: "💔", label: "切ない結末", next: "m_eternal_sunshine" },
+      { emoji: "📮", label: "時を超える愛", next: "m_kimi_no_na_wa" },
+    ]
+  },
+  family: {
+    text: "どんな家族の物語？",
+    choices: [
+      { emoji: "🏠", label: "日常の温かさ", next: "m_shoplifters" },
+      { emoji: "✈️", label: "離れていても", next: "m_coco" },
+      { emoji: "🧒", label: "子どもの成長", next: "m_totoro" },
+    ]
+  },
+  life: {
+    text: "人生のどの瞬間？",
+    choices: [
+      { emoji: "🎓", label: "青春", next: "m_dead_poets" },
+      { emoji: "🌅", label: "晩年の美しさ", next: "m_ikiru" },
+      { emoji: "🎬", label: "夢を追う姿", next: "m_greatest_showman" },
+    ]
+  },
+
+  // ─── Think Branch ────────────────────────────────
+  think: {
+    text: "どんな思考体験がいい？",
+    choices: [
+      { emoji: "🧠", label: "哲学的な問い", desc: "存在、自由意志、現実", next: "philosophy" },
+      { emoji: "🔍", label: "謎を解きたい", desc: "伏線回収、どんでん返し", next: "mystery" },
+      { emoji: "🌐", label: "社会を見つめる", desc: "格差、正義、システム", next: "social" },
+    ]
+  },
+  philosophy: {
+    text: "どのテーマが気になる？",
+    choices: [
+      { emoji: "🪞", label: "現実とは何か", next: "m_matrix" },
+      { emoji: "⏳", label: "時間と記憶", next: "m_memento" },
+      { emoji: "🌀", label: "夢と潜在意識", next: "m_inception" },
+    ]
+  },
+  mystery: {
+    text: "どんな謎解き？",
+    choices: [
+      { emoji: "🕵️‍♂️", label: "推理・探偵もの", next: "m_knives_out" },
+      { emoji: "🔮", label: "SF的謎", next: "m_arrival" },
+      { emoji: "🎭", label: "心理的どんでん返し", next: "m_sixth_sense" },
+    ]
+  },
+  social: {
+    text: "どの社会テーマ？",
+    choices: [
+      { emoji: "💰", label: "格差と階級", next: "m_parasite" },
+      { emoji: "⚖️", label: "正義とは何か", next: "m_12_angry_men" },
+      { emoji: "📱", label: "テクノロジーと人間", next: "m_her" },
+    ]
+  },
+
+  // ─── Laugh Branch ────────────────────────────────
+  laugh: {
+    text: "どんな笑いがいい？",
+    choices: [
+      { emoji: "🤣", label: "爆笑コメディ", desc: "おバカ、シチュエーション", next: "comedy_big" },
+      { emoji: "😊", label: "ほっこり癒し", desc: "ハートウォーミング、日常", next: "heartwarming" },
+      { emoji: "🎭", label: "ブラックユーモア", desc: "皮肉、風刺、シニカル", next: "dark_comedy" },
+    ]
+  },
+  comedy_big: {
+    text: "コメディのスタイルは？",
+    choices: [
+      { emoji: "🏫", label: "学園・青春", next: "m_waterboy" },
+      { emoji: "👨‍👩‍👧‍👦", label: "家族コメディ", next: "m_home_alone" },
+      { emoji: "🎬", label: "映画パロディ", next: "m_truman" },
+    ]
+  },
+  heartwarming: {
+    text: "どんな癒し？",
+    choices: [
+      { emoji: "🍳", label: "食べ物と幸せ", next: "m_ratatouille" },
+      { emoji: "🐕", label: "動物との絆", next: "m_hachi" },
+      { emoji: "🌷", label: "小さな幸せ", next: "m_amelie" },
+    ]
+  },
+  dark_comedy: {
+    text: "どのくらいダーク？",
+    choices: [
+      { emoji: "⚫", label: "かなりブラック", next: "m_fargo" },
+      { emoji: "🎪", label: "風刺的", next: "m_dr_strangelove" },
+      { emoji: "😈", label: "犯罪コメディ", next: "m_snatch" },
+    ]
+  },
+
+  // ─── Thrill Branch ───────────────────────────────
+  thrill: {
+    text: "どんなゾクゾク？",
+    choices: [
+      { emoji: "👻", label: "ホラー", desc: "怖い、呪い、超常現象", next: "horror" },
+      { emoji: "🔪", label: "サスペンス", desc: "犯人は誰だ、追い詰める", next: "suspense" },
+      { emoji: "🧟", label: "サバイバル", desc: "極限状態、生き残り", next: "survival" },
+    ]
+  },
+  horror: {
+    text: "ホラーのタイプは？",
+    choices: [
+      { emoji: "🏚️", label: "心理ホラー", next: "m_shining" },
+      { emoji: "👹", label: "日本ホラー", next: "m_ringu" },
+      { emoji: "🪦", label: "ゴシックホラー", next: "m_crimson_peak" },
+    ]
+  },
+  suspense: {
+    text: "サスペンスのスタイルは？",
+    choices: [
+      { emoji: "🔐", label: "密室・閉鎖空間", next: "m_saw" },
+      { emoji: "🧩", label: "知能犯との対決", next: "m_silence" },
+      { emoji: "📞", label: "リアルタイムの緊張", next: "m_zodiac" },
+    ]
+  },
+  survival: {
+    text: "何から生き残る？",
+    choices: [
+      { emoji: "🌊", label: "自然の脅威", next: "m_revenant" },
+      { emoji: "🧟", label: "ゾンビ・感染", next: "m_train_to_busan" },
+      { emoji: "🏝️", label: "孤島・漂流", next: "m_castaway" },
+    ]
+  },
+
+  // ═══ Movie Recommendations (Leaf Nodes) ═══════════
+  m_lotr: { movie: { title: "ロード・オブ・ザ・リング", original: "The Lord of the Rings: The Fellowship of the Ring", year: 2001, director: "ピーター・ジャクソン", rating: 8.8, genre: "ファンタジー / 冒険", desc: "ホビットのフロドが、世界を滅ぼす力を持つ「一つの指輪」を破壊するため、仲間とともに壮大な旅に出る。トールキンの原作を見事に映像化した、映画史に残る三部作の始まり。" }},
+  m_gladiator: { movie: { title: "グラディエーター", original: "Gladiator", year: 2000, director: "リドリー・スコット", rating: 8.5, genre: "歴史 / アクション", desc: "ローマ帝国の将軍マキシマスは、皇帝の裏切りにより家族を失い奴隷に落とされる。剣闘士として闘技場に立ち、復讐と名誉回復を目指す。壮大なスケールの歴史大作。" }},
+  m_indiana: { movie: { title: "インディ・ジョーンズ レイダース/失われたアーク", original: "Raiders of the Lost Ark", year: 1981, director: "スティーヴン・スピルバーグ", rating: 8.4, genre: "冒険 / アクション", desc: "考古学者にして冒険家のインディ・ジョーンズが、ナチスより先に聖櫃を手に入れるため世界を駆け巡る。スピルバーグとルーカスが生んだ永遠の冒険活劇。" }},
+  m_interstellar_ex: { movie: { title: "インターステラー", original: "Interstellar", year: 2014, director: "クリストファー・ノーラン", rating: 8.7, genre: "SF / ドラマ", desc: "荒廃した地球を救うため、元パイロットのクーパーが人類移住先を探すワームホールの彼方へ旅立つ。時間、重力、愛の物語。ノーランの最高傑作との呼び声も高い。" }},
+  m_readyplayer: { movie: { title: "レディ・プレイヤー1", original: "Ready Player One", year: 2018, director: "スティーヴン・スピルバーグ", rating: 7.4, genre: "SF / 冒険", desc: "2045年、人々はVR世界「オアシス」に没頭する。創設者が遺した「イースターエッグ」を巡る壮大な宝探しが始まる。ポップカルチャーへの愛に満ちたスピルバーグの冒険映画。" }},
+  m_arrival_ex: { movie: { title: "コンタクト", original: "Contact", year: 1997, director: "ロバート・ゼメキス", rating: 7.5, genre: "SF / ドラマ", desc: "電波天文学者エリーが、宇宙からの知的信号を受信する。信号に含まれた設計図で建造された装置で、彼女は宇宙の彼方へ旅立つ。科学と信仰の対立を描くカール・セーガン原作のSF大作。" }},
+  m_john_wick: { movie: { title: "ジョン・ウィック", original: "John Wick", year: 2014, director: "チャド・スタエルスキ", rating: 7.4, genre: "アクション", desc: "引退した伝説の殺し屋ジョン・ウィックが、愛犬を殺された復讐のため再び裏社会に戻る。スタイリッシュなアクション演出が革新的な、新世代アクション映画の金字塔。" }},
+  m_mad_max: { movie: { title: "マッドマックス 怒りのデス・ロード", original: "Mad Max: Fury Road", year: 2015, director: "ジョージ・ミラー", rating: 8.1, genre: "アクション / SF", desc: "荒廃した未来世界。独裁者から逃れるフュリオサとマックスが、砂漠を駆け抜ける壮絶なカーチェイス。映画史上最高のアクション映画とも評される圧巻の映像体験。" }},
+  m_mission: { movie: { title: "ミッション:インポッシブル フォールアウト", original: "Mission: Impossible - Fallout", year: 2018, director: "クリストファー・マッカリー", rating: 7.7, genre: "アクション / スパイ", desc: "イーサン・ハントが核テロを阻止するため世界を飛び回る。トム・クルーズの命懸けのスタントが話題を呼んだ、シリーズ最高傑作。" }},
+  m_lalaland: { movie: { title: "ラ・ラ・ランド", original: "La La Land", year: 2016, director: "デイミアン・チャゼル", rating: 8.0, genre: "ミュージカル / ロマンス", desc: "夢を追うジャズピアニストと女優の卵が恋に落ちる。夢と愛、どちらかを選ばなければならない切なさを、美しい音楽と色彩で描くモダンミュージカルの傑作。" }},
+  m_eternal_sunshine: { movie: { title: "エターナル・サンシャイン", original: "Eternal Sunshine of the Spotless Mind", year: 2004, director: "ミシェル・ゴンドリー", rating: 8.3, genre: "ロマンス / SF", desc: "別れた恋人の記憶を消す施術を受けた男が、消えゆく記憶の中で彼女との思い出を必死に守ろうとする。記憶と愛についての美しくも切ないSFラブストーリー。" }},
+  m_kimi_no_na_wa: { movie: { title: "君の名は。", original: "Kimi no Na wa.", year: 2016, director: "新海誠", rating: 8.4, genre: "アニメ / ロマンス", desc: "東京の少年と田舎の少女が、夢の中で入れ替わる不思議な体験をする。やがて二人は運命的な出会いを求め始める。新海誠が描く、時空を超えた純愛の物語。" }},
+  m_shoplifters: { movie: { title: "万引き家族", original: "Shoplifters", year: 2018, director: "是枝裕和", rating: 7.9, genre: "ドラマ", desc: "血の繋がらない「家族」が、万引きで生計を立てながらも幸せに暮らす。ある事件をきっかけに、その絆が試される。是枝裕和がカンヌでパルムドールを受賞した傑作。" }},
+  m_coco: { movie: { title: "リメンバー・ミー", original: "Coco", year: 2017, director: "リー・アンクリッチ", rating: 8.4, genre: "アニメ / ファミリー", desc: "音楽を禁じられた少年ミゲルが、死者の国に迷い込み、音楽家だった先祖の秘密を知る。家族の絆と記憶の大切さを描く、ピクサーの感動大作。泣かない人はいない。" }},
+  m_totoro: { movie: { title: "となりのトトロ", original: "My Neighbor Totoro", year: 1988, director: "宮崎駿", rating: 8.1, genre: "アニメ / ファミリー", desc: "田舎に引っ越した姉妹が、森の精霊トトロと出会う。子ども時代の純粋な驚きと自然の美しさを描いた、宮崎駿の永遠の名作。すべての世代に愛される映画。" }},
+  m_dead_poets: { movie: { title: "いまを生きる", original: "Dead Poets Society", year: 1989, director: "ピーター・ウィアー", rating: 8.1, genre: "ドラマ", desc: "型破りな英語教師キーティングが、生徒たちに詩と自由な精神の大切さを教える。「カルペ・ディエム（今を生きろ）」— 青春の輝きと代償を描く名作。" }},
+  m_ikiru: { movie: { title: "生きる", original: "Ikiru", year: 1952, director: "黒澤明", rating: 8.3, genre: "ドラマ", desc: "余命宣告を受けた老いた市役所職員が、残りの人生で何か意味あることを成し遂げようとする。黒澤明の最高傑作の一つ。70年以上経った今も色褪せない人生讃歌。" }},
+  m_greatest_showman: { movie: { title: "グレイテスト・ショーマン", original: "The Greatest Showman", year: 2017, director: "マイケル・グレイシー", rating: 7.5, genre: "ミュージカル", desc: "P.T.バーナムが「ユニークな人々」を集めてサーカスを作り上げる。夢を追う情熱とインクルージョンのメッセージを、圧巻の楽曲で描くミュージカル大作。" }},
+  m_matrix: { movie: { title: "マトリックス", original: "The Matrix", year: 1999, director: "ウォシャウスキー姉妹", rating: 8.7, genre: "SF / アクション", desc: "プログラマーのネオが、人類が機械に支配された仮想現実「マトリックス」の真実を知る。革命的なVFXと哲学的テーマで映画を変えた、SFの金字塔。" }},
+  m_memento: { movie: { title: "メメント", original: "Memento", year: 2000, director: "クリストファー・ノーラン", rating: 8.4, genre: "サスペンス / SF", desc: "前向性健忘症の男が、妻を殺した犯人を追う。物語が逆順で進む革新的な構成。最後に明かされる真実に衝撃を受ける、ノーランの出世作。" }},
+  m_inception: { movie: { title: "インセプション", original: "Inception", year: 2010, director: "クリストファー・ノーラン", rating: 8.8, genre: "SF / アクション", desc: "他人の夢に侵入し、アイデアを植え付ける「インセプション」。夢の中の夢、さらにその中の夢—多層構造の世界で繰り広げられる壮大な頭脳戦。映画体験の極致。" }},
+  m_knives_out: { movie: { title: "ナイブズ・アウト", original: "Knives Out", year: 2019, director: "ライアン・ジョンソン", rating: 7.9, genre: "ミステリー / コメディ", desc: "大富豪の不審死。名探偵ブランが一族の秘密を暴く。古典的ミステリーを現代的に再構築した、伏線回収の快感が味わえる極上のエンターテインメント。" }},
+  m_arrival: { movie: { title: "メッセージ", original: "Arrival", year: 2016, director: "ドゥニ・ヴィルヌーヴ", rating: 7.9, genre: "SF / ドラマ", desc: "突如現れた宇宙船。言語学者が異星人の言語を解読するうち、時間認識が変わるという驚愕の真実に直面する。テッド・チャンの短編を映画化した知的SF。" }},
+  m_sixth_sense: { movie: { title: "シックス・センス", original: "The Sixth Sense", year: 1999, director: "M・ナイト・シャマラン", rating: 8.1, genre: "サスペンス / ホラー", desc: "「死んだ人が見える」少年と、彼を助けようとする心理学者。映画史に残る衝撃のどんでん返し。知ってしまったら二度目はまったく違う映画に見える。" }},
+  m_parasite: { movie: { title: "パラサイト 半地下の家族", original: "Parasite", year: 2019, director: "ポン・ジュノ", rating: 8.5, genre: "スリラー / ドラマ", desc: "貧しい家族が富裕層の家に寄生していく。笑い、緊張、衝撃がジェットコースターのように押し寄せる。カンヌとアカデミーを制した、ポン・ジュノの最高傑作。" }},
+  m_12_angry_men: { movie: { title: "十二人の怒れる男", original: "12 Angry Men", year: 1957, director: "シドニー・ルメット", rating: 9.0, genre: "ドラマ / 法廷", desc: "一つの陪審員室で12人の男たちが少年の有罪/無罪を議論する。偏見、論理、正義とは何かを問う、映画史上最高の密室劇。セットは一部屋だけなのに圧巻の緊張感。" }},
+  m_her: { movie: { title: "her/世界でひとつの彼女", original: "Her", year: 2013, director: "スパイク・ジョーンズ", rating: 8.0, genre: "SF / ロマンス", desc: "孤独な男がAIアシスタントに恋をする。テクノロジーと孤独、人間関係の本質を優しく問いかける、予言的なSFラブストーリー。AI時代に改めて見るべき一作。" }},
+  m_waterboy: { movie: { title: "ウォーターボーイ", original: "The Waterboy", year: 1998, director: "フランク・コラチ", rating: 6.1, genre: "コメディ / スポーツ", desc: "いじめられっ子の給水係が、怒りのパワーでアメフト選手として大活躍。アダム・サンドラーの代表的おバカコメディ。何も考えずに笑いたい夜にぴったり。" }},
+  m_home_alone: { movie: { title: "ホーム・アローン", original: "Home Alone", year: 1990, director: "クリス・コロンバス", rating: 7.7, genre: "コメディ / ファミリー", desc: "家に一人取り残された8歳のケビンが、泥棒から家を守るために仕掛けるトラップの数々。大人も子どもも楽しめる、永遠のファミリーコメディの傑作。" }},
+  m_truman: { movie: { title: "トゥルーマン・ショー", original: "The Truman Show", year: 1998, director: "ピーター・ウィアー", rating: 8.2, genre: "コメディ / ドラマ", desc: "生まれた時からリアリティTVの主人公だった男トゥルーマン。自分の人生がすべて作り物だと気づいた時、彼は自由を求めて立ち上がる。先見的で深い喜劇。" }},
+  m_ratatouille: { movie: { title: "レミーのおいしいレストラン", original: "Ratatouille", year: 2007, director: "ブラッド・バード", rating: 8.1, genre: "アニメ / コメディ", desc: "料理の天才ネズミのレミーが、パリのレストランで夢を追う。「誰でも料理ができる」— 夢を信じる勇気と食の喜びを描いたピクサーの傑作。食欲が止まらなくなる。" }},
+  m_hachi: { movie: { title: "HACHI 約束の犬", original: "Hachi: A Dog's Tale", year: 2009, director: "ラッセ・ハルストレム", rating: 8.1, genre: "ドラマ / ファミリー", desc: "毎日駅で飼い主の帰りを待ち続けた秋田犬ハチの実話を基にした物語。忠誠心と無条件の愛に、涙なしでは見られない。動物好きは号泣必至。" }},
+  m_amelie: { movie: { title: "アメリ", original: "Amélie", year: 2001, director: "ジャン＝ピエール・ジュネ", rating: 8.3, genre: "コメディ / ロマンス", desc: "パリのカフェで働く空想好きな女の子アメリが、周囲の人を密かに幸せにしていく。独特の色彩と遊び心に満ちた演出で、見るだけで幸せになれるフランス映画の宝石。" }},
+  m_fargo: { movie: { title: "ファーゴ", original: "Fargo", year: 1996, director: "コーエン兄弟", rating: 8.1, genre: "クライム / ブラックコメディ", desc: "雪深いミネソタで、狂言誘拐が思わぬ方向に暴走する。コーエン兄弟らしいブラックユーモアと、妊婦の女性保安官の活躍が光る、犯罪映画の傑作。" }},
+  m_dr_strangelove: { movie: { title: "博士の異常な愛情", original: "Dr. Strangelove", year: 1964, director: "スタンリー・キューブリック", rating: 8.4, genre: "コメディ / 風刺", desc: "核戦争の危機を前に右往左往する指導者たちを描いた、キューブリックの痛烈な風刺コメディ。冷戦時代の狂気を笑いに変えた、永遠のブラックコメディ。" }},
+  m_snatch: { movie: { title: "スナッチ", original: "Snatch", year: 2000, director: "ガイ・リッチー", rating: 8.3, genre: "クライム / コメディ", desc: "巨大ダイヤモンドを巡り、裏社会の個性的すぎるキャラクターたちが大混乱。ガイ・リッチーのスタイリッシュな編集とウィットに富んだ脚本が冴え渡る傑作犯罪コメディ。" }},
+  m_shining: { movie: { title: "シャイニング", original: "The Shining", year: 1980, director: "スタンリー・キューブリック", rating: 8.4, genre: "ホラー", desc: "冬季閉鎖されたホテルの管理人になった作家一家。やがて父親が狂気に蝕まれていく。キューブリックが作り上げた完璧な恐怖の空間。ホラー映画の最高峰。" }},
+  m_ringu: { movie: { title: "リング", original: "Ringu", year: 1998, director: "中田秀夫", rating: 7.3, genre: "ホラー", desc: "見たら7日後に死ぬ呪いのビデオテープ。貞子の恐怖は世界を震撼させ、Jホラーブームを巻き起こした。テレビから這い出すシーンは映画史に刻まれた名場面。" }},
+  m_crimson_peak: { movie: { title: "クリムゾン・ピーク", original: "Crimson Peak", year: 2015, director: "ギレルモ・デル・トロ", rating: 6.5, genre: "ホラー / ロマンス", desc: "朽ちゆく洋館に嫁いだ女性が、屋敷に潜む恐ろしい秘密を知る。デル・トロの美学が炸裂するゴシックホラー。恐怖と美しさが同居する視覚の饗宴。" }},
+  m_saw: { movie: { title: "ソウ", original: "Saw", year: 2004, director: "ジェームズ・ワン", rating: 7.6, genre: "ホラー / サスペンス", desc: "密室に閉じ込められた2人の男。脱出のためには究極の選択を迫られる。低予算ながら衝撃のラストで映画界に旋風を巻き起こした、ソリッド・シチュエーション・スリラーの先駆け。" }},
+  m_silence: { movie: { title: "羊たちの沈黙", original: "The Silence of the Lambs", year: 1991, director: "ジョナサン・デミ", rating: 8.6, genre: "スリラー / ホラー", desc: "FBI訓練生クラリスが、連続殺人犯を捕らえるために天才殺人鬼ハンニバル・レクター博士の助けを借りる。知性と狂気の対決。アカデミー主要5部門制覇の伝説的サスペンス。" }},
+  m_zodiac: { movie: { title: "ゾディアック", original: "Zodiac", year: 2007, director: "デヴィッド・フィンチャー", rating: 7.7, genre: "サスペンス / クライム", desc: "1960-70年代サンフランシスコを恐怖に陥れた未解決事件「ゾディアック事件」。新聞記者と刑事が真相に迫る。フィンチャーが描く、執念と狂気の実録サスペンス。" }},
+  m_revenant: { movie: { title: "レヴェナント: 蘇えりし者", original: "The Revenant", year: 2015, director: "アレハンドロ・ゴンサレス・イニャリトゥ", rating: 8.0, genre: "アドベンチャー / ドラマ", desc: "熊に襲われ瀕死の重傷を負った罠猟師ヒュー・グラスが、極寒の大自然の中で復讐のために生き延びる。レオナルド・ディカプリオの壮絶な演技が圧巻。" }},
+  m_train_to_busan: { movie: { title: "新感染 ファイナル・エクスプレス", original: "Train to Busan", year: 2016, director: "ヨン・サンホ", rating: 7.6, genre: "ホラー / アクション", desc: "KTX車内でゾンビウイルスが発生。釜山を目指す乗客たちの壮絶なサバイバル。韓国発のゾンビ映画として世界的大ヒット。手に汗握る展開と感動のラスト。" }},
+  m_castaway: { movie: { title: "キャスト・アウェイ", original: "Cast Away", year: 2000, director: "ロバート・ゼメキス", rating: 7.8, genre: "ドラマ / アドベンチャー", desc: "飛行機事故で無人島に漂着したFedEx社員が、4年間の孤独なサバイバルを送る。トム・ハンクスの一人芝居が圧巻。バレーボール「ウィルソン」は映画史上最も有名な無生物俳優。" }},
+};
+
+// ─── State ─────────────────────────────────────────
+let currentNode = null;
+let path = [];        // [{nodeId, choiceLabel}]
+let totalPaths = 0;   // from localStorage
+let favoriteGenres = {};
+
+function loadStats() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('eigamichi-stats') || '{}');
+    totalPaths = saved.totalPaths || 0;
+    favoriteGenres = saved.favoriteGenres || {};
+  } catch(e) {}
+}
+
+function saveStats() {
+  localStorage.setItem('eigamichi-stats', JSON.stringify({ totalPaths, favoriteGenres }));
+}
+
+// ─── Rendering ─────────────────────────────────────
+const app = document.getElementById('app');
+
+function render() {
+  if (!currentNode) {
+    renderTitle();
+  } else {
+    const node = tree[currentNode];
+    if (node.movie) {
+      renderResult(node.movie);
+    } else {
+      renderScene(node);
+    }
+  }
+}
+
+function renderTitle() {
+  loadStats();
+  app.innerHTML = `
+    <div class="title-screen">
+      <div class="big-icon">🎬</div>
+      <h1>映 画 道</h1>
+      <p class="tagline">あなたの気分が導く、映画との出会い</p>
+      ${totalPaths > 0 ? `
+        <div class="stats-row">
+          <div class="stat-item"><div class="stat-num">${totalPaths}</div><div class="stat-label">たどった道</div></div>
+          <div class="stat-item"><div class="stat-num">${Object.keys(favoriteGenres).length}</div><div class="stat-label">出会ったジャンル</div></div>
+        </div>
+      ` : ''}
+      <button class="btn btn-primary" onclick="startJourney()">映画道を歩む</button>
+      <p class="start-hint">選択肢を選んで、あなたにぴったりの映画を見つけよう</p>
+    </div>
+  `;
+}
+
+function renderScene(node) {
+  const pathHtml = path.length > 0 ? `
+    <div class="path-bar">
+      ${path.map((p, i) => `
+        <span class="path-node">${p.choiceLabel}</span>
+        ${i < path.length - 1 ? '<span class="path-arrow">→</span>' : ''}
+      `).join('')}
+    </div>
+  ` : '';
+
+  app.innerHTML = `
+    <div class="header">
+      <h1>映画道</h1>
+      <div class="sub">ステップ ${path.length + 1}</div>
+    </div>
+    ${pathHtml}
+    <div class="scene" key="${currentNode}">
+      <p class="scene-text">${node.text}</p>
+      ${node.hint ? `<p class="scene-hint">${node.hint}</p>` : ''}
+      <div class="choices">
+        ${node.choices.map((c, i) => `
+          <button class="choice-btn" onclick="choose('${c.next}', '${c.label.replace(/'/g, "\\'")}')">
+            <span class="emoji">${c.emoji}</span>
+            <div>
+              <div class="label">${c.label}</div>
+              ${c.desc ? `<div class="desc">${c.desc}</div>` : ''}
+            </div>
+          </button>
+        `).join('')}
+      </div>
+    </div>
+    <div class="action-row" style="margin-top:20px">
+      ${path.length > 0 ? `<button class="btn" onclick="goBack()">← 戻る</button>` : ''}
+      <button class="btn" onclick="resetJourney()">最初から</button>
+    </div>
+  `;
+
+  // Re-trigger animation
+  const scene = app.querySelector('.scene');
+  scene.style.animation = 'none';
+  scene.offsetHeight;
+  scene.style.animation = '';
+}
+
+function renderResult(movie) {
+  totalPaths++;
+  const genre = movie.genre.split(' / ')[0];
+  favoriteGenres[genre] = (favoriteGenres[genre] || 0) + 1;
+  saveStats();
+
+  const starsHtml = '★'.repeat(Math.round(movie.rating / 2)) + '☆'.repeat(5 - Math.round(movie.rating / 2));
+
+  app.innerHTML = `
+    <div class="header">
+      <h1>映画道</h1>
+      <div class="sub">あなたの道が導いた一作</div>
+    </div>
+    <div class="result">
+      <div class="movie-card">
+        <div class="movie-genre">${movie.genre}</div>
+        <div class="movie-title">${movie.title}</div>
+        <div class="movie-original">${movie.original}</div>
+        <div class="movie-rating">${starsHtml} ${movie.rating}</div>
+        <div class="movie-meta">
+          <span>📅 ${movie.year}</span>
+          <span>🎬 ${movie.director}</span>
+        </div>
+        <div class="movie-desc">${movie.desc}</div>
+      </div>
+
+      <div class="path-tree">
+        <h3>🌿 あなたの映画道</h3>
+        <div class="tree-steps">
+          ${path.map((p, i) => `
+            <div class="tree-step">
+              <div class="tree-dot"></div>
+              <span class="tree-label">${p.choiceLabel}</span>
+            </div>
+          `).join('')}
+          <div class="tree-step">
+            <div class="tree-dot"></div>
+            <span class="tree-label" style="color:var(--gold);font-weight:700">${movie.title}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button class="btn btn-primary" onclick="resetJourney()">もう一度歩む</button>
+        <button class="btn" onclick="goHome()">タイトルへ</button>
+      </div>
+    </div>
+  `;
+}
+
+// ─── Actions ───────────────────────────────────────
+function startJourney() {
+  currentNode = 'root';
+  path = [];
+  render();
+}
+
+function choose(nextNode, label) {
+  path.push({ nodeId: currentNode, choiceLabel: label });
+  currentNode = nextNode;
+  render();
+}
+
+function goBack() {
+  if (path.length > 0) {
+    const prev = path.pop();
+    currentNode = prev.nodeId;
+    render();
+  }
+}
+
+function resetJourney() {
+  currentNode = 'root';
+  path = [];
+  render();
+}
+
+function goHome() {
+  currentNode = null;
+  path = [];
+  render();
+}
+
+// ─── Init ──────────────────────────────────────────
+render();
+</script>
+</body>
+</html>

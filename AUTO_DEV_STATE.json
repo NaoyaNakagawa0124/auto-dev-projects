@@ -1,5 +1,5 @@
 {
-  "apps_completed": 66,
+  "apps_completed": 67,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -399,6 +399,12 @@
       "persona": 27,
       "platform": 12,
       "wildcard": 39
+    },
+    {
+      "source": 33,
+      "persona": 13,
+      "platform": 17,
+      "wildcard": 43
     }
   ],
   "history": [
@@ -599,6 +605,9 @@
     },
     {
       "name": "idolhistoria"
+    },
+    {
+      "name": "eigamichi"
     }
   ]
 }
