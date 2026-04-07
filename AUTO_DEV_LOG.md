@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-04-01 02:00 | Total apps: 69 | Total tests: 9,674
+> Last updated: 2026-04-08 10:00 | Total apps: 70 | Total tests: 9,737
 
 ## Quick Overview
 
@@ -75,6 +75,7 @@
 | 67 | [eigamichi](#eigamichi) | Visual-novel branching movie recommender | Vanilla JS/HTML/CSS | 31 | complete | `open index.html` |
 | 68 | [otonoha](#otonoha) | Music chart generative flower garden | p5.js/iTunes API | 44 | complete | `open index.html` |
 | 69 | [sekaiquest](#sekaiquest) | ASCII world map TUI explorer | Python/Textual/Rich | 46 | complete | `python3 app.py` |
+| 70 | [tokineko](#tokineko) | 時間旅行する猫のターミナルコンパニオン | Python/Textual/Rich | 63 | complete | `pip install -e . && tokineko` |
 
 ---
 
@@ -3155,3 +3156,59 @@ None — clean implementation.
 - Quiz mode: guess the city from facts
 - Flight path animation between visited cities
 - Real travel advisory API integration
+
+---
+
+### <a id="tokineko"></a>70. tokineko - 2026-04-08 10:00
+
+**What is this?**
+ターミナルに住む時間旅行する猫のコンパニオン。孤独なリモートワーカーのためのPomodoro連動型バーチャルペット。作業セッションを完了するたびに猫が先史時代から未来まで9つの時代を旅し、各時代でアイテムを収集できる。
+
+**Discovery Roll**
+Source: 24 (Pet/animal viral content) | Persona: 14 (孤独なリモートワーカー) | Platform: 3 (Python TUI) | Wildcard: 48 (タイムトラベル)
+
+**Features Built**
+- ポモドーロタイマー: 25分作業 / 5分休憩のサイクル管理
+- 時間旅行: 3ポモドーロごとに猫が次の時代へ移動（9時代）
+- 猫インタラクション: なでる・遊ぶ・おやつ（時代別リアクション）
+- アイテム収集: 27個のアイテム（common/rare/legendaryのレアリティ）
+- 実績システム: 10個の実績を解除
+- 猫ステータス: 幸福度・エネルギー・好奇心の管理
+- 永続セーブ: ~/.tokineko/save.jsonに自動保存
+
+**Tech Stack**
+Python 3.10+ / Textual (TUI) / Rich (formatting) / JSON file storage
+
+**Key Files**
+```
+tokineko/
+├── src/tokineko/
+│   ├── app.py        # Textual TUI application
+│   ├── game.py       # Core game logic
+│   ├── models.py     # Data models & persistence
+│   └── eras.py       # Era/item/achievement database
+├── tests/
+│   ├── test_models.py
+│   ├── test_eras.py
+│   └── test_game.py
+└── pyproject.toml
+```
+
+**How to Run**
+```bash
+cd tokineko
+pip install -e .
+tokineko
+```
+
+**Tests**: 63 passing | **Files**: 34 | **LOC**: ~1,718 | **Build time**: ~10 min
+
+**Challenges & Fixes**
+Python 3.10 compatibility: replaced `list[str]` and `X | None` syntax with `from __future__ import annotations` and `Optional`/`List` imports.
+
+**Potential Next Steps**
+- Sound effects via terminal bell or system notifications
+- Online leaderboard for Pomodoro counts
+- Seasonal events with time-limited items
+- Cat customization (appearance, personality)
+- Multi-cat support

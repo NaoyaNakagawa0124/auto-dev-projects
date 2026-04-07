@@ -1,0 +1,16 @@
+README.md
+pyproject.toml
+src/tokineko/__init__.py
+src/tokineko/app.py
+src/tokineko/eras.py
+src/tokineko/game.py
+src/tokineko/models.py
+src/tokineko.egg-info/PKG-INFO
+src/tokineko.egg-info/SOURCES.txt
+src/tokineko.egg-info/dependency_links.txt
+src/tokineko.egg-info/entry_points.txt
+src/tokineko.egg-info/requires.txt
+src/tokineko.egg-info/top_level.txt
+tests/test_eras.py
+tests/test_game.py
+tests/test_models.py

@@ -1,0 +1,2 @@
+[console_scripts]
+tokineko = tokineko.app:main

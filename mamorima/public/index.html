@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mamorima - 守り間</title>
+<style>
+:root {
+  --bg: #FFF8F0;
+  --card: rgba(255,255,255,0.75);
+  --card-solid: #FFFFFF;
+  --primary: #E8835A;
+  --primary-light: #FCEADE;
+  --primary-dark: #C96840;
+  --accent: #5A9FE8;
+  --accent-light: #DEEDFB;
+  --text: #3A2E28;
+  --text-light: #8A7E78;
+  --border: #EDE5DE;
+  --green: #4CAF50;
+  --yellow: #FFC107;
+  --red: #F44336;
+  --shadow: 0 4px 24px rgba(58,46,40,0.08);
+  --shadow-lg: 0 8px 40px rgba(58,46,40,0.12);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ── Header ── */
+.header {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 20px rgba(200,104,64,0.3);
+}
+.header-left { display: flex; align-items: center; gap: 12px; }
+.logo { font-size: 28px; }
+.header h1 { font-size: 20px; font-weight: 700; letter-spacing: 1px; }
+.header h1 small { font-size: 12px; font-weight: 400; opacity: 0.85; display: block; letter-spacing: 0; }
+.header-right { display: flex; gap: 8px; }
+.header-btn {
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: var(--transition);
+  backdrop-filter: blur(10px);
+}
+.header-btn:hover { background: rgba(255,255,255,0.35); }
+
+/* ── Nav tabs ── */
+.nav-tabs {
+  display: flex;
+  background: var(--card-solid);
+  border-bottom: 1px solid var(--border);
+  padding: 0 16px;
+  overflow-x: auto;
+}
+.nav-tab {
+  padding: 14px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-light);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+.nav-tab:hover { color: var(--primary); }
+.nav-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+/* ── Main container ── */
+.container { max-width: 1200px; margin: 0 auto; padding: 20px 16px; }
+
+/* ── Cards ── */
+.card {
+  background: var(--card);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+.card:hover { box-shadow: var(--shadow-lg); }
+.card-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Setup / Home selector ── */
+.setup-screen { text-align: center; padding: 60px 20px; }
+.setup-screen h2 { font-size: 28px; margin-bottom: 8px; }
+.setup-screen p { color: var(--text-light); margin-bottom: 32px; }
+.setup-form { max-width: 400px; margin: 0 auto; }
+.form-group { margin-bottom: 16px; text-align: left; }
+.form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text-light); }
+.form-group input, .form-group select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  background: var(--card-solid);
+  color: var(--text);
+  transition: var(--transition);
+}
+.form-group input:focus, .form-group select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+.btn-secondary { background: var(--accent-light); color: var(--accent); }
+.btn-secondary:hover { background: #c8dff5; }
+.btn-danger { background: #FDECEA; color: var(--red); }
+.btn-danger:hover { background: #F9D5D2; }
+.btn-sm { padding: 8px 14px; font-size: 12px; }
+.btn-block { width: 100%; justify-content: center; }
+
+/* ── Floor plan editor ── */
+.editor-layout { display: grid; grid-template-columns: 240px 1fr; gap: 20px; }
+@media (max-width: 768px) { .editor-layout { grid-template-columns: 1fr; } }
+
+.room-palette {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.room-palette-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 8px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-sm);
+  cursor: grab;
+  font-size: 12px;
+  font-weight: 600;
+  transition: var(--transition);
+  background: var(--card-solid);
+  user-select: none;
+}
+.room-palette-item:hover {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+.room-palette-item .room-icon { font-size: 24px; }
+
+.floor-plan-canvas {
+  position: relative;
+  background: white;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  min-height: 500px;
+  overflow: hidden;
+  background-image:
+    linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.floor-plan-canvas.drag-over {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 20px var(--primary-light);
+}
+
+.room-block {
+  position: absolute;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: move;
+  transition: box-shadow 0.2s;
+  border: 2px solid rgba(0,0,0,0.08);
+  user-select: none;
+  font-weight: 600;
+  font-size: 13px;
+  gap: 2px;
+  overflow: hidden;
+}
+.room-block:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  z-index: 10;
+}
+.room-block .room-icon { font-size: 28px; }
+.room-block .room-label { font-size: 11px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; max-width: 90%; }
+.room-block .room-score-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: white;
+  border: 2px solid white;
+}
+.room-block .room-delete {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(244,67,54,0.85);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.room-block:hover .room-delete { display: flex; }
+
+/* ── Dashboard ── */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.score-circle {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  position: relative;
+}
+.score-circle .score-value { font-size: 48px; font-weight: 800; }
+.score-circle .score-label { font-size: 12px; color: var(--text-light); font-weight: 600; }
+
+.progress-bar-bg {
+  height: 12px;
+  background: var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.room-score-list { display: flex; flex-direction: column; gap: 10px; }
+.room-score-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.room-score-item:hover { background: var(--primary-light); }
+.room-score-item .rs-icon { font-size: 24px; }
+.room-score-item .rs-info { flex: 1; }
+.room-score-item .rs-name { font-weight: 600; font-size: 14px; }
+.room-score-item .rs-detail { font-size: 12px; color: var(--text-light); }
+.room-score-item .rs-score {
+  font-size: 16px;
+  font-weight: 700;
+  min-width: 48px;
+  text-align: center;
+}
+.room-score-item .rs-bar { width: 80px; }
+
+/* ── Hazard checklist ── */
+.hazard-panel {
+  position: fixed;
+  top: 0;
+  right: -440px;
+  width: 420px;
+  max-width: 100vw;
+  height: 100vh;
+  background: var(--card-solid);
+  box-shadow: -4px 0 40px rgba(0,0,0,0.1);
+  z-index: 200;
+  transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+}
+.hazard-panel.open { right: 0; }
+.hazard-panel-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.hazard-panel-header h3 { font-size: 18px; display: flex; align-items: center; gap: 8px; }
+.hazard-panel-close {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg);
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+.hazard-panel-close:hover { background: var(--border); }
+.hazard-panel-body { flex: 1; overflow-y: auto; padding: 16px 24px; }
+
+.hazard-group-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin: 16px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+.hazard-group-title:first-child { margin-top: 0; }
+
+.hazard-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+  cursor: pointer;
+}
+.hazard-item:hover { background: var(--bg); }
+.hazard-item.checked { opacity: 0.55; }
+.hazard-item.checked .hazard-text { text-decoration: line-through; }
+
+.hazard-checkbox {
+  width: 24px; height: 24px;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: var(--transition);
+  font-size: 14px;
+}
+.hazard-item.checked .hazard-checkbox {
+  background: var(--green);
+  border-color: var(--green);
+  color: white;
+}
+.hazard-text { flex: 1; font-size: 14px; }
+.hazard-priority {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+.priority-high { background: #FDECEA; color: var(--red); }
+.priority-medium { background: #FFF8E1; color: #E65100; }
+.priority-low { background: #E8F5E9; color: var(--green); }
+
+.hazard-panel-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+.hazard-room-score {
+  font-size: 32px;
+  font-weight: 800;
+}
+
+/* ── Quick check ── */
+.quick-check-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 300;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.quick-check-overlay.open { display: flex; }
+.quick-check-card {
+  background: var(--card-solid);
+  border-radius: 24px;
+  padding: 40px;
+  max-width: 480px;
+  width: 90%;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp 0.4s ease;
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.quick-check-card .qc-icon { font-size: 48px; margin-bottom: 12px; }
+.quick-check-card .qc-room { font-size: 13px; color: var(--text-light); margin-bottom: 4px; }
+.quick-check-card .qc-text { font-size: 20px; font-weight: 700; margin-bottom: 24px; }
+.quick-check-card .qc-priority { margin-bottom: 24px; }
+.quick-check-card .qc-progress { font-size: 13px; color: var(--text-light); margin-bottom: 16px; }
+.quick-check-buttons { display: flex; gap: 12px; justify-content: center; }
+.quick-check-buttons .btn { min-width: 120px; justify-content: center; }
+
+/* ── Priority action list ── */
+.action-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.action-item:hover { background: var(--primary-light); }
+.action-item .action-icon { font-size: 20px; }
+.action-item .action-text { flex: 1; font-size: 14px; }
+.action-item .action-room { font-size: 12px; color: var(--text-light); }
+
+/* ── Empty state ── */
+.empty-state {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--text-light);
+}
+.empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
+.empty-state h3 { margin-bottom: 8px; color: var(--text); }
+
+/* ── Overlay for panel ── */
+.panel-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 190;
+  display: none;
+}
+.panel-overlay.open { display: block; }
+
+/* ── Home list ── */
+.home-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 20px; }
+.home-card {
+  background: var(--card-solid);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+}
+.home-card:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow);
+  transform: translateY(-2px);
+}
+.home-card .home-icon { font-size: 40px; margin-bottom: 8px; }
+.home-card .home-name { font-size: 18px; font-weight: 700; }
+.home-card .home-meta { font-size: 13px; color: var(--text-light); margin-top: 4px; }
+.home-card.add-new {
+  border-style: dashed;
+  color: var(--text-light);
+}
+.home-card.add-new:hover { color: var(--primary); }
+.home-card.add-new .home-icon { opacity: 0.5; }
+
+/* ── Delete home btn ── */
+.home-card-delete {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: var(--transition);
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+.home-card-delete:hover { color: var(--red); background: #FDECEA; }
+.home-card { position: relative; }
+
+/* ── Modal ── */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 500;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--card-solid);
+  border-radius: 20px;
+  padding: 32px;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp 0.3s ease;
+}
+.modal h3 { font-size: 20px; margin-bottom: 20px; text-align: center; }
+.modal .btn { margin-top: 8px; }
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .header h1 { font-size: 16px; }
+  .header h1 small { font-size: 10px; }
+  .container { padding: 12px 8px; }
+  .card { padding: 16px; }
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .hazard-panel { width: 100%; right: -100%; }
+  .quick-check-card { padding: 24px; }
+  .quick-check-card .qc-text { font-size: 17px; }
+  .nav-tab { padding: 12px 14px; font-size: 13px; }
+  .room-palette { grid-template-columns: repeat(3, 1fr); }
+  .editor-layout { grid-template-columns: 1fr; }
+}
+
+/* ── Utility ── */
+.hidden { display: none !important; }
+.text-center { text-align: center; }
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mb-8 { margin-bottom: 8px; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<div class="header">
+  <div class="header-left">
+    <span class="logo">🏠</span>
+    <h1>mamorima<small>守り間 - こどもの安全を守る</small></h1>
+  </div>
+  <div class="header-right">
+    <button class="header-btn" onclick="showQuickCheck()" id="quickCheckBtn" style="display:none">⚡ 5分チェック</button>
+  </div>
+</div>
+
+<!-- ── Nav ── -->
+<div class="nav-tabs" id="navTabs" style="display:none">
+  <div class="nav-tab active" data-tab="dashboard" onclick="switchTab('dashboard')">📊 ダッシュボード</div>
+  <div class="nav-tab" data-tab="editor" onclick="switchTab('editor')">🗺️ 間取りエディタ</div>
+  <div class="nav-tab" data-tab="checklist" onclick="switchTab('checklist')">✅ チェックリスト</div>
+</div>
+
+<!-- ── Views ── -->
+<div class="container">
+  <!-- Home selection / creation -->
+  <div id="homeSelectView">
+    <div class="setup-screen">
+      <h2>🏠 おうちを選んでください</h2>
+      <p>お子さまの安全を守る第一歩。まずはおうちを登録しましょう。</p>
+      <div class="home-list" id="homeList"></div>
+    </div>
+  </div>
+
+  <!-- Dashboard view -->
+  <div id="dashboardView" class="hidden">
+    <div class="dashboard-grid">
+      <div class="card">
+        <div class="card-title">🛡️ 安全スコア</div>
+        <div class="score-circle" id="overallScoreCircle">
+          <span class="score-value" id="overallScore">--</span>
+          <span class="score-label">安全スコア</span>
+        </div>
+        <div class="flex-between mb-8">
+          <span style="font-size:13px;font-weight:600">対策完了率</span>
+          <span style="font-size:13px;color:var(--text-light)" id="completionText">0/0</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="completionBar" style="width:0%;background:var(--green)"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🏠 部屋別スコア</div>
+        <div class="room-score-list" id="roomScoreList">
+          <div class="empty-state"><div class="empty-icon">🏗️</div><h3>部屋がまだありません</h3><p>間取りエディタで部屋を追加しましょう</p></div>
+        </div>
+      </div>
+
+      <div class="card" style="grid-column: 1 / -1;">
+        <div class="card-title">🚨 最優先でやるべきこと</div>
+        <div id="priorityActions">
+          <div class="empty-state"><div class="empty-icon">🎉</div><h3>すべて完了！</h3><p>素晴らしい！全ての安全対策が完了しています。</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Editor view -->
+  <div id="editorView" class="hidden">
+    <div class="editor-layout">
+      <div>
+        <div class="card">
+          <div class="card-title">📦 部屋を追加</div>
+          <p style="font-size:12px;color:var(--text-light);margin-bottom:12px">ドラッグして間取りに配置</p>
+          <div class="room-palette" id="roomPalette"></div>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="padding:0;overflow:hidden">
+          <div class="floor-plan-canvas" id="floorPlanCanvas"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checklist view -->
+  <div id="checklistView" class="hidden">
+    <div id="checklistRoomList"></div>
+  </div>
+</div>
+
+<!-- ── Hazard Panel (slide-in) ── -->
+<div class="panel-overlay" id="panelOverlay" onclick="closeHazardPanel()"></div>
+<div class="hazard-panel" id="hazardPanel">
+  <div class="hazard-panel-header">
+    <h3 id="hazardPanelTitle">部屋名</h3>
+    <button class="hazard-panel-close" onclick="closeHazardPanel()">✕</button>
+  </div>
+  <div class="hazard-panel-body" id="hazardPanelBody"></div>
+  <div class="hazard-panel-footer">
+    <div style="font-size:12px;color:var(--text-light);margin-bottom:4px">この部屋の安全スコア</div>
+    <div class="hazard-room-score" id="hazardRoomScore">--</div>
+  </div>
+</div>
+
+<!-- ── Quick Check Overlay ── -->
+<div class="quick-check-overlay" id="quickCheckOverlay">
+  <div class="quick-check-card">
+    <div class="qc-icon" id="qcIcon">🔍</div>
+    <div class="qc-room" id="qcRoom">部屋名</div>
+    <div class="qc-text" id="qcText">チェック項目</div>
+    <div class="qc-priority" id="qcPriority"></div>
+    <div class="qc-progress" id="qcProgress">1 / 10</div>
+    <div class="progress-bar-bg" style="margin-bottom:20px">
+      <div class="progress-bar-fill" id="qcProgressBar" style="width:0;background:var(--primary)"></div>
+    </div>
+    <div class="quick-check-buttons">
+      <button class="btn btn-primary" onclick="qcMark(true)">✅ 対策済み</button>
+      <button class="btn btn-secondary" onclick="qcMark(false)">⏭️ スキップ</button>
+    </div>
+    <button class="btn btn-sm mt-16" onclick="closeQuickCheck()" style="background:none;color:var(--text-light)">閉じる</button>
+  </div>
+</div>
+
+<!-- ── New Home Modal ── -->
+<div class="modal-overlay" id="newHomeModal">
+  <div class="modal">
+    <h3>🏠 新しいおうちを登録</h3>
+    <div class="form-group">
+      <label>おうちの名前</label>
+      <input type="text" id="newHomeName" placeholder="例: 我が家" value="我が家">
+    </div>
+    <div class="form-group">
+      <label>お子さまの年齢</label>
+      <select id="newHomeAge">
+        <option value="0-1">0〜1歳</option>
+        <option value="1-3">1〜3歳</option>
+        <option value="3-6">3〜6歳</option>
+        <option value="6-12">6〜12歳</option>
+      </select>
+    </div>
+    <button class="btn btn-primary btn-block" onclick="createHome()">登録する</button>
+    <button class="btn btn-block mt-8" onclick="closeNewHomeModal()" style="background:none;color:var(--text-light)">キャンセル</button>
+  </div>
+</div>
+
+<script>
+// ── State ──
+let state = {
+  homes: [],
+  currentHomeId: null,
+  currentTab: 'dashboard',
+  dashboard: null,
+  roomTypes: [],
+  ageGroups: [],
+  quickCheckItems: [],
+  qcIndex: 0,
+};
+
+// ── API helpers ──
+async function api(path, opts = {}) {
+  const res = await fetch('/api' + path, {
+    headers: { 'Content-Type': 'application/json' },
+    ...opts,
+    body: opts.body ? JSON.stringify(opts.body) : undefined,
+  });
+  if (res.status === 204) return null;
+  return res.json();
+}
+
+// ── Init ──
+async function init() {
+  const [roomTypes, ageGroups, homes] = await Promise.all([
+    api('/room-types'),
+    api('/age-groups'),
+    api('/homes'),
+  ]);
+  state.roomTypes = roomTypes;
+  state.ageGroups = ageGroups;
+  state.homes = homes;
+
+  renderHomeList();
+  buildRoomPalette();
+
+  // Auto-select if only one home
+  if (homes.length === 1) {
+    selectHome(homes[0].id);
+  }
+}
+
+// ── Home selection ──
+function renderHomeList() {
+  const list = document.getElementById('homeList');
+  list.innerHTML = '';
+  for (const home of state.homes) {
+    const ag = state.ageGroups.find(a => a.id === home.ageGroup);
+    const card = document.createElement('div');
+    card.className = 'home-card';
+    card.onclick = (e) => { if (!e.target.classList.contains('home-card-delete')) selectHome(home.id); };
+    card.innerHTML = `
+      <button class="home-card-delete" onclick="event.stopPropagation();deleteHome('${home.id}')" title="削除">🗑️</button>
+      <div class="home-icon">🏠</div>
+      <div class="home-name">${esc(home.name)}</div>
+      <div class="home-meta">${ag ? ag.label : home.ageGroup} ・ ${home.rooms.length}部屋</div>
+    `;
+    list.appendChild(card);
+  }
+  // Add new card
+  const addCard = document.createElement('div');
+  addCard.className = 'home-card add-new';
+  addCard.onclick = () => openNewHomeModal();
+  addCard.innerHTML = `<div class="home-icon">➕</div><div class="home-name">新しいおうちを追加</div>`;
+  list.appendChild(addCard);
+}
+
+async function selectHome(homeId) {
+  state.currentHomeId = homeId;
+  document.getElementById('homeSelectView').classList.add('hidden');
+  document.getElementById('navTabs').style.display = 'flex';
+  document.getElementById('quickCheckBtn').style.display = '';
+  switchTab('dashboard');
+}
+
+function backToHomeList() {
+  state.currentHomeId = null;
+  document.getElementById('homeSelectView').classList.remove('hidden');
+  document.getElementById('navTabs').style.display = 'none';
+  document.getElementById('quickCheckBtn').style.display = 'none';
+  document.getElementById('dashboardView').classList.add('hidden');
+  document.getElementById('editorView').classList.add('hidden');
+  document.getElementById('checklistView').classList.add('hidden');
+  renderHomeList();
+}
+
+function openNewHomeModal() { document.getElementById('newHomeModal').classList.add('open'); }
+function closeNewHomeModal() { document.getElementById('newHomeModal').classList.remove('open'); }
+
+async function createHome() {
+  const name = document.getElementById('newHomeName').value.trim() || '我が家';
+  const ageGroup = document.getElementById('newHomeAge').value;
+  const home = await api('/homes', { method: 'POST', body: { name, ageGroup } });
+  state.homes.push(home);
+  closeNewHomeModal();
+  selectHome(home.id);
+}
+
+async function deleteHome(homeId) {
+  if (!confirm('このおうちを削除しますか？')) return;
+  await api('/homes/' + homeId, { method: 'DELETE' });
+  state.homes = state.homes.filter(h => h.id !== homeId);
+  if (state.currentHomeId === homeId) backToHomeList();
+  else renderHomeList();
+}
+
+// ── Tabs ──
+function switchTab(tab) {
+  state.currentTab = tab;
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  document.getElementById('dashboardView').classList.toggle('hidden', tab !== 'dashboard');
+  document.getElementById('editorView').classList.toggle('hidden', tab !== 'editor');
+  document.getElementById('checklistView').classList.toggle('hidden', tab !== 'checklist');
+
+  if (tab === 'dashboard') loadDashboard();
+  if (tab === 'editor') loadFloorPlan();
+  if (tab === 'checklist') loadChecklist();
+}
+
+// ── Dashboard ──
+async function loadDashboard() {
+  if (!state.currentHomeId) return;
+  const d = await api('/homes/' + state.currentHomeId + '/dashboard');
+  state.dashboard = d;
+
+  // Overall score
+  const scoreEl = document.getElementById('overallScore');
+  scoreEl.textContent = d.overallScore;
+  const circle = document.getElementById('overallScoreCircle');
+  circle.style.background = `conic-gradient(${scoreColor(d.overallScore)} ${d.overallScore * 3.6}deg, var(--border) 0)`;
+  circle.style.color = scoreColor(d.overallScore);
+
+  // Completion
+  document.getElementById('completionText').textContent = `${d.checkedHazards}/${d.totalHazards} 完了`;
+  document.getElementById('completionBar').style.width = d.completionRate + '%';
+  document.getElementById('completionBar').style.background = scoreColor(d.completionRate);
+
+  // Room scores
+  const roomList = document.getElementById('roomScoreList');
+  if (d.roomScores.length === 0) {
+    roomList.innerHTML = '<div class="empty-state"><div class="empty-icon">🏗️</div><h3>部屋がまだありません</h3><p>間取りエディタで部屋を追加しましょう</p></div>';
+  } else {
+    roomList.innerHTML = d.roomScores.map(r => `
+      <div class="room-score-item" onclick="openHazardPanel('${r.id}')">
+        <span class="rs-icon">${r.icon}</span>
+        <div class="rs-info">
+          <div class="rs-name">${esc(r.name)}</div>
+          <div class="rs-detail">${r.checkedHazards}/${r.totalHazards} 完了</div>
+        </div>
+        <div class="rs-bar">
+          <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${r.score}%;background:${scoreColor(r.score)}"></div></div>
+        </div>
+        <span class="rs-score" style="color:${scoreColor(r.score)}">${r.score}</span>
+      </div>
+    `).join('');
+  }
+
+  // Priority actions
+  const pa = document.getElementById('priorityActions');
+  if (d.priorityActions.length === 0) {
+    pa.innerHTML = '<div class="empty-state"><div class="empty-icon">🎉</div><h3>すべて完了！</h3><p>素晴らしい！全ての安全対策が完了しています。</p></div>';
+  } else {
+    pa.innerHTML = d.priorityActions.map(a => `
+      <div class="action-item">
+        <span class="action-icon">${a.roomIcon}</span>
+        <span class="action-text">${esc(a.text)}</span>
+        <span class="hazard-priority priority-${a.priority}">${priorityLabel(a.priority)}</span>
+        <span class="action-room">${esc(a.roomName)}</span>
+      </div>
+    `).join('');
+  }
+}
+
+// ── Floor Plan Editor ──
+function buildRoomPalette() {
+  const palette = document.getElementById('roomPalette');
+  palette.innerHTML = state.roomTypes.map(r => `
+    <div class="room-palette-item" draggable="true"
+      data-room-type="${r.id}"
+      ondragstart="onPaletteDragStart(event, '${r.id}')">
+      <span class="room-icon">${r.icon}</span>
+      <span>${r.name}</span>
+    </div>
+  `).join('');
+}
+
+let dragRoomType = null;
+
+function onPaletteDragStart(e, roomType) {
+  dragRoomType = roomType;
+  e.dataTransfer.effectAllowed = 'copy';
+  e.dataTransfer.setData('text/plain', roomType);
+}
+
+async function loadFloorPlan() {
+  if (!state.currentHomeId) return;
+  const home = await api('/homes/' + state.currentHomeId);
+  const canvas = document.getElementById('floorPlanCanvas');
+
+  // Setup drop
+  canvas.ondragover = (e) => { e.preventDefault(); canvas.classList.add('drag-over'); };
+  canvas.ondragleave = () => canvas.classList.remove('drag-over');
+  canvas.ondrop = async (e) => {
+    e.preventDefault();
+    canvas.classList.remove('drag-over');
+    if (!dragRoomType) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = Math.max(0, Math.round((e.clientX - rect.left - 30) / 60));
+    const y = Math.max(0, Math.round((e.clientY - rect.top - 30) / 60));
+    await addRoom(dragRoomType, x, y);
+    dragRoomType = null;
+  };
+
+  renderRooms(home.rooms);
+}
+
+function renderRooms(rooms) {
+  const canvas = document.getElementById('floorPlanCanvas');
+  // Remove existing room blocks
+  canvas.querySelectorAll('.room-block').forEach(el => el.remove());
+
+  for (const room of rooms) {
+    const rt = state.roomTypes.find(r => r.id === room.type);
+    const score = calcLocalScore(room.hazards);
+    const block = document.createElement('div');
+    block.className = 'room-block';
+    block.style.left = (room.x * 60) + 'px';
+    block.style.top = (room.y * 60) + 'px';
+    block.style.width = (room.w * 60) + 'px';
+    block.style.height = (room.h * 60) + 'px';
+    block.style.background = rt ? rt.color : '#ddd';
+    block.dataset.roomId = room.id;
+    block.innerHTML = `
+      <button class="room-delete" onclick="event.stopPropagation();deleteRoom('${room.id}')">✕</button>
+      <span class="room-icon">${rt ? rt.icon : '🏠'}</span>
+      <span class="room-label">${esc(room.name)}</span>
+      <span class="room-score-badge" style="background:${scoreColor(score)}">${score}</span>
+    `;
+    block.onclick = () => openHazardPanel(room.id);
+
+    // Dragging rooms on canvas
+    let isDragging = false, startX, startY, origX, origY;
+    block.onmousedown = (e) => {
+      if (e.target.classList.contains('room-delete')) return;
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      origX = parseInt(block.style.left);
+      origY = parseInt(block.style.top);
+      block.style.zIndex = 20;
+      block.style.opacity = '0.85';
+      e.preventDefault();
+    };
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      block.style.left = Math.max(0, origX + dx) + 'px';
+      block.style.top = Math.max(0, origY + dy) + 'px';
+    });
+    document.addEventListener('mouseup', async () => {
+      if (!isDragging) return;
+      isDragging = false;
+      block.style.zIndex = '';
+      block.style.opacity = '';
+      const newX = Math.max(0, Math.round(parseInt(block.style.left) / 60));
+      const newY = Math.max(0, Math.round(parseInt(block.style.top) / 60));
+      block.style.left = (newX * 60) + 'px';
+      block.style.top = (newY * 60) + 'px';
+      await api('/homes/' + state.currentHomeId + '/rooms/' + room.id, {
+        method: 'PUT',
+        body: { x: newX, y: newY },
+      });
+    });
+
+    // Touch support for mobile
+    block.ontouchstart = (e) => {
+      if (e.target.classList.contains('room-delete')) return;
+      const touch = e.touches[0];
+      isDragging = true;
+      startX = touch.clientX;
+      startY = touch.clientY;
+      origX = parseInt(block.style.left);
+      origY = parseInt(block.style.top);
+      block.style.zIndex = 20;
+    };
+    block.ontouchmove = (e) => {
+      if (!isDragging) return;
+      e.preventDefault();
+      const touch = e.touches[0];
+      const dx = touch.clientX - startX;
+      const dy = touch.clientY - startY;
+      block.style.left = Math.max(0, origX + dx) + 'px';
+      block.style.top = Math.max(0, origY + dy) + 'px';
+    };
+    block.ontouchend = async () => {
+      if (!isDragging) return;
+      isDragging = false;
+      block.style.zIndex = '';
+      const newX = Math.max(0, Math.round(parseInt(block.style.left) / 60));
+      const newY = Math.max(0, Math.round(parseInt(block.style.top) / 60));
+      block.style.left = (newX * 60) + 'px';
+      block.style.top = (newY * 60) + 'px';
+      await api('/homes/' + state.currentHomeId + '/rooms/' + room.id, {
+        method: 'PUT',
+        body: { x: newX, y: newY },
+      });
+    };
+
+    canvas.appendChild(block);
+  }
+}
+
+async function addRoom(type, x, y) {
+  const room = await api('/homes/' + state.currentHomeId + '/rooms', {
+    method: 'POST',
+    body: { type, x, y },
+  });
+  loadFloorPlan();
+}
+
+async function deleteRoom(roomId) {
+  if (!confirm('この部屋を削除しますか？')) return;
+  await api('/homes/' + state.currentHomeId + '/rooms/' + roomId, { method: 'DELETE' });
+  loadFloorPlan();
+}
+
+// ── Checklist view ──
+async function loadChecklist() {
+  if (!state.currentHomeId) return;
+  const home = await api('/homes/' + state.currentHomeId);
+  const container = document.getElementById('checklistRoomList');
+
+  if (home.rooms.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">🏗️</div><h3>部屋がまだありません</h3><p>間取りエディタで部屋を追加してください</p></div>';
+    return;
+  }
+
+  container.innerHTML = home.rooms.map(room => {
+    const rt = state.roomTypes.find(r => r.id === room.type);
+    const score = calcLocalScore(room.hazards);
+    const groups = groupByPriority(room.hazards);
+    return `
+      <div class="card">
+        <div class="flex-between">
+          <div class="card-title">${rt ? rt.icon : '🏠'} ${esc(room.name)}</div>
+          <span style="font-size:24px;font-weight:800;color:${scoreColor(score)}">${score}</span>
+        </div>
+        ${['high', 'medium', 'low'].map(p => {
+          if (!groups[p] || groups[p].length === 0) return '';
+          return `
+            <div class="hazard-group-title">${priorityLabel(p)}（${groups[p].filter(h=>h.checked).length}/${groups[p].length}）</div>
+            ${groups[p].map(h => `
+              <div class="hazard-item ${h.checked ? 'checked' : ''}" onclick="toggleHazardFromList('${room.id}','${h.id}',${!h.checked})">
+                <div class="hazard-checkbox">${h.checked ? '✓' : ''}</div>
+                <span class="hazard-text">${esc(h.text)}</span>
+                <span class="hazard-priority priority-${h.priority}">${priorityLabel(h.priority)}</span>
+              </div>
+            `).join('')}
+          `;
+        }).join('')}
+      </div>
+    `;
+  }).join('');
+}
+
+async function toggleHazardFromList(roomId, hazardId, checked) {
+  await api(`/homes/${state.currentHomeId}/rooms/${roomId}/hazards/${hazardId}`, {
+    method: 'PUT',
+    body: { checked },
+  });
+  loadChecklist();
+}
+
+// ── Hazard Panel ──
+let currentPanelRoomId = null;
+
+async function openHazardPanel(roomId) {
+  currentPanelRoomId = roomId;
+  const home = await api('/homes/' + state.currentHomeId);
+  const room = home.rooms.find(r => r.id === roomId);
+  if (!room) return;
+
+  const rt = state.roomTypes.find(r => r.id === room.type);
+  document.getElementById('hazardPanelTitle').innerHTML = `${rt ? rt.icon : '🏠'} ${esc(room.name)}`;
+
+  const body = document.getElementById('hazardPanelBody');
+  const groups = groupByPriority(room.hazards);
+
+  body.innerHTML = ['high', 'medium', 'low'].map(p => {
+    if (!groups[p] || groups[p].length === 0) return '';
+    return `
+      <div class="hazard-group-title">${priorityLabel(p)}（${groups[p].filter(h=>h.checked).length}/${groups[p].length}）</div>
+      ${groups[p].map(h => `
+        <div class="hazard-item ${h.checked ? 'checked' : ''}" onclick="toggleHazard('${roomId}','${h.id}',${!h.checked})">
+          <div class="hazard-checkbox">${h.checked ? '✓' : ''}</div>
+          <span class="hazard-text">${esc(h.text)}</span>
+          <span class="hazard-priority priority-${h.priority}">${priorityLabel(h.priority)}</span>
+        </div>
+      `).join('')}
+    `;
+  }).join('');
+
+  const score = calcLocalScore(room.hazards);
+  const scoreEl = document.getElementById('hazardRoomScore');
+  scoreEl.textContent = score;
+  scoreEl.style.color = scoreColor(score);
+
+  document.getElementById('hazardPanel').classList.add('open');
+  document.getElementById('panelOverlay').classList.add('open');
+}
+
+function closeHazardPanel() {
+  document.getElementById('hazardPanel').classList.remove('open');
+  document.getElementById('panelOverlay').classList.remove('open');
+  currentPanelRoomId = null;
+  // Refresh current view
+  if (state.currentTab === 'dashboard') loadDashboard();
+  if (state.currentTab === 'editor') loadFloorPlan();
+  if (state.currentTab === 'checklist') loadChecklist();
+}
+
+async function toggleHazard(roomId, hazardId, checked) {
+  await api(`/homes/${state.currentHomeId}/rooms/${roomId}/hazards/${hazardId}`, {
+    method: 'PUT',
+    body: { checked },
+  });
+  openHazardPanel(roomId);
+}
+
+// ── Quick Check ──
+async function showQuickCheck() {
+  if (!state.currentHomeId) return;
+  const items = await api('/homes/' + state.currentHomeId + '/quick-check');
+  if (items.length === 0) {
+    alert('🎉 全ての安全チェックが完了しています！');
+    return;
+  }
+  state.quickCheckItems = items;
+  state.qcIndex = 0;
+  renderQuickCheckItem();
+  document.getElementById('quickCheckOverlay').classList.add('open');
+}
+
+function renderQuickCheckItem() {
+  const items = state.quickCheckItems;
+  if (state.qcIndex >= items.length) {
+    closeQuickCheck();
+    if (state.currentTab === 'dashboard') loadDashboard();
+    return;
+  }
+  const item = items[state.qcIndex];
+  document.getElementById('qcIcon').textContent = item.roomIcon;
+  document.getElementById('qcRoom').textContent = item.roomName;
+  document.getElementById('qcText').textContent = item.text;
+  document.getElementById('qcPriority').innerHTML = `<span class="hazard-priority priority-${item.priority}">${priorityLabel(item.priority)}</span>`;
+  document.getElementById('qcProgress').textContent = `${state.qcIndex + 1} / ${items.length}`;
+  document.getElementById('qcProgressBar').style.width = ((state.qcIndex + 1) / items.length * 100) + '%';
+}
+
+async function qcMark(checked) {
+  const item = state.quickCheckItems[state.qcIndex];
+  if (checked && item.id) {
+    // Find the room that contains this hazard
+    const home = await api('/homes/' + state.currentHomeId);
+    for (const room of home.rooms) {
+      const hazard = room.hazards.find(h => h.id === item.id);
+      if (hazard) {
+        await api(`/homes/${state.currentHomeId}/rooms/${room.id}/hazards/${item.id}`, {
+          method: 'PUT',
+          body: { checked: true },
+        });
+        break;
+      }
+    }
+  }
+  state.qcIndex++;
+  renderQuickCheckItem();
+}
+
+function closeQuickCheck() {
+  document.getElementById('quickCheckOverlay').classList.remove('open');
+  if (state.currentTab === 'dashboard') loadDashboard();
+  if (state.currentTab === 'editor') loadFloorPlan();
+  if (state.currentTab === 'checklist') loadChecklist();
+}
+
+// ── Helpers ──
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function scoreColor(score) {
+  if (score >= 80) return 'var(--green)';
+  if (score >= 50) return 'var(--yellow)';
+  return 'var(--red)';
+}
+
+function priorityLabel(p) {
+  return { high: '高', medium: '中', low: '低' }[p] || p;
+}
+
+function groupByPriority(hazards) {
+  const groups = { high: [], medium: [], low: [] };
+  for (const h of hazards) {
+    if (groups[h.priority]) groups[h.priority].push(h);
+    else groups.low.push(h);
+  }
+  return groups;
+}
+
+function calcLocalScore(hazards) {
+  if (!hazards || hazards.length === 0) return 100;
+  const weights = { high: 3, medium: 2, low: 1 };
+  let total = 0, checked = 0;
+  for (const h of hazards) {
+    const w = weights[h.priority] || 1;
+    total += w;
+    if (h.checked) checked += w;
+  }
+  return total === 0 ? 100 : Math.round((checked / total) * 100);
+}
+
+// ── Start ──
+init();
+</script>
+</body>
+</html>

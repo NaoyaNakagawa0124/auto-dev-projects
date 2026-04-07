@@ -1,5 +1,5 @@
 {
-  "apps_completed": 69,
+  "apps_completed": 70,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -417,6 +417,12 @@
       "persona": 1,
       "platform": 3,
       "wildcard": 33
+    },
+    {
+      "source": 24,
+      "persona": 14,
+      "platform": 3,
+      "wildcard": 48
     }
   ],
   "history": [
@@ -626,6 +632,9 @@
     },
     {
       "name": "sekaiquest"
+    },
+    {
+      "name": "tokineko"
     }
   ]
 }
