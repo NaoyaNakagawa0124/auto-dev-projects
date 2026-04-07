@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-04-08 10:00 | Total apps: 70 | Total tests: 9,737
+> Last updated: 2026-04-08 11:00 | Total apps: 71 | Total tests: 9,782
 
 ## Quick Overview
 
@@ -76,6 +76,7 @@
 | 68 | [otonoha](#otonoha) | Music chart generative flower garden | p5.js/iTunes API | 44 | complete | `open index.html` |
 | 69 | [sekaiquest](#sekaiquest) | ASCII world map TUI explorer | Python/Textual/Rich | 46 | complete | `python3 app.py` |
 | 70 | [tokineko](#tokineko) | 時間旅行する猫のターミナルコンパニオン | Python/Textual/Rich | 63 | complete | `pip install -e . && tokineko` |
+| 71 | [niwacraft](#niwacraft) | 親子で楽しむコージー庭づくりゲーム | Godot 4.x/GDScript | 45 | complete | Godotで開く → F5 |
 
 ---
 
@@ -3212,3 +3213,56 @@ Python 3.10 compatibility: replaced `list[str]` and `X | None` syntax with `from
 - Seasonal events with time-limited items
 - Cat customization (appearance, personality)
 - Multi-cat support
+
+---
+
+### <a id="niwacraft"></a>71. niwacraft - 2026-04-08 11:00
+
+**What is this?**
+親子で楽しむコージーな2D庭づくりシミュレーションゲーム。16x12のグリッドに作物・花・木・小道・柵・池などを配置して理想の庭をデザイン。季節が巡り植物が育ち、収穫もできる。各アイテムに食育豆知識付き。
+
+**Discovery Roll**
+Source: 21 (Agriculture/sustainability) | Persona: 39 (子育て中のパパ/ママ) | Platform: 14 (Godot game) | Wildcard: 47 (建築・間取り)
+
+**Features Built**
+- グリッドベースの庭エディタ: 20種のアイテムを自由配置
+- 季節サイクル: 春→夏→秋→冬で植物の育成が変化
+- 植物成長システム: 種→芽→成長→収穫の4段階
+- 食育ヒント: 全アイテムに日本語の豆知識
+- カスタム描画: GDScriptのdraw()で全ビジュアルを描画（外部アセット不要）
+- カテゴリ別パレット: 作物・花・木・小道・建物・水場
+
+**Tech Stack**
+Godot 4.x / GDScript / Custom draw calls / No external assets
+
+**Key Files**
+```
+niwacraft/
+├── project.godot
+├── scenes/main.tscn
+├── scripts/
+│   ├── game_data.gd    # Item/season/growth data
+│   ├── grid_manager.gd # Grid system & rendering
+│   └── main.gd         # Main game controller
+└── tests/
+    ├── test_game_data.gd
+    └── test_grid_logic.gd
+```
+
+**How to Run**
+```bash
+# Godot 4.x をインストール後
+godot --path niwacraft/
+# または Godot エディタで開いて F5
+```
+
+**Tests**: 45 passing | **Files**: 11 | **LOC**: ~1,616 | **Build time**: ~8 min
+
+**Challenges & Fixes**
+Self-contained design: Used GDScript draw calls (draw_rect, draw_circle, draw_arc) instead of sprite assets to keep the project portable and dependency-free.
+
+**Potential Next Steps**
+- Weather system affecting growth
+- Animal visitors (butterflies, birds)
+- Recipes using harvested crops
+- Garden export as image

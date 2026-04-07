@@ -1,5 +1,5 @@
 {
-  "apps_completed": 70,
+  "apps_completed": 71,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -423,6 +423,12 @@
       "persona": 14,
       "platform": 3,
       "wildcard": 48
+    },
+    {
+      "source": 21,
+      "persona": 39,
+      "platform": 14,
+      "wildcard": 47
     }
   ],
   "history": [
@@ -635,6 +641,9 @@
     },
     {
       "name": "tokineko"
+    },
+    {
+      "name": "niwacraft"
     }
   ]
 }
