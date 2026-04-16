@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-04-08 11:00 | Total apps: 71 | Total tests: 9,782
+> Last updated: 2026-04-16 22:00 | Total apps: 72 | Total tests: 9,862
 
 ## Quick Overview
 
@@ -77,6 +77,7 @@
 | 69 | [sekaiquest](#sekaiquest) | ASCII world map TUI explorer | Python/Textual/Rich | 46 | complete | `python3 app.py` |
 | 70 | [tokineko](#tokineko) | 時間旅行する猫のターミナルコンパニオン | Python/Textual/Rich | 63 | complete | `pip install -e . && tokineko` |
 | 71 | [niwacraft](#niwacraft) | 親子で楽しむコージー庭づくりゲーム | Godot 4.x/GDScript | 45 | complete | Godotで開く → F5 |
+| 72 | [ryuusai](#ryuusai) | デジタル墨流しアートジェネレータ | p5.js/Vanilla JS | 80 | complete | `npx serve .` → http://localhost:3000 |
 
 ---
 
@@ -3266,3 +3267,54 @@ Self-contained design: Used GDScript draw calls (draw_rect, draw_circle, draw_ar
 - Animal visitors (butterflies, birds)
 - Recipes using harvested crops
 - Garden export as image
+
+---
+
+### <a id="ryuusai"></a>72. ryuusai - 2026-04-16 22:00
+
+**What is this?**
+デジタル墨流し（Suminagashi）アートジェネレータ。リアルタイム流体物理シミュレーション（Navier-Stokes方程式）を使い、クリックで墨を落としドラッグで流れを作ることで、美しい抽象アートを生成する。高解像度エクスポート機能付きで、プリントオンデマンド副業にも活用可能。
+
+**Discovery Roll**
+Source: 7 (Wikipedia — fluid dynamics) | Persona: 33 (副業を始めたい人) | Platform: 19 (p5.js / creative coding) | Wildcard: 22 (物理シミュレーション)
+
+**Features Built**
+- リアルタイムNavier-Stokes流体シミュレーション（マランゴニ効果付き）
+- 6種類の和風カラーパレット（侘寂、桜、海、夕焼け、ネオン、墨）各5色
+- 自動生成モード（ランダムにインクを落とし流れを作る）
+- 高解像度エクスポート（最大4x、和紙風テクスチャ背景対応）
+- ギャラリー機能（localStorage、最大50枚保存）
+- レスポンシブデザイン（モバイル対応）
+
+**Tech Stack**
+p5.js / Vanilla JavaScript / CSS (glassmorphism) / HTML5 Canvas / localStorage
+
+**Key Files**
+```
+ryuusai/
+├── index.html      — アプリシェル・UI構造
+├── style.css       — ダークテーマ・グラスモーフィズム
+├── fluid.js        — FluidSolverクラス（Navier-Stokes解法）
+├── palettes.js     — 6パレット・30色定義
+├── gallery.js      — GalleryManager（永続化）
+├── app.js          — p5.jsスケッチ・UI制御・エクスポート
+├── tests.js        — Node.jsテストスイート（80件）
+└── tests.html      — ブラウザテストランナー
+```
+
+**How to Run**
+```bash
+cd ryuusai
+npx serve .
+# ブラウザで http://localhost:3000 を開く
+```
+
+**Tests**: 80 passing | **Files**: 12 | **LOC**: ~2,138 | **Build time**: ~10 min
+
+**Challenges & Fixes**
+流体シミュレーションの安定性確保のため、速度減衰（damping factor 0.999）とGauss-Seidel反復回数の調整が必要だった。
+
+**Potential Next Steps**
+- WebGLシェーダーによる高解像度グリッド描画
+- SVGエクスポート（無限スケーリング対応）
+- SNS共有機能（OGPプレビュー付き）

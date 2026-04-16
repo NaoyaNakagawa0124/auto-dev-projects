@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>流彩 テスト</title>
+  <style>
+    body { font-family: monospace; background: #1a1a20; color: #e8e6e1; padding: 20px; }
+    .pass { color: #4ade80; }
+    .fail { color: #f43f5e; }
+    .suite { margin: 16px 0; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 8px; }
+    h2 { font-size: 14px; color: #c4956a; margin-bottom: 8px; }
+    .result { padding: 2px 0; font-size: 13px; }
+    #summary { margin-top: 20px; padding: 16px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h1>流彩 — テストスイート</h1>
+  <div id="output"></div>
+  <div id="summary"></div>
+
+  <script src="fluid.js"></script>
+  <script src="palettes.js"></script>
+  <script src="gallery.js"></script>
+  <script>
+    let passed = 0, failed = 0;
+    const output = document.getElementById('output');
+
+    function suite(name) {
+      const div = document.createElement('div');
+      div.className = 'suite';
+      div.innerHTML = `<h2>${name}</h2>`;
+      output.appendChild(div);
+      return div;
+    }
+
+    function assert(suiteEl, testName, condition) {
+      const el = document.createElement('div');
+      el.className = 'result';
+      if (condition) {
+        el.innerHTML = `<span class="pass">✓</span> ${testName}`;
+        passed++;
+      } else {
+        el.innerHTML = `<span class="fail">✗</span> ${testName}`;
+        failed++;
+      }
+      suiteEl.appendChild(el);
+    }
+
+    // ===== FluidSolver Tests =====
+    (function testFluidSolver() {
+      const s = suite('FluidSolver');
+
+      // Construction
+      const f = new FluidSolver(64);
+      assert(s, 'コンストラクタ: グリッドサイズ', f.N === 64);
+      assert(s, 'コンストラクタ: バッファサイズ', f.size === 66 * 66);
+      assert(s, 'コンストラクタ: 速度場初期化', f.u.length === f.size);
+      assert(s, 'コンストラクタ: 密度場R初期化', f.densityR.length === f.size);
+
+      // IX indexing
+      assert(s, 'IX: インデックス計算', f.IX(5, 3) === 5 + 66 * 3);
+      assert(s, 'IX: 原点', f.IX(0, 0) === 0);
+
+      // Reset
+      f.densityR[100] = 1.0;
+      f.u[200] = 5.0;
+      f.reset();
+      assert(s, 'リセット: 密度クリア', f.densityR[100] === 0);
+      assert(s, 'リセット: 速度クリア', f.u[200] === 0);
+      assert(s, 'リセット: インクレイヤークリア', f.inkLayers.length === 0);
+
+      // addDensity
+      f.reset();
+      f.addDensity(10, 10, 0.5, 0.3, 0.1, 1.0);
+      const idx = f.IX(10, 10);
+      assert(s, 'addDensity: R追加', Math.abs(f.densityR[idx] - 0.5) < 0.001);
+      assert(s, 'addDensity: G追加', Math.abs(f.densityG[idx] - 0.3) < 0.001);
+      assert(s, 'addDensity: B追加', Math.abs(f.densityB[idx] - 0.1) < 0.001);
+      assert(s, 'addDensity: A追加', f.densityA[idx] <= 1.0);
+
+      // addVelocity
+      f.reset();
+      f.addVelocity(20, 20, 3.0, -2.0);
+      const vidx = f.IX(20, 20);
+      assert(s, 'addVelocity: X速度', f.u[vidx] === 3.0);
+      assert(s, 'addVelocity: Y速度', f.v[vidx] === -2.0);
+
+      // dropInk
+      f.reset();
+      f.dropInk(32, 32, 5, 1.0, 0.0, 0.0, 0.5);
+      const centerIdx = f.IX(32, 32);
+      assert(s, 'dropInk: 中心に密度', f.densityR[centerIdx] > 0);
+      assert(s, 'dropInk: レイヤー記録', f.inkLayers.length === 1);
+      assert(s, 'dropInk: レイヤーの色', f.inkLayers[0].r === 1.0);
+
+      // Marangoni effect (velocity created around drop)
+      let hasOutwardVelocity = false;
+      for (let i = -5; i <= 5; i++) {
+        for (let j = -5; j <= 5; j++) {
+          const vi = f.IX(32 + i, 32 + j);
+          if (Math.abs(f.u[vi]) > 0.001 || Math.abs(f.v[vi]) > 0.001) {
+            hasOutwardVelocity = true;
+          }
+        }
+      }
+      assert(s, 'dropInk: マランゴニ効果（速度場）', hasOutwardVelocity);
+
+      // Step simulation
+      f.reset();
+      f.dropInk(32, 32, 5, 0.5, 0.5, 0.5, 0.3);
+      const beforeR = f.densityR[f.IX(32, 32)];
+      f.step();
+      assert(s, 'step: シミュレーション実行', true); // No crash
+      // After step, density should have spread
+      assert(s, 'step: 密度が拡散', f.densityR[f.IX(33, 32)] > 0 || f.densityR[f.IX(32, 33)] > 0);
+
+      // Multiple steps stability
+      for (let i = 0; i < 20; i++) f.step();
+      let hasNaN = false;
+      for (let i = 0; i < f.size; i++) {
+        if (isNaN(f.densityR[i]) || isNaN(f.u[i])) { hasNaN = true; break; }
+      }
+      assert(s, 'step: 20ステップ後安定（NaNなし）', !hasNaN);
+
+      // Velocity damping
+      f.reset();
+      f.addVelocity(32, 32, 10.0, 10.0);
+      for (let i = 0; i < 50; i++) f.step();
+      const finalU = Math.abs(f.u[f.IX(32, 32)]);
+      assert(s, 'step: 速度減衰', finalU < 10.0);
+
+      // Boundary conditions
+      f.reset();
+      f.addDensity(1, 1, 1, 1, 1, 1);
+      f.step();
+      assert(s, '境界条件: 端でクラッシュしない', true);
+    })();
+
+    // ===== Palette Tests =====
+    (function testPalettes() {
+      const s = suite('パレット');
+
+      assert(s, 'getPalette: wabi取得', getPalette('wabi').name === '侘寂');
+      assert(s, 'getPalette: sakura取得', getPalette('sakura').name === '桜');
+      assert(s, 'getPalette: ocean取得', getPalette('ocean').name === '海');
+      assert(s, 'getPalette: sunset取得', getPalette('sunset').name === '夕焼け');
+      assert(s, 'getPalette: neon取得', getPalette('neon').name === 'ネオン');
+      assert(s, 'getPalette: mono取得', getPalette('mono').name === '墨');
+      assert(s, 'getPalette: 不正名 → wabi', getPalette('invalid').name === '侘寂');
+
+      const wabi = getPalette('wabi');
+      assert(s, '色数: 5色', wabi.colors.length === 5);
+      assert(s, '色データ: hex', wabi.colors[0].hex.startsWith('#'));
+      assert(s, '色データ: rgb配列', wabi.colors[0].rgb.length === 3);
+      assert(s, '色データ: rgb範囲', wabi.colors[0].rgb[0] >= 0 && wabi.colors[0].rgb[0] <= 1);
+      assert(s, '背景色: hex', wabi.background.startsWith('#'));
+      assert(s, '色名: 日本語', wabi.colors[0].name === '墨');
+
+      const names = getAllPaletteNames();
+      assert(s, 'getAllPaletteNames: 6パレット', names.length === 6);
+      assert(s, 'getAllPaletteNames: wabiを含む', names.includes('wabi'));
+    })();
+
+    // ===== Gallery Tests =====
+    (function testGallery() {
+      const s = suite('ギャラリー');
+      const g = new GalleryManager();
+
+      // Clear for testing
+      localStorage.removeItem(g.storageKey);
+
+      assert(s, '初期状態: 空', g.getAll().length === 0);
+      assert(s, 'getCount: 0', g.getCount() === 0);
+
+      // Save
+      const item = g.save('data:image/png;base64,test123', { palette: 'wabi' });
+      assert(s, '保存: アイテム返却', item !== null);
+      assert(s, '保存: ID存在', item.id.length > 0);
+      assert(s, '保存: パレット保存', item.palette === 'wabi');
+      assert(s, '保存: 作成日', item.createdAt.includes('T'));
+      assert(s, 'getCount: 1', g.getCount() === 1);
+
+      // Save another
+      g.save('data:image/png;base64,test456', { palette: 'sakura' });
+      assert(s, '複数保存: 2件', g.getCount() === 2);
+
+      // Newest first
+      const all = g.getAll();
+      assert(s, '順序: 新しい順', all[0].palette === 'sakura');
+
+      // Delete
+      g.delete(all[0].id);
+      assert(s, '削除: 1件', g.getCount() === 1);
+
+      // formatDate
+      const dateStr = g.formatDate('2026-04-16T14:30:00.000Z');
+      assert(s, 'formatDate: フォーマット', dateStr.includes('/') && dateStr.includes(':'));
+
+      // Cleanup
+      localStorage.removeItem(g.storageKey);
+    })();
+
+    // ===== Summary =====
+    const summary = document.getElementById('summary');
+    const total = passed + failed;
+    const cls = failed === 0 ? 'pass' : 'fail';
+    summary.innerHTML = `<span class="${cls}">${passed}/${total} テスト通過</span>` +
+      (failed > 0 ? ` — <span class="fail">${failed} 件失敗</span>` : ' — 全テスト成功 🎉');
+  </script>
+</body>
+</html>

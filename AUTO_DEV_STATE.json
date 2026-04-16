@@ -1,5 +1,5 @@
 {
-  "apps_completed": 71,
+  "apps_completed": 72,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -429,6 +429,12 @@
       "persona": 39,
       "platform": 14,
       "wildcard": 47
+    },
+    {
+      "source": 7,
+      "persona": 33,
+      "platform": 19,
+      "wildcard": 22
     }
   ],
   "history": [
@@ -644,6 +650,9 @@
     },
     {
       "name": "niwacraft"
+    },
+    {
+      "name": "ryuusai"
     }
   ]
 }
