@@ -77,5 +77,6 @@
 | 71 | niwacraft | 親子で楽しむコージー庭づくりゲーム | Godot 4.x/GDScript | 45 |
 | 72 | ryuusai | デジタル墨流しアートジェネレータ | p5.js/Vanilla JS | 80 |
 | 73 | tsumugu | 七十二候×手仕事 Discord/CLIボット | Node.js/discord.js | 115 |
+| 74 | tabibumi | エモい旅日記CLI | Bun/TypeScript/SQLite | 38 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

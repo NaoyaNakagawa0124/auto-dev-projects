@@ -1,0 +1,11 @@
+{
+  "name": "tabibumi",
+  "version": "1.0.0",
+  "description": "エモい旅日記 CLI — ノスタルジア心理学に基づく旅の記録ツール",
+  "scripts": {
+    "start": "bun run src/cli.ts",
+    "test": "bun test"
+  },
+  "keywords": ["travel", "journal", "cli", "nostalgia", "bun"],
+  "license": "MIT"
+}

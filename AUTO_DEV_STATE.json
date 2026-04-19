@@ -1,5 +1,5 @@
 {
-  "apps_completed": 73,
+  "apps_completed": 74,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -441,6 +441,12 @@
       "persona": 37,
       "platform": 8,
       "wildcard": 15
+    },
+    {
+      "source": 20,
+      "persona": 9,
+      "platform": 18,
+      "wildcard": 20
     }
   ],
   "history": [
@@ -662,6 +668,9 @@
     },
     {
       "name": "tsumugu"
+    },
+    {
+      "name": "tabibumi"
     }
   ]
 }

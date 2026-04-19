@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-04-19 12:00 | Total apps: 73 | Total tests: 9,977
+> Last updated: 2026-04-19 23:45 | Total apps: 74 | Total tests: 10,015
 
 ## Quick Overview
 
@@ -79,6 +79,7 @@
 | 71 | [niwacraft](#niwacraft) | 親子で楽しむコージー庭づくりゲーム | Godot 4.x/GDScript | 45 | complete | Godotで開く → F5 |
 | 72 | [ryuusai](#ryuusai) | デジタル墨流しアートジェネレータ | p5.js/Vanilla JS | 80 | complete | `npx serve .` → http://localhost:3000 |
 | 73 | [tsumugu](#tsumugu) | 七十二候×手仕事 Discord/CLIボット | Node.js/discord.js | 115 | complete | `node src/cli.js today` |
+| 74 | [tabibumi](#tabibumi) | エモい旅日記CLI | Bun/TypeScript/SQLite | 38 | complete | `bun run src/cli.ts help` |
 
 ---
 
@@ -3371,3 +3372,56 @@ node src/cli.js crafts    # 季節の手仕事一覧
 - 天気API連携（実際の天気と候の組み合わせ）
 - 候変わりの自動通知（cron scheduled post）
 - 各候のイラスト画像生成
+
+---
+
+### <a id="tabibumi"></a>74. tabibumi - 2026-04-19 23:45
+
+**What is this?**
+ノスタルジア心理学の研究に基づく、一人旅のためのエモいCLI旅日記。やさしい質問で旅の感情を引き出し、記録を「未来の自分への手紙」に変換する。Bun + TypeScript + SQLiteで動作し、外部依存ゼロ。
+
+**Discovery Roll**
+Source: 20 (Academic papers / ArXiv) | Persona: 9 (海外一人旅中の旅行者) | Platform: 18 (Deno/Bun) | Wildcard: 20 (エモい・感情に訴える体験)
+
+**Features Built**
+- 心理学ベースの42問の質問（五感・感情・社会性・意味・ノスタルジア・発見の6カテゴリ）
+- 旅フェーズ＆時間帯に応じた文脈適応型プロンプト
+- 「未来の自分への手紙」自動生成エンジン
+- 10種類の気分トラッキング（嬉しい、穏やか、感動、自由 etc.）
+- Markdownエクスポート・旅の統計
+- 温かみのあるANSIカラーCLI（amber/rose/cream系パレット）
+
+**Tech Stack**
+Bun / TypeScript / bun:sqlite / ANSI terminal
+
+**Key Files**
+```
+tabibumi/
+├── src/
+│   ├── db.ts          — SQLite CRUD
+│   ├── questions.ts   — 42問の質問バンク
+│   ├── letter.ts      — 手紙・MD生成
+│   ├── display.ts     — カラー出力
+│   └── cli.ts         — CLIルーター
+├── tests/
+│   └── tabibumi.test.ts — 38テスト
+└── package.json
+```
+
+**How to Run**
+```bash
+cd tabibumi
+bun run src/cli.ts start "パリ"
+bun run src/cli.ts write
+bun run src/cli.ts letter
+```
+
+**Tests**: 38 passing | **Files**: 10 | **LOC**: ~1,352 | **Build time**: ~8 min
+
+**Challenges & Fixes**
+bun:sqliteのWALモードがテスト時の一時ファイル削除と競合。テストごとにユニークなDB名を使用する方式で解決。
+
+**Potential Next Steps**
+- IP位置情報による自動ロケーション検出
+- 天気API連携で五感の文脈を追加
+- 写真添付対応
