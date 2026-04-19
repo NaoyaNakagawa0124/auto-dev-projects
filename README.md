@@ -76,5 +76,6 @@
 | 70 | tokineko | 時間旅行する猫のターミナルコンパニオン | Python/Textual/Rich | 63 |
 | 71 | niwacraft | 親子で楽しむコージー庭づくりゲーム | Godot 4.x/GDScript | 45 |
 | 72 | ryuusai | デジタル墨流しアートジェネレータ | p5.js/Vanilla JS | 80 |
+| 73 | tsumugu | 七十二候×手仕事 Discord/CLIボット | Node.js/discord.js | 115 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

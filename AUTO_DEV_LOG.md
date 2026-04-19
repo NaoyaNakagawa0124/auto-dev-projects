@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-04-16 22:00 | Total apps: 72 | Total tests: 9,862
+> Last updated: 2026-04-19 12:00 | Total apps: 73 | Total tests: 9,977
 
 ## Quick Overview
 
@@ -78,6 +78,7 @@
 | 70 | [tokineko](#tokineko) | 時間旅行する猫のターミナルコンパニオン | Python/Textual/Rich | 63 | complete | `pip install -e . && tokineko` |
 | 71 | [niwacraft](#niwacraft) | 親子で楽しむコージー庭づくりゲーム | Godot 4.x/GDScript | 45 | complete | Godotで開く → F5 |
 | 72 | [ryuusai](#ryuusai) | デジタル墨流しアートジェネレータ | p5.js/Vanilla JS | 80 | complete | `npx serve .` → http://localhost:3000 |
+| 73 | [tsumugu](#tsumugu) | 七十二候×手仕事 Discord/CLIボット | Node.js/discord.js | 115 | complete | `node src/cli.js today` |
 
 ---
 
@@ -3318,3 +3319,55 @@ npx serve .
 - WebGLシェーダーによる高解像度グリッド描画
 - SVGエクスポート（無限スケーリング対応）
 - SNS共有機能（OGPプレビュー付き）
+
+---
+
+### <a id="tsumugu"></a>73. tsumugu - 2026-04-19 12:00
+
+**What is this?**
+日本の伝統暦「七十二候」に基づき、季節の手仕事（つまみ細工、水引、刺し子、草木染め等）を提案するDiscordボット＋CLIツール。全72候と36種の手仕事を完全収録し、日付に応じて自動的に今の候とおすすめクラフトを表示する。
+
+**Discovery Roll**
+Source: 6 (天気・自然現象) | Persona: 37 (DIY/クラフター) | Platform: 8 (Discord/LINE bot) | Wildcard: 15 (和風テーマ)
+
+**Features Built**
+- 七十二候完全データベース（全72候・24節気・4季節・読みがな・意味）
+- 月別36種の和風クラフト提案（材料・難易度・季節メモ付き）
+- 美しいBox-drawing CLI出力（ANSI色・季節カラーテーマ）
+- Discord Embed生成（和風カラー・季節絵文字）
+- キーワード検索（候名・読み・手仕事名・材料で横断検索）
+
+**Tech Stack**
+Node.js / ES modules / discord.js v14 / ANSI terminal colors
+
+**Key Files**
+```
+tsumugu/
+├── src/
+│   ├── seasons.js   — 72候+24節気データベース
+│   ├── crafts.js    — 36手仕事データベース
+│   ├── embeds.js    — Discord Embed生成
+│   ├── cli.js       — ターミナルUI
+│   └── bot.js       — Discordボット
+├── tests/
+│   └── run.js       — 115テスト
+└── package.json
+```
+
+**How to Run**
+```bash
+cd tsumugu
+node src/cli.js today     # 今日の候と手仕事
+node src/cli.js search 桜 # 検索
+node src/cli.js crafts    # 季節の手仕事一覧
+```
+
+**Tests**: 115 passing | **Files**: 11 | **LOC**: ~1,644 | **Build time**: ~8 min
+
+**Challenges & Fixes**
+七十二候の正確な日付計算（太陽黄経ベース）を近似値で実装。年をまたぐ候（12月→1月）のインデックス計算にラップアラウンド処理が必要だった。
+
+**Potential Next Steps**
+- 天気API連携（実際の天気と候の組み合わせ）
+- 候変わりの自動通知（cron scheduled post）
+- 各候のイラスト画像生成

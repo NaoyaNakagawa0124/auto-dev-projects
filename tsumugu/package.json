@@ -1,0 +1,14 @@
+{
+  "name": "tsumugu",
+  "version": "1.0.0",
+  "description": "七十二候×手仕事 Discord ボット",
+  "type": "module",
+  "main": "src/bot.js",
+  "scripts": {
+    "start": "node src/bot.js",
+    "cli": "node src/cli.js",
+    "test": "node tests/run.js"
+  },
+  "keywords": ["discord", "bot", "japanese", "seasons", "craft"],
+  "license": "MIT"
+}

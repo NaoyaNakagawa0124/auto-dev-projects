@@ -1,5 +1,5 @@
 {
-  "apps_completed": 72,
+  "apps_completed": 73,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -435,6 +435,12 @@
       "persona": 33,
       "platform": 19,
       "wildcard": 22
+    },
+    {
+      "source": 6,
+      "persona": 37,
+      "platform": 8,
+      "wildcard": 15
     }
   ],
   "history": [
@@ -653,6 +659,9 @@
     },
     {
       "name": "ryuusai"
+    },
+    {
+      "name": "tsumugu"
     }
   ]
 }
