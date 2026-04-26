@@ -84,5 +84,6 @@
 | 78 | gaku-erp | 勉強エンタープライズ管理 | C#/Mono | 70 |
 | 79 | omusubi | 🍙遠距離カップル食事共有 | Dart/HTML/CSS/JS | 32 |
 | 80 | kuukan | 🚀宇宙ステーション・バーチャルオフィス | HTML/CSS/JS/Canvas | 103 |
+| 81 | manabi-no-ki | 🌳学習で育つ木 — 親子学習トラッカー | Python/ANSI/JSON | 109 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

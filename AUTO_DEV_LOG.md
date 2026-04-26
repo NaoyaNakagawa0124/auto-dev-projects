@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-04-27 00:00 | Total apps: 80 | Total tests: 10,408
+> Last updated: 2026-04-27 01:00 | Total apps: 81 | Total tests: 10,517
 
 ## Quick Overview
 
@@ -86,6 +86,7 @@
 | 78 | [gaku-erp](#gaku-erp) | 勉強エンタープライズ管理 | C#/Mono/ANSI | 70 | complete | `make && mono gaku-erp.exe` |
 | 79 | [omusubi](#omusubi) | 🍙遠距離カップル食事共有 | Dart/HTML/CSS/JS | 32 | complete | `dart run bin/omusubi.dart log カレー` |
 | 80 | [kuukan](#kuukan) | 🚀宇宙ステーション・バーチャルオフィス | HTML/CSS/JS/Canvas | 103 | complete | `python3 -m http.server 8080` |
+| 81 | [manabi-no-ki](#manabi-no-ki) | 🌳学習で育つ木 — 親子学習トラッカー | Python/ANSI/JSON | 109 | complete | `python3 src/cli.py status` |
 
 ---
 
@@ -3744,3 +3745,54 @@ data.jsのconst宣言がNode.jsのeval環境で使えない問題。テスト時
 - 宇宙ステーションBGM（ホワイトノイズ+機器音）
 - WebSocket共有クルールーム
 - ミッションストリーク実績システム
+
+---
+
+### <a id="manabi-no-ki"></a>81. manabi-no-ki - 2026-04-27 01:00
+
+**What is this?**
+子どもの学習記録で仮想の木が成長するPython CLIアプリ。7段階の成長ステージ（種→巨木）、9教科対応、マイルストーン祝い、プログレスバー、週間統計、ストリーク追跡。学習のモチベーションを「木を育てる」楽しさで支える。
+
+**Discovery Roll**
+Source: 38 (教育テック) | Persona: 39 (子育て中のパパ/ママ) | Platform: 3 (Python TUI) | Wildcard: 16 (育成要素)
+
+**Features Built**
+- 7段階ASCII木アート（種→芽→苗木→若木→成長中→大木→巨木）
+- 9教科対応（国語/算数/理科/社会/英語/音楽/体育/図工/その他）
+- マイルストーンシステム（30/120/300/600/1200/2400分）
+- プログレスバー＆科目別バーチャート
+- 週間統計レポート＆連続学習ストリーク
+- JSON永続化（~/.manabi-no-ki/data.json）
+
+**Tech Stack**
+Python 3.10 / ANSI terminal / JSON file storage
+
+**Key Files**
+```
+manabi-no-ki/
+├── src/
+│   ├── tree.py   — 木の成長ステージ・ASCIIアート・科目データ
+│   ├── data.py   — JSON永続化・セッション管理・統計
+│   └── cli.py    — CLIインターフェース
+├── tests/
+│   └── test_all.py — 109テスト
+└── README.md
+```
+
+**How to Run**
+```bash
+cd manabi-no-ki
+python3 src/cli.py log 算数 30 足し算
+python3 src/cli.py status
+python3 src/cli.py stats
+```
+
+**Tests**: 109 passing | **Files**: 8 | **LOC**: ~650 | **Build time**: ~10 min
+
+**Challenges & Fixes**
+木のステージ境界値テスト — マイルストーン値(30分)がステージ境界と一致するため、テストで+1が必要だった。
+
+**Potential Next Steps**
+- Textual TUIフルスクリーンアプリ
+- 複数子どもプロフィール
+- 科目ごとの枝ビジュアライゼーション

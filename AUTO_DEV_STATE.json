@@ -1,5 +1,5 @@
 {
-  "apps_completed": 80,
+  "apps_completed": 81,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -483,6 +483,12 @@
       "persona": 14,
       "platform": 6,
       "wildcard": 34
+    },
+    {
+      "source": 38,
+      "persona": 39,
+      "platform": 3,
+      "wildcard": 16
     }
   ],
   "history": [
@@ -725,6 +731,9 @@
     },
     {
       "name": "kuukan"
+    },
+    {
+      "name": "manabi-no-ki"
     }
   ]
 }
