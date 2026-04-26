@@ -1,5 +1,5 @@
 {
-  "apps_completed": 76,
+  "apps_completed": 77,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -459,6 +459,12 @@
       "persona": 24,
       "platform": 7,
       "wildcard": 38
+    },
+    {
+      "source": 12,
+      "persona": 15,
+      "platform": 15,
+      "wildcard": 41
     }
   ],
   "history": [
@@ -689,6 +695,9 @@
     },
     {
       "name": "shinjin-quest"
+    },
+    {
+      "name": "hoshiura"
     }
   ]
 }

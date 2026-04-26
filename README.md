@@ -80,5 +80,6 @@
 | 74 | tabibumi | エモい旅日記CLI | Bun/TypeScript/SQLite | 38 |
 | 75 | tiketto | 🎫チケットコレクション Electronアプリ | Electron/Vanilla JS | 71 |
 | 76 | shinjin-quest | 新卒サバイバルシミュレーション | C++17/ANSI Terminal | 88 |
+| 77 | hoshiura | 写真カラー×星座占い | Dart/HTML/CSS/JS | 29 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

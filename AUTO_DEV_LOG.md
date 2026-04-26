@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-04-26 13:00 | Total apps: 76 | Total tests: 10,174
+> Last updated: 2026-04-26 14:00 | Total apps: 77 | Total tests: 10,203
 
 ## Quick Overview
 
@@ -82,6 +82,7 @@
 | 74 | [tabibumi](#tabibumi) | エモい旅日記CLI | Bun/TypeScript/SQLite | 38 | complete | `bun run src/cli.ts help` |
 | 75 | [tiketto](#tiketto) | 🎫チケットコレクション Electronアプリ | Electron/Vanilla JS/JSON | 71 | complete | `npm start` |
 | 76 | [shinjin-quest](#shinjin-quest) | 新卒サバイバルシミュレーション | C++17/ANSI Terminal | 88 | complete | `make && ./shinjin-quest` |
+| 77 | [hoshiura](#hoshiura) | 写真カラー×星座占い | Dart/HTML/CSS/JS | 29 | complete | `dart run bin/hoshiura.dart` |
 
 ---
 
@@ -3527,3 +3528,61 @@ make && ./shinjin-quest
 - セーブ/ロード機能
 - 難易度選択（ホワイト企業/ブラック企業）
 - 職種分岐（営業/技術/企画）
+
+---
+
+### <a id="hoshiura"></a>77. hoshiura - 2026-04-26 14:00
+
+**What is this?**
+写真の色彩を分析して12星座とマッチングし、宇宙テーマの美しい占い結果を生成するDartアプリ。CLI + Web UIの二面構成で、写真ドロップ→カラー抽出→星座判定→運勢表示の一連の体験を提供。JWSTの宇宙写真ブームと2026年星座カラー占い流行を掛け合わせたコンセプト。
+
+**Discovery Roll**
+Source: 12 (科学/宇宙ニュース) | Persona: 15 (1万枚の写真を持つカメラ好き) | Platform: 15 (Flutter/Dart) | Wildcard: 41 (占い/運勢)
+
+**Features Built**
+- 12星座カラープロファイル（RGB主色/副色、エレメント、特性、ラッキーアイテム）
+- 重み付きRGB色距離によるカラーマッチング
+- シードベース決定論的占い生成（5カテゴリ×5段階）
+- Canvas写真カラー抽出（彩度加重平均）
+- 星空アニメーション背景
+- Dart CLI（ANSI 256色スウォッチ表示）
+- 宇宙テーマWeb UI（グラスモーフィズム、コスミックグラデーション）
+
+**Tech Stack**
+Dart 3.11 / HTML/CSS/JS / Canvas API / Glassmorphism UI
+
+**Key Files**
+```
+hoshiura/
+├── lib/
+│   ├── constellations.dart — 12星座カラーDB
+│   └── fortune.dart        — 占い生成エンジン
+├── bin/
+│   └── hoshiura.dart       — CLI
+├── web/
+│   ├── index.html          — Web UI
+│   ├── style.css           — 宇宙テーマCSS
+│   ├── constellations.js   — JS版星座データ
+│   └── app.js              — 写真分析&占い表示
+├── test/
+│   └── hoshiura_test.dart  — 29テスト
+└── pubspec.yaml
+```
+
+**How to Run**
+```bash
+cd hoshiura
+dart pub get
+dart run bin/hoshiura.dart --rgb 200,50,100
+# Web: cd web && python3 -m http.server 8080
+```
+
+**Tests**: 29 passing | **Files**: 12 | **LOC**: ~1,320 | **Build time**: ~10 min
+
+**Challenges & Fixes**
+Dart source fileのUTF-8エンコーディングで一部CJK文字が化ける問題。手動で修正が必要だった（獅子座、奉仕精神等）。
+
+**Potential Next Steps**
+- カメラキャプチャ（モバイルPWA対応）
+- 占い結果のOGPカード画像生成
+- 日別占い履歴

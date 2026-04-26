@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>星占 — 写真カラー×星座占い</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="stars-bg"></canvas>
+
+  <div id="app">
+    <header>
+      <h1>✨ 星<span class="accent">占</span></h1>
+      <p class="subtitle">写真のカラーから星座を読む</p>
+    </header>
+
+    <!-- Upload Section -->
+    <section id="upload-section" class="card">
+      <div id="drop-zone">
+        <div class="drop-icon">📸</div>
+        <p>写真をドロップ、またはクリックで選択</p>
+        <p class="hint">写真の色を分析して、あなたの星座を占います</p>
+        <input type="file" id="file-input" accept="image/*" hidden>
+      </div>
+      <div id="preview-container" class="hidden">
+        <canvas id="preview-canvas"></canvas>
+        <div id="color-result">
+          <div id="color-swatch"></div>
+          <span id="color-text"></span>
+        </div>
+        <button id="btn-read" class="btn-cosmic">星を読む ✨</button>
+        <button id="btn-reset" class="btn-secondary">別の写真を選ぶ</button>
+      </div>
+    </section>
+
+    <!-- Fortune Result -->
+    <section id="fortune-section" class="card hidden">
+      <div class="constellation-header">
+        <span id="constellation-symbol" class="constellation-symbol"></span>
+        <div>
+          <h2 id="constellation-name"></h2>
+          <p id="constellation-period" class="dim"></p>
+        </div>
+      </div>
+
+      <div id="constellation-traits" class="traits"></div>
+
+      <div class="fortune-grid">
+        <div class="luck-item">
+          <span class="luck-label">総合運</span>
+          <span id="luck-overall" class="luck-stars"></span>
+        </div>
+        <div class="luck-item">
+          <span class="luck-label">恋愛運</span>
+          <span id="luck-love" class="luck-stars"></span>
+        </div>
+        <div class="luck-item">
+          <span class="luck-label">仕事運</span>
+          <span id="luck-work" class="luck-stars"></span>
+        </div>
+        <div class="luck-item">
+          <span class="luck-label">金運</span>
+          <span id="luck-money" class="luck-stars"></span>
+        </div>
+        <div class="luck-item">
+          <span class="luck-label">健康運</span>
+          <span id="luck-health" class="luck-stars"></span>
+        </div>
+      </div>
+
+      <div id="fortune-message" class="fortune-message"></div>
+      <div id="fortune-advice" class="fortune-advice"></div>
+
+      <div class="fortune-extras">
+        <div class="extra-item">
+          <span class="extra-label">ラッキーカラー</span>
+          <span id="lucky-color"></span>
+        </div>
+        <div class="extra-item">
+          <span class="extra-label">ラッキーナンバー</span>
+          <span id="lucky-number"></span>
+        </div>
+        <div class="extra-item">
+          <span class="extra-label">ラッキーアイテム</span>
+          <span id="lucky-item"></span>
+        </div>
+        <div class="extra-item">
+          <span class="extra-label">コスミックエネルギー</span>
+          <div class="energy-bar">
+            <div id="energy-fill" class="energy-fill"></div>
+          </div>
+          <span id="energy-value"></span>
+        </div>
+      </div>
+
+      <button id="btn-retry" class="btn-cosmic">もう一度占う 🔮</button>
+    </section>
+
+    <footer>
+      <p>星占 (Hoshiura) — Dart + Web</p>
+    </footer>
+  </div>
+
+  <script src="constellations.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
