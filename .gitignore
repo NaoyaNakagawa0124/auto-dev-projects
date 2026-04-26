@@ -29,3 +29,4 @@ __pycache__/
 
 # Rust/WASM
 pkg/
+tiketto/node_modules/

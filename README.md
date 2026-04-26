@@ -78,5 +78,6 @@
 | 72 | ryuusai | デジタル墨流しアートジェネレータ | p5.js/Vanilla JS | 80 |
 | 73 | tsumugu | 七十二候×手仕事 Discord/CLIボット | Node.js/discord.js | 115 |
 | 74 | tabibumi | エモい旅日記CLI | Bun/TypeScript/SQLite | 38 |
+| 75 | tiketto | 🎫チケットコレクション Electronアプリ | Electron/Vanilla JS | 71 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.
