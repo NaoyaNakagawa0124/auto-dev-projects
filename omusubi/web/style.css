@@ -1,0 +1,296 @@
+:root {
+  --bg: #fff5f5;
+  --surface: #ffffff;
+  --border: rgba(0,0,0,0.06);
+  --text: #2d2d2d;
+  --text-muted: #888;
+  --pink: #ff6b8a;
+  --pink-light: #fff0f3;
+  --pink-glow: rgba(255,107,138,0.15);
+  --blue: #6b8aff;
+  --green: #4caf50;
+  --orange: #ff9800;
+  --font: 'Noto Sans JP', -apple-system, sans-serif;
+  --radius: 16px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 15px;
+}
+
+#app {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.mascot-small { font-size: 40px; margin-bottom: 4px; }
+header h1 { font-size: 28px; font-weight: 700; color: var(--pink); }
+.subtitle { font-size: 13px; color: var(--text-muted); letter-spacing: 0.1em; }
+
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.card h2 {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+
+/* Mascot Card */
+.mascot-card {
+  text-align: center;
+  background: var(--pink-light);
+  border-color: rgba(255,107,138,0.15);
+}
+
+.mascot-face {
+  font-size: 64px;
+  margin-bottom: 8px;
+  transition: all 0.3s;
+}
+
+#mascot-message {
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 12px;
+  min-height: 1.5em;
+}
+
+.streak-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  background: white;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--pink);
+  box-shadow: 0 2px 8px rgba(255,107,138,0.15);
+}
+
+/* Input */
+.input-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.person-toggle {
+  display: flex;
+  gap: 4px;
+  width: 100%;
+}
+
+.person-btn {
+  flex: 1;
+  padding: 8px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  background: white;
+  font-size: 14px;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.person-btn.active {
+  border-color: var(--pink);
+  background: var(--pink-light);
+  color: var(--pink);
+  font-weight: 500;
+}
+
+.person-btn[data-person="B"].active {
+  border-color: var(--blue);
+  background: #f0f3ff;
+  color: var(--blue);
+}
+
+#food-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: var(--font);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+#food-input:focus { border-color: var(--pink); }
+#food-input::placeholder { color: #ccc; }
+
+.btn-primary {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  background: var(--pink);
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.btn-primary:hover { background: #ff5577; }
+
+/* Meals Split */
+.meals-split {
+  display: flex;
+  gap: 12px;
+}
+
+.meals-column { flex: 1; }
+.meals-divider { width: 1px; background: var(--border); }
+
+.meals-column h3 {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.person-a { color: var(--pink); }
+.person-b { color: var(--blue); }
+
+.meal-item {
+  padding: 8px 10px;
+  background: #f8f8f8;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+.meal-item .time {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.meal-item.together {
+  background: var(--pink-light);
+  border: 1px solid rgba(255,107,138,0.2);
+}
+
+/* Together Meals */
+#together-meals {
+  margin-top: 12px;
+}
+
+.together-banner {
+  text-align: center;
+  padding: 12px;
+  background: linear-gradient(135deg, var(--pink-light), #f0f3ff);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Recipe */
+.recipe-card {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.recipe-emoji { font-size: 40px; }
+
+.recipe-info h3 {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.recipe-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.recipe-tip {
+  font-size: 13px;
+  color: var(--pink);
+  font-style: italic;
+}
+
+.recipe-ingredients {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.ingredient-tag {
+  padding: 2px 8px;
+  background: #f0f0f0;
+  border-radius: 10px;
+  font-size: 11px;
+}
+
+/* Stats */
+.stats-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stat {
+  flex: 1;
+  text-align: center;
+  padding: 12px;
+  background: #f8f8f8;
+  border-radius: 10px;
+}
+
+.stat-num {
+  display: block;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--pink);
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+#food-ranking .rank-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+
+#food-ranking .rank-item:last-child { border-bottom: none; }
+.rank-count { color: var(--text-muted); font-size: 12px; }
+
+footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+@media (max-width: 400px) {
+  #app { padding: 12px 10px; }
+  .card { padding: 16px; }
+}
