@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>空間 — 宇宙ステーション・バーチャルオフィス</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="starfield"></canvas>
+
+  <div id="app">
+    <!-- Station Header -->
+    <header id="station-header">
+      <div class="station-id">
+        <span class="station-dot"></span>
+        <span class="station-name">KUUKAN STATION</span>
+        <span class="station-label">空間</span>
+      </div>
+      <div class="station-status">
+        <span id="crew-indicator" class="crew-online">
+          <span class="crew-dot"></span>
+          <span id="crew-count">3</span>名のクルーが活動中
+        </span>
+        <span id="station-time" class="mono"></span>
+      </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="grid">
+      <!-- Mission Timer -->
+      <section class="panel mission-panel">
+        <div class="panel-header">
+          <h2>🚀 ミッション</h2>
+          <span id="mission-status" class="status-badge idle">待機中</span>
+        </div>
+        <div id="timer-display" class="timer">25:00</div>
+        <div class="timer-label" id="timer-label">集中ミッション（25分）</div>
+        <div class="mission-controls">
+          <button id="btn-start" class="btn-mission">発進</button>
+          <button id="btn-pause" class="btn-secondary hidden">一時停止</button>
+          <button id="btn-reset" class="btn-secondary hidden">帰還</button>
+        </div>
+        <div class="mission-presets">
+          <button class="preset active" data-minutes="25">25分</button>
+          <button class="preset" data-minutes="50">50分</button>
+          <button class="preset" data-minutes="15">15分 休憩</button>
+        </div>
+        <div class="mission-stats">
+          <div class="stat-mini"><span id="missions-today">0</span><label>今日のミッション</label></div>
+          <div class="stat-mini"><span id="focus-today">0</span><label>集中時間(分)</label></div>
+        </div>
+      </section>
+
+      <!-- Transmission -->
+      <section class="panel transmission-panel">
+        <div class="panel-header">
+          <h2>📡 管制室からの通信</h2>
+          <span class="signal-bars">▁▃▅▇</span>
+        </div>
+        <div id="transmission" class="transmission">
+          <div class="tx-from">管制室 → あなたへ</div>
+          <div id="tx-message" class="tx-message"></div>
+          <div id="tx-advice" class="tx-advice"></div>
+        </div>
+        <button id="btn-new-tx" class="btn-secondary btn-full">次の通信を受信</button>
+      </section>
+
+      <!-- Crew -->
+      <section class="panel crew-panel">
+        <div class="panel-header">
+          <h2>👥 クルーステータス</h2>
+        </div>
+        <div id="crew-list" class="crew-list"></div>
+        <div class="crew-note">※ バーチャルクルーがあなたと一緒に働いています</div>
+      </section>
+
+      <!-- Mission Log -->
+      <section class="panel log-panel">
+        <div class="panel-header">
+          <h2>📋 ミッションログ</h2>
+          <button id="btn-clear-log" class="btn-tiny">クリア</button>
+        </div>
+        <div id="mission-log" class="mission-log"></div>
+        <div id="log-empty" class="log-empty">ミッション記録なし — 「発進」でスタート</div>
+      </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <span>空間 (Kuukan) — 宇宙ステーション・バーチャルオフィス</span>
+      <span class="mono" id="uptime"></span>
+    </footer>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

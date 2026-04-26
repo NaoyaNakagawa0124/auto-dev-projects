@@ -83,5 +83,6 @@
 | 77 | hoshiura | 写真カラー×星座占い | Dart/HTML/CSS/JS | 29 |
 | 78 | gaku-erp | 勉強エンタープライズ管理 | C#/Mono | 70 |
 | 79 | omusubi | 🍙遠距離カップル食事共有 | Dart/HTML/CSS/JS | 32 |
+| 80 | kuukan | 🚀宇宙ステーション・バーチャルオフィス | HTML/CSS/JS/Canvas | 103 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-04-26 22:45 | Total apps: 79 | Total tests: 10,305
+> Last updated: 2026-04-27 00:00 | Total apps: 80 | Total tests: 10,408
 
 ## Quick Overview
 
@@ -84,7 +84,8 @@
 | 76 | [shinjin-quest](#shinjin-quest) | 新卒サバイバルシミュレーション | C++17/ANSI Terminal | 88 | complete | `make && ./shinjin-quest` |
 | 77 | [hoshiura](#hoshiura) | 写真カラー×星座占い | Dart/HTML/CSS/JS | 29 | complete | `dart run bin/hoshiura.dart` |
 | 78 | [gaku-erp](#gaku-erp) | 勉強エンタープライズ管理 | C#/Mono/ANSI | 70 | complete | `make && mono gaku-erp.exe` |
-| 79 | [omusubi](#omusubi) | 🍙遠距離カ���プル食事共有 | Dart/HTML/CSS/JS | 32 | complete | `dart run bin/omusubi.dart log カレー` |
+| 79 | [omusubi](#omusubi) | 🍙遠距離カップル食事共有 | Dart/HTML/CSS/JS | 32 | complete | `dart run bin/omusubi.dart log カレー` |
+| 80 | [kuukan](#kuukan) | 🚀宇宙ステーション・バーチャルオフィス | HTML/CSS/JS/Canvas | 103 | complete | `python3 -m http.server 8080` |
 
 ---
 
@@ -3693,3 +3694,53 @@ dart run bin/omusubi.dart log カレーライス
 - 食事写真共有機能
 - パートナーが食事記録した時のプッシュ通知
 - 食事当てっこゲーム
+
+---
+
+### <a id="kuukan"></a>80. kuukan - 2026-04-27 00:00
+
+**What is this?**
+リモートワーカーの孤独感を解消する宇宙ステーション風バーチャルオフィス。3層パララックス星空アニメーション、ミッション型ポモドーロタイマー、管制室からの通信（タイピングエフェクト付き）、バーチャルクルーの存在感表示。宇宙の静けさ＝リモートワークの孤独というメタファーを美しいUIで表現。80個目のマイルストーンアプリ。
+
+**Discovery Roll**
+Source: 7 (Wikipedia) | Persona: 14 (孤独を感じるリモートワーカー) | Platform: 6 (Unity/C# interactive) | Wildcard: 34 (宇宙テーマ)
+
+**Features Built**
+- 3層パララックス星空Canvas（ちらつき・視差あり）
+- ミッションタイマー（25/50/15分プリセット、ステータスバッジ）
+- 管制室通信（15メッセージ、タイピングエフェクト、実用アドバイス）
+- バーチャルクルー（6名、ランダムタスク、ステータスドット）
+- ミッションログ（タイムスタンプ自動記録、LocalStorage永続化）
+- 日次統計（ミッション数・集中時間、日替わりリセット）
+- グラスモーフィズムUI + パルスアニメーション
+
+**Tech Stack**
+HTML/CSS/JS / Canvas 2D / LocalStorage / Noto Sans JP + JetBrains Mono
+
+**Key Files**
+```
+kuukan/
+├── index.html    — 宇宙ステーションUI
+├── style.css     — ダーク宇宙テーマ
+├── data.js       — 通信・クルー・メッセージDB
+├── app.js        — タイマー・星空・ロジック
+├── tests/run.js  — 103テスト
+├── README.md
+└── SUMMARY.md
+```
+
+**How to Run**
+```bash
+cd kuukan && python3 -m http.server 8080
+# http://localhost:8080
+```
+
+**Tests**: 103 passing | **Files**: 9 | **LOC**: ~1,400 | **Build time**: ~10 min
+
+**Challenges & Fixes**
+data.jsのconst宣言がNode.jsのeval環境で使えない問題。テスト時にconst→varに置換するアプローチで解決。
+
+**Potential Next Steps**
+- 宇宙ステーションBGM（ホワイトノイズ+機器音）
+- WebSocket共有クルールーム
+- ミッションストリーク実績システム
