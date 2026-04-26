@@ -1,5 +1,5 @@
 {
-  "apps_completed": 75,
+  "apps_completed": 76,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -453,6 +453,12 @@
       "persona": 11,
       "platform": 9,
       "wildcard": 8
+    },
+    {
+      "source": 4,
+      "persona": 24,
+      "platform": 7,
+      "wildcard": 38
     }
   ],
   "history": [
@@ -680,6 +686,9 @@
     },
     {
       "name": "tiketto"
+    },
+    {
+      "name": "shinjin-quest"
     }
   ]
 }

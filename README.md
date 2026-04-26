@@ -79,5 +79,6 @@
 | 73 | tsumugu | 七十二候×手仕事 Discord/CLIボット | Node.js/discord.js | 115 |
 | 74 | tabibumi | エモい旅日記CLI | Bun/TypeScript/SQLite | 38 |
 | 75 | tiketto | 🎫チケットコレクション Electronアプリ | Electron/Vanilla JS | 71 |
+| 76 | shinjin-quest | 新卒サバイバルシミュレーション | C++17/ANSI Terminal | 88 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.
