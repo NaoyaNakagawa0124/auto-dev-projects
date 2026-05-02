@@ -85,5 +85,6 @@
 | 79 | omusubi | 🍙遠距離カップル食事共有 | Dart/HTML/CSS/JS | 32 |
 | 80 | kuukan | 🚀宇宙ステーション・バーチャルオフィス | HTML/CSS/JS/Canvas | 103 |
 | 81 | manabi-no-ki | 🌳学習で育つ木 — 親子学習トラッカー | Python/ANSI/JSON | 109 |
+| 82 | sodachi-graph | 🌱育ちグラフ — 子育てVN×ダッシュボード | C/Raylib 5.5 | 126 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

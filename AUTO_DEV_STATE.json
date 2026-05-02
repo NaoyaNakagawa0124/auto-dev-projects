@@ -1,5 +1,5 @@
 {
-  "apps_completed": 81,
+  "apps_completed": 82,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -489,6 +489,12 @@
       "persona": 39,
       "platform": 3,
       "wildcard": 16
+    },
+    {
+      "source": 40,
+      "persona": 39,
+      "platform": 20,
+      "wildcard": 43
     }
   ],
   "history": [
@@ -734,6 +740,9 @@
     },
     {
       "name": "manabi-no-ki"
+    },
+    {
+      "name": "sodachi-graph"
     }
   ]
 }

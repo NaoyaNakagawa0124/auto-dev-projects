@@ -1,0 +1,4 @@
+*.o
+sodachi-graph
+.DS_Store
+test_endings

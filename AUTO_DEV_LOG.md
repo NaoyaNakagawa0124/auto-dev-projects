@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-04-27 01:00 | Total apps: 81 | Total tests: 10,517
+> Last updated: 2026-05-03 00:30 | Total apps: 82 | Total tests: 10,643
 
 ## Quick Overview
 
@@ -87,6 +87,7 @@
 | 79 | [omusubi](#omusubi) | 🍙遠距離カップル食事共有 | Dart/HTML/CSS/JS | 32 | complete | `dart run bin/omusubi.dart log カレー` |
 | 80 | [kuukan](#kuukan) | 🚀宇宙ステーション・バーチャルオフィス | HTML/CSS/JS/Canvas | 103 | complete | `python3 -m http.server 8080` |
 | 81 | [manabi-no-ki](#manabi-no-ki) | 🌳学習で育つ木 — 親子学習トラッカー | Python/ANSI/JSON | 109 | complete | `python3 src/cli.py status` |
+| 82 | [sodachi-graph](#sodachi-graph) | 🌱育ちグラフ — 子育てVN×ダッシュボード | C/Raylib 5.5 | 126 | complete | `make && ./sodachi-graph` |
 
 ---
 
@@ -3796,3 +3797,60 @@ python3 src/cli.py stats
 - Textual TUIフルスクリーンアプリ
 - 複数子どもプロフィール
 - 科目ごとの枝ビジュアライゼーション
+
+---
+
+### <a id="sodachi-graph"></a>82. sodachi-graph - 2026-05-03 00:30
+
+**What is this?**
+親が子育て中の選択を10回行い、章末ごとに「智・徳・体・情」のスタッツが伸びる**ビジュアルノベル × データダッシュボード**ハイブリッド。Raylib (C) ネイティブで、Noto Sans JP の動的コードポイントロード、章ごとに異なる手描き風背景（プリミティブ図形のみで構築）、章間に滑らかなeasingで伸びるバーチャートを実装。エンディングは12通り、選択の偏りで変化。
+
+**Discovery Roll**
+Source: 40 (データ分析・ダッシュボード系) | Persona: 39 (子育て中のパパ/ママ) | Platform: 20 (Raylib/SDL game) | Wildcard: 43 (選択肢で分岐するマルチエンディングVN)
+
+**Features Built**
+- 5章 × 2選択 = 10決定の分岐ストーリー（0〜15歳の子育てを圧縮）
+- 4スタッツ（智 知性 / 徳 思いやり / 体 健やかさ / 情 感性）と章間ダッシュボード
+- 12種類のエンディング（突き抜け4 + 二刀流6 + 全人格1 + 凡庸1）
+- 章ごとに異なる手描き風グラデーション背景（朝焼け→空＋木→学校→山並み→星空）
+- ダッシュボードのease-in-outアニメーション + デルタ表示（+9 / −3など）
+- UTF-8対応の独自ワードラップ描画関数（日本語の文字単位折り返し）
+- 起動時に全表示テキストを連結→codepointsを抽出→LoadFontExへ（533 unique glyphs）
+
+**Tech Stack**
+C11 / Raylib 5.5 / Noto Sans JP / Make / -Wall -Wextra clean
+
+**Key Files**
+```
+sodachi-graph/
+├── Makefile            — clang + raylib via pkg-config
+├── README.md / PLAN.md / SUMMARY.md / CLAUDE.md
+├── assets/
+│   └── NotoSansJP.ttf  — 同梱フォント
+├── src/
+│   ├── main.c          — 1280x720ゲームループ・10シーン状態機械・全描画
+│   ├── story.h         — Stats / ChoicePoint / Chapter / Ending 型
+│   └── story.c         — 物語データ + select_ending() 分岐ロジック
+└── tests/
+    └── test_endings.c  — 126 アサーション
+```
+
+**How to Run**
+```bash
+brew install raylib
+cd sodachi-graph
+make
+./sodachi-graph
+```
+
+**Tests**: 126 passing | **Files**: 8 (excluding font) | **LOC**: ~970 (main.c 600 + story.c 220 + tests 150) | **Build time**: ~15 min
+
+**Challenges & Fixes**
+- Raylibの`LoadFontEx`は与えたcodepoint配列だけグリフを焼くため、日本語の動的フォントロードでは「表示するすべての文字」を事前に列挙する必要があった。`gather_text_buffer()`で全UI/物語/エンディング文字列を連結→`LoadCodepoints`→重複排除して解決。
+- C文字列ポインタ算術 `"第一二三四五"+(chapter*3)` は ASCII を仮定する書き方で、UTF-8 では各漢字が3バイトのため一見動くがコンパイラ警告が出た。`const char *kanji[] = {"一","二",...}` に置き換え。
+
+**Potential Next Steps**
+- Web Audio対応（章ごとのアンビエント音楽）
+- セーブ/ロード（plain JSONで途中保存）
+- エンディング画面に4軸レーダーチャート追加
+- WebAssembly（emscripten）でブラウザ版
