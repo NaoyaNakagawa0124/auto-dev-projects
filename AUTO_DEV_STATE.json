@@ -1,9 +1,15 @@
 {
-  "apps_completed": 82,
+  "apps_completed": 83,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
   "discovery_rolls": [
+    {
+      "source": 13,
+      "persona": 34,
+      "platform": 10,
+      "intent": 4
+    },
     {
       "source": 2,
       "persona": 13,
@@ -743,6 +749,9 @@
     },
     {
       "name": "sodachi-graph"
+    },
+    {
+      "name": "mado"
     }
   ]
 }

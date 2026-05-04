@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-03 00:30 | Total apps: 82 | Total tests: 10,643
+> Last updated: 2026-05-05 03:10 | Total apps: 83 | Total tests: 10,651
 
 ## Quick Overview
 
@@ -88,6 +88,7 @@
 | 80 | [kuukan](#kuukan) | 🚀宇宙ステーション・バーチャルオフィス | HTML/CSS/JS/Canvas | 103 | complete | `python3 -m http.server 8080` |
 | 81 | [manabi-no-ki](#manabi-no-ki) | 🌳学習で育つ木 — 親子学習トラッカー | Python/ANSI/JSON | 109 | complete | `python3 src/cli.py status` |
 | 82 | [sodachi-graph](#sodachi-graph) | 🌱育ちグラフ — 子育てVN×ダッシュボード | C/Raylib 5.5 | 126 | complete | `make && ./sodachi-graph` |
+| 83 | [mado](#mado) | 窓 — 静かな語学旅 (Rust+WASM ambient scenes) | Rust+WASM/Canvas/Web Audio | 8 | complete | `python3 -m http.server 8765` |
 
 ---
 
@@ -3854,3 +3855,65 @@ make
 - セーブ/ロード（plain JSONで途中保存）
 - エンディング画面に4軸レーダーチャート追加
 - WebAssembly（emscripten）でブラウザ版
+
+---
+
+### <a id="mado"></a>83. mado - 2026-05-05 03:10
+
+**What is this?**
+**窓**（mado）は、世界のどこかの街にある「窓」を一つ開けて、3 分だけ眺めて閉じる Web アプリ。空のグラデーション、屋根や山並みのシルエット、雪や蛍やオーロラの粒子、そして Rust が手でこしらえた 14 秒のシームレスな環境音。窓の下には、その土地の言葉が 3 つ静かに置いてある。覚えなくていい、ただ眺めるだけでもいい。Duolingo の真逆を狙った、ストリーク・通知・クイズのない語学アプリ。
+
+**Discovery Roll**
+Source: 13 (Travel destinations trending) | Persona: 34 (語学を勉強中の人) | Platform: 10 (Rust + WASM web app) | Intent: 4 (そっと寄り添う — 癒し/メンタル/静か)
+
+**Features Built**
+- 6 つの窓: パリ夜明け / リスボン午後 / ハノイ夕暮れ / ストックホルム雪朝 / イスタンブール夕焼け / レイキャビク深夜オーロラ
+- シーンごとの空グラデーション (4 stop) + 3 層シルエット (64 点ハイトマップ) + 粒子 (埃/雪/蛍/オーロラ) を Rust 側で決定論的に生成
+- Rust DSP による 14 秒シームレス環境音ループ (オシレータ + フィルタードノイズ + アクセント包絡)
+- 「言葉を集める」手帳 (localStorage 永続化、街・言語・日付付き)
+- ガラスモーフィズム + Noto Serif JP / Cormorant Garamond の静かなタイポグラフィ
+- モバイル 480px 以下でフレーズカードが縦積みになる完全レスポンシブ
+- 環境音ボタン: 1.4 秒フェードイン / 0.6 秒フェードアウト
+- シーン切替時に WASM 内のアニメーション・粒子・音バッファが連続的に切り替わる
+
+**Tech Stack**
+Rust 1.94 + wasm-bindgen 0.2 (cdylib, 31KB wasm) / Canvas 2D / Web Audio API / Plain ES Modules / Noto Serif JP + Noto Sans JP + Cormorant Garamond
+
+**Key Files**
+```
+mado/
+├── Cargo.toml
+├── src/lib.rs           — Mado 構造体、6シーンのグラデ/シルエット/粒子/音響レシピ
+├── pkg/                 — wasm-pack の出力 (mado_bg.wasm 31KB、コミット済み)
+├── data/windows.js      — 6 都市 × 3 フレーズ (原文・読み・意味・場面)
+├── index.html           — マークアップ
+├── style.css            — ガラスモーフィズム + JP タイポグラフィ
+├── main.js              — WASM ロード・Canvas 描画・Web Audio・手帳
+└── README.md / PLAN.md / SUMMARY.md / CLAUDE.md
+```
+
+**How to Run**
+```bash
+# pre-built WASM is committed
+cd mado
+python3 -m http.server 8765
+# → http://localhost:8765/
+
+# rebuild Rust → WASM
+wasm-pack build --target web --out-dir pkg --release
+
+# run Rust unit tests
+cargo test --lib
+```
+
+**Tests**: 8 passing (Rust unit tests: scene count / wraparound / gradient bytes / silhouette range / particle spawning / audio buffer length & range / seamless loop endpoints / per-scene audio difference) | **Files**: 13 (excl. target/) | **LOC**: ~1,720 (Rust 489 + main.js 455 + style.css 503 + windows.js 195 + html 78) | **Build time**: ~25 min
+
+**Challenges & Fixes**
+- 当初 `generate_audio()` は `mado.set_scene()` で内部状態を切り替えてから呼ぶ設計だったが、これだと音バッファ生成のたびに粒子と時刻がリセットされ、シーン切替時にアニメーションが瞬断する。`generate_audio_for(scene, sr, sec)` という状態を持たない静的メソッドを追加し、`Mado::synth_audio` に共通ロジックを抽出して解決。
+- 親リポジトリの `.gitignore` がグローバルに `pkg/` を除外していたため、ビルド済み WASM がコミットされない。`!mado/pkg/` で例外を追加し、`wasm-pack` が自動生成する `pkg/.gitignore` (`*` のみ) は削除。
+- Rust の借用チェッカー: `tick()` の中で `self.particles.iter_mut()` と `self.rand_f32(&mut self)` を同時に使えない。spawn ロジックを `spawn_one()` に切り出し、先に死んでいる粒子のインデックスを `position()` で取得 → その後 `rand_f32()` を呼ぶ → 最後にインデックスでアクセス、という順番に整理。
+
+**Potential Next Steps**
+- 京都 / マラケシュ / ブエノスアイレスなど追加の窓 (Rust 側はすべて `match scene` の追記、データ側は windows.js の追記だけで増やせる)
+- Web Speech API による発音再生 (タップ時のみ、自動再生はしない)
+- 現在の窓と集めた言葉から PNG ポストカードを生成して保存 / 共有

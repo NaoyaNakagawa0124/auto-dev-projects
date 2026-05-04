@@ -86,5 +86,6 @@
 | 80 | kuukan | 🚀宇宙ステーション・バーチャルオフィス | HTML/CSS/JS/Canvas | 103 |
 | 81 | manabi-no-ki | 🌳学習で育つ木 — 親子学習トラッカー | Python/ANSI/JSON | 109 |
 | 82 | sodachi-graph | 🌱育ちグラフ — 子育てVN×ダッシュボード | C/Raylib 5.5 | 126 |
+| 83 | mado | 窓 — 静かな語学旅 (Rust+WASM ambient scenes) | Rust+WASM/Canvas/Web Audio | 8 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

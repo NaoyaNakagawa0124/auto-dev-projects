@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>窓 — mado</title>
+  <meta name="description" content="今日の窓を、ひとつ。世界のどこかの街にそっと寄り添う、語学の小さな旅。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="frame">
+    <section class="window">
+      <canvas id="scene" aria-hidden="true"></canvas>
+      <div class="window-overlay">
+        <p class="prelude">今日の窓</p>
+        <h1 class="city">
+          <span data-bind="city">—</span>
+          <span class="city-divider">・</span>
+          <span data-bind="moment">—</span>
+        </h1>
+        <p class="country" data-bind="country">—</p>
+      </div>
+      <button id="audio-toggle" class="audio-toggle" aria-pressed="false" aria-label="環境音をならす">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9v6h3l5 4V5L8 9H5z" fill="currentColor"/></svg>
+        <span class="audio-label">音をそっと</span>
+      </button>
+    </section>
+
+    <section class="note-card">
+      <p data-bind="note">—</p>
+      <p class="meta">
+        <span data-bind="language">—</span>
+        <span class="meta-dot">・</span>
+        <span data-bind="season">—</span>
+      </p>
+    </section>
+
+    <section class="phrases" id="phrases" aria-label="今日の言葉">
+      <!-- phrase cards injected by JS -->
+    </section>
+
+    <section class="actions">
+      <button id="next-window" class="primary">
+        <span>次の窓を開ける</span>
+      </button>
+      <button id="open-journal" class="ghost">
+        <span>あつめた言葉</span>
+        <span id="journal-count" class="badge">0</span>
+      </button>
+    </section>
+
+    <footer class="foot">
+      <p>窓は静かな場所です。覚えなくてもいい、ただ眺めるだけでも。</p>
+    </footer>
+  </main>
+
+  <aside id="journal" class="journal" aria-hidden="true">
+    <div class="journal-inner">
+      <header>
+        <h2>あつめた言葉</h2>
+        <button id="close-journal" class="close" aria-label="閉じる">×</button>
+      </header>
+      <ul id="journal-list" class="journal-list"></ul>
+      <p id="journal-empty" class="journal-empty">まだ何も集めていません。気に入った言葉に「集める」を押してみてください。</p>
+      <footer>
+        <button id="journal-clear" class="text-action">すべて忘れる</button>
+      </footer>
+    </div>
+  </aside>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "mado",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "mado_bg.wasm",
+    "mado.js",
+    "mado.d.ts"
+  ],
+  "main": "mado.js",
+  "types": "mado.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

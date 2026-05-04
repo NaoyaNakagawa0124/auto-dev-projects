@@ -29,4 +29,5 @@ __pycache__/
 
 # Rust/WASM
 pkg/
+!mado/pkg/
 tiketto/node_modules/
