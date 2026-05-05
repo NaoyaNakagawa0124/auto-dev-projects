@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-05 09:40 | Total apps: 84 | Total tests: 10,670
+> Last updated: 2026-05-05 10:30 | Total apps: 85 | Total tests: 10,694
 
 ## Quick Overview
 
@@ -90,6 +90,7 @@
 | 82 | [sodachi-graph](#sodachi-graph) | 🌱育ちグラフ — 子育てVN×ダッシュボード | C/Raylib 5.5 | 126 | complete | `make && ./sodachi-graph` |
 | 83 | [mado](#mado) | 窓 — 静かな語学旅 (Rust+WASM ambient scenes) | Rust+WASM/Canvas/Web Audio | 8 | complete | `python3 -m http.server 8765` |
 | 84 | [bug-zumou](#bug-zumou) | バグずもう — 60秒バグ発見お相撲 | Swift 5.9/SwiftUI/SwiftPM | 19 | complete | `swift run` |
+| 85 | [danboaru-za](#danboaru-za) | 段ボール座 — 引っ越し未開封箱を星座にする | p5.js/HTML/CSS/ESM | 24 | complete | `python3 -m http.server 8765` |
 
 ---
 
@@ -3983,3 +3984,63 @@ swift test
 - 親方の一番（日替わり 1 番、日付シードで全ユーザー共通）
 - 数字キー（1-9）で行選択するキーボードショートカット
 - `~/Library/Application Support/bug-zumou/` の JSON でカスタムコーパスを追加できる「自前部屋」機能（チームで共有する社内バグ集など）
+
+---
+
+### <a id="danboaru-za"></a>85. danboaru-za - 2026-05-05 10:30
+
+**What is this?**
+**段ボール座**（だんぼーるざ、*Constellatio Cartonensis*）は、引っ越したばかりの部屋に積まれた **未開封の段ボール** を、夜空にひとつの **星座** として登録するブラウザアプリ。各箱は名前から決定論的に位置が決まる恒星になり、サイズが等級になり、近くの星と細い線で繋がって独自の星座を成す。「開封」を押すと該当する星が **超新星爆発** を起こし、夜空からそっと消えていく。すべての箱を開け終えた瞬間に「**完全移住完了**」が観測カタログに記録される。Intent 3「こんなのアリ？と笑わせる」の振り切ったユーモアで、片付けを天体観測に変換する。
+
+**Discovery Roll**
+Source: 12 (Science breakthroughs / space news this week) | Persona: 28 (引っ越ししたばかりの人) | Platform: 19 (p5.js / Three.js creative coding) | Intent: 3 (「こんなのアリ？」と笑わせる — コンセプチュアル/変/一発ネタ)
+
+**Features Built**
+- 箱名から決定論的に決まる星の座標 (FNV-1a-ish hash → mulberry32 PRNG → 0..1 正規化)
+- サイズ 3 段階（小・中・大）が等級（0.55 / 1.0 / 1.6）にマッピング
+- 2-最近傍の重複削除エッジで自動的に組み立てられる星座線
+- 暖色 75% + 寒色 25% の色相分布で「本物の夜空」感
+- 1.4 秒の超新星アニメ（外向き衝撃波リング + コアフラッシュ）
+- 「Constellatio Cartonensis」風の Latin カタログ名（箱の集合から決定論的に生成、順序非依存）
+- ガラスモーフィズム + ダーク宇宙テーマの右側パネル
+- 統計ブロック: 未開封 / 登録 / 等級平均 / カタログ名
+- localStorage 永続化（キー: `danboaru-za.v1`）
+- キャンバスの星をクリック OR 台帳の「開封」ボタンで開封
+- 完全移住完了オーバーレイに `Logged YYYY-MM-DD · DBZ Catalogue` の偽装ジャーナル印字
+- モバイル対応（パネルが下部ドロワー化）
+
+**Tech Stack**
+Vanilla HTML / CSS3 / ES Modules / p5.js 1.9 (CDN, instance mode) / localStorage / Noto Serif JP + Cormorant Garamond (italic) + JetBrains Mono / Node.js `node:test` for unit tests
+
+**Key Files**
+```
+danboaru-za/
+├── index.html           — マークアップ
+├── styles.css           — グラスモーフィズム + ダーク宇宙テーマ
+├── core.js              — 純粋ロジック (Node からも import 可能)
+├── app.js               — p5.js キャンバス + DOM 配線
+├── test/core.test.mjs   — 24 個の Node テスト
+└── README.md / PLAN.md / SUMMARY.md / CLAUDE.md
+```
+
+**How to Run**
+```bash
+cd danboaru-za
+python3 -m http.server 8765
+# → http://localhost:8765/
+
+# テスト:
+node --test test/core.test.mjs
+```
+
+**Tests**: 24 passing (hashLabel 3 / mulberry32 2 / placeStar 4 / nearestNeighborEdges 4 / catalogueName 2 / BoxStore 9) | **Files**: 9 | **LOC**: ~1,351 (core 165 + app 369 + styles 518 + html 89 + tests 210) | **Build time**: ~25 min
+
+**Challenges & Fixes**
+- 純ロジックを Node からテストしたかったので、`core.js` から `crypto.randomUUID()` を呼びつつ、Node 19 未満や古いブラウザのフォールバックを書く必要があった。`globalThis.crypto?.randomUUID` の optional chaining + Math.random ベースの予備 ID 生成で解決。
+- p5.js のグローバルモードと ES モジュールは相性が悪い（`<script type="module">` 内で定義した `setup()` を p5 が拾えない）。インスタンスモード `new p5((p) => { p.setup = ...; p.draw = ... })` に切り替えてクリーンに統合。
+- 星の位置が 0..1 正規化座標、ガラスパネルが画面右側を覆う構成だと、星の半分がパネルの裏に隠れる懸念があった。実際にはパネルが半透明（blur+saturate）なので、星が透けて見える方が「夜空にガラスを置いた」感が出て良かったので、x 範囲を絞らずに採用。
+
+**Potential Next Steps**
+- 完全移住完了後の「夜空ポストカード」生成（PNG 出力 + シェアリンク）
+- 部屋ごとの複数星座（キッチン座・寝室座など）と「南天/北天」風の俯瞰表示
+- 14 秒のアンビエント環境音ループ（Web Audio）、超新星時に短く無音化する演出
