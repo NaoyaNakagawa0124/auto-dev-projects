@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-05 03:10 | Total apps: 83 | Total tests: 10,651
+> Last updated: 2026-05-05 09:40 | Total apps: 84 | Total tests: 10,670
 
 ## Quick Overview
 
@@ -89,6 +89,7 @@
 | 81 | [manabi-no-ki](#manabi-no-ki) | 🌳学習で育つ木 — 親子学習トラッカー | Python/ANSI/JSON | 109 | complete | `python3 src/cli.py status` |
 | 82 | [sodachi-graph](#sodachi-graph) | 🌱育ちグラフ — 子育てVN×ダッシュボード | C/Raylib 5.5 | 126 | complete | `make && ./sodachi-graph` |
 | 83 | [mado](#mado) | 窓 — 静かな語学旅 (Rust+WASM ambient scenes) | Rust+WASM/Canvas/Web Audio | 8 | complete | `python3 -m http.server 8765` |
+| 84 | [bug-zumou](#bug-zumou) | バグずもう — 60秒バグ発見お相撲 | Swift 5.9/SwiftUI/SwiftPM | 19 | complete | `swift run` |
 
 ---
 
@@ -3917,3 +3918,68 @@ cargo test --lib
 - 京都 / マラケシュ / ブエノスアイレスなど追加の窓 (Rust 側はすべて `match scene` の追記、データ側は windows.js の追記だけで増やせる)
 - Web Speech API による発音再生 (タップ時のみ、自動再生はしない)
 - 現在の窓と集めた言葉から PNG ポストカードを生成して保存 / 共有
+
+---
+
+### <a id="bug-zumou"></a>84. bug-zumou - 2026-05-05 09:40
+
+**What is this?**
+**バグずもう**は、Stack Overflow に出てくる本物のバグを 60 秒一本勝負の相撲に仕立てた macOS ネイティブ SwiftUI アプリ。3〜7 行のコード断片の中で「バグの行」をクリックすれば一勝、外せば黒星、時間切れも黒星。連勝で番付が **序ノ口 → 序二段 → 三段目 → 幕下 → 十両 → 前頭 → 小結 → 関脇 → 大関 → 横綱** と昇る。一人で家で働く開発者が、コーヒーを淹れている合間に「一番だけ」取って閉じる、そんな 90 秒の儀式を作る Intent 5 (夢中にさせる) のミニゲーム。
+
+**Discovery Roll**
+Source: 34 (Stack Overflow — 開発者が困っていること) | Persona: 14 (孤独を感じるリモートワーカー) | Platform: 11 (Swift macOS native app) | Intent: 5 (夢中にさせる — ゲーム性/中毒/競う)
+
+**Features Built**
+- 6 部屋 × 4 番 = 24 取組のキュレーションされたバグ・コーパス（言語横断: JS / Python / Java / Swift / C / Go / SQL / Bash）
+- 部屋: ぬる怪部屋 / 一つ違ヰ部屋 / 等号部屋 / 正規表現部屋 / 並行ノ宿 / 罠ノ型部屋
+- 番付 10 段階の昇進ロジック（連勝閾値 0→1→3→6→10→15→22→30→40→55、横綱の遠さを意識した非線形）
+- 60 秒タイマー、残り 15 秒で警告色
+- 行クリックで判定、勝敗と力士名・解説を覆い被せて即座に開示
+- 連勝・最高・総取組数・勝率の永続化（UserDefaults）
+- 取組ごとに力士名（ぬるぽ太郎、一寸はみ出し、代入暴狼、半端アンカー、素通り forEach、文字でなで斬りなど 24 種類）
+- Return キーで取組開始 / 次の取組へ
+- 直近 6 番のリピート回避
+
+**Tech Stack**
+Swift 5.9 / SwiftUI / SwiftPM `.executableTarget` / Combine / UserDefaults / XCTest / 朱色 (#f58e44) アクセントの自前 Theme
+
+**Key Files**
+```
+bug-zumou/
+├── Package.swift
+├── Sources/BugZumou/
+│   ├── BugZumouApp.swift   — @main エントリ
+│   ├── ContentView.swift   — 全 SwiftUI ビュー (RankHeader / IdleHero / CodePanel / TimerStrip / RevealOverlay)
+│   ├── Theme.swift         — 配色とフォント
+│   ├── Models.swift        — Stable / Rank / Puzzle / Outcome
+│   ├── Corpus.swift        — 24 取組のデータ
+│   └── GameState.swift     — フェーズ機械、タイマー、永続化
+└── Tests/BugZumouTests/
+    ├── CorpusTests.swift   — 6 cases
+    ├── RankTests.swift     — 5 cases
+    └── GameStateTests.swift— 8 cases
+```
+
+**How to Run**
+```bash
+cd bug-zumou
+swift build -c release
+.build/release/bug-zumou
+# or for development:
+swift run
+# tests:
+swift test
+```
+
+**Tests**: 19 passing (Corpus 6 / Rank 5 / GameState 8) | **Files**: 10 | **LOC**: ~1,317 (Sources 1,099 + Tests 218) | **Build time**: ~30 min
+
+**Challenges & Fixes**
+- `GameState` を `@MainActor` にしたため、`pickPuzzle(rng:)` を XCTest からテストするには `public` にする必要があった。最初は `func`（internal）でテストモジュールから見えず、ビルドエラー。`public` に格上げして解決。
+- `Corpus` の `buggyLineIndex` は手書きのため、コードを後から編集すると行番号がズレるリスクが高い。`testBuggyLineIndexIsInRange` と `testIsCorrectMatchesIndex` でガードレール化（範囲外をすぐに検出）。
+- SwiftPM の `executableTarget` で SwiftUI アプリを動かすのは可能（`@main App` を一個置くだけ）だが、`Info.plist` を持たないので Dock の挙動はネイティブアプリほど整わない。デモ用途には十分なので妥協。
+- 力士名と取組タイトルを真面目に "発明" するのが一番時間がかかった部分。バグの本質を一つの 6〜10 文字の名前に圧縮するのは、半分テクニカルライティング、半分ネーミング。
+
+**Potential Next Steps**
+- 親方の一番（日替わり 1 番、日付シードで全ユーザー共通）
+- 数字キー（1-9）で行選択するキーボードショートカット
+- `~/Library/Application Support/bug-zumou/` の JSON でカスタムコーパスを追加できる「自前部屋」機能（チームで共有する社内バグ集など）

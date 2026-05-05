@@ -1,9 +1,15 @@
 {
-  "apps_completed": 83,
+  "apps_completed": 84,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
   "discovery_rolls": [
+    {
+      "source": 34,
+      "persona": 14,
+      "platform": 11,
+      "intent": 5
+    },
     {
       "source": 13,
       "persona": 34,
@@ -752,6 +758,9 @@
     },
     {
       "name": "mado"
+    },
+    {
+      "name": "bug-zumou"
     }
   ]
 }

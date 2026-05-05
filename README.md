@@ -87,5 +87,6 @@
 | 81 | manabi-no-ki | 🌳学習で育つ木 — 親子学習トラッカー | Python/ANSI/JSON | 109 |
 | 82 | sodachi-graph | 🌱育ちグラフ — 子育てVN×ダッシュボード | C/Raylib 5.5 | 126 |
 | 83 | mado | 窓 — 静かな語学旅 (Rust+WASM ambient scenes) | Rust+WASM/Canvas/Web Audio | 8 |
+| 84 | bug-zumou | バグずもう — 60秒バグ発見お相撲 | Swift 5.9/SwiftUI/SwiftPM | 19 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.
