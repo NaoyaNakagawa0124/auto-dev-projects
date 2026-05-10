@@ -1,5 +1,5 @@
 {
-  "apps_completed": 85,
+  "apps_completed": 86,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -513,6 +513,12 @@
       "persona": 39,
       "platform": 20,
       "wildcard": 43
+    },
+    {
+      "source": 10,
+      "persona": 30,
+      "platform": 4,
+      "intent": 4
     }
   ],
   "history": [
@@ -770,6 +776,9 @@
     },
     {
       "name": "danboaru-za"
+    },
+    {
+      "name": "takibi"
     }
   ]
 }

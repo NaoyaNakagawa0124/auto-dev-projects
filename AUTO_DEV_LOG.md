@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-05 10:30 | Total apps: 85 | Total tests: 10,694
+> Last updated: 2026-05-10 14:50 | Total apps: 86 | Total tests: 10,708
 
 ## Quick Overview
 
@@ -91,6 +91,7 @@
 | 83 | [mado](#mado) | 窓 — 静かな語学旅 (Rust+WASM ambient scenes) | Rust+WASM/Canvas/Web Audio | 8 | complete | `python3 -m http.server 8765` |
 | 84 | [bug-zumou](#bug-zumou) | バグずもう — 60秒バグ発見お相撲 | Swift 5.9/SwiftUI/SwiftPM | 19 | complete | `swift run` |
 | 85 | [danboaru-za](#danboaru-za) | 段ボール座 — 引っ越し未開封箱を星座にする | p5.js/HTML/CSS/ESM | 24 | complete | `python3 -m http.server 8765` |
+| 86 | [takibi](#takibi) | 焚火 — カフェノマドの寄り添う集中PWA | Vanilla JS/Canvas/Web Audio/PWA | 14 | complete | `python3 -m http.server 8000` |
 
 ---
 
@@ -4044,3 +4045,63 @@ node --test test/core.test.mjs
 - 完全移住完了後の「夜空ポストカード」生成（PNG 出力 + シェアリンク）
 - 部屋ごとの複数星座（キッチン座・寝室座など）と「南天/北天」風の俯瞰表示
 - 14 秒のアンビエント環境音ループ（Web Audio）、超新星時に短く無音化する演出
+
+
+---
+
+### <a id="takibi"></a>86. takibi - 2026-05-10 14:50
+
+**What is this?**
+カフェで作業するノマド向けの「ポケットの中の焚火」PWA。ピクセルアートの焚火が画面の中で静かに燃え、Doom fire アルゴリズムで揺らぐ炎と舞う火の粉が、25/5 分のポモドーロサイクルを優しく見守る。Web Audio で生成されるパチパチ音と低い風音は、サンプルなしの完全合成。インディーゲームの「セーブポイント = 安らぎ」（Dark Souls のかがり火、Hollow Knight のベンチ）の系譜を、カフェノマドの机の上に持ち込んだ。
+
+**Discovery Roll**
+Source: 10 (インディーゲーム / 速攻クリア文化) | Persona: 30 (カフェで作業するノマドワーカー) | Platform: 4 (モバイル PWA) | Intent: 4 (そっと寄り添う — 癒し・静か)
+
+**Features Built**
+- ピクセルアート焚火の Canvas アニメーション (Doom fire algorithm + 12色の温色パレット)
+- 上昇する火の粉パーティクル（ふわっと減速、フェードアウト）
+- Web Audio で完全合成された環境音（ピンクノイズの風 + 短ノイズバーストのパチパチ）
+- 25 分集中 / 5 分休憩の純粋ロジック状態機械（テスト容易な設計）
+- フェーズに応じた火の挙動変化（眠っている / 集中 / 休息で炎の強さ・色味・音量が変わる）
+- 「薪をくべる」演出（サイクル完了で炎が一瞬大きくなる）
+- 今日くべた薪 (= 完了サイクル数) を localStorage に日付毎に保存
+- PWA 対応 (manifest + service worker でオフライン動作、ホーム画面追加可能)
+- 全 UI 日本語 + ダークテーマ + スマホ縦向き最適化 + safe-area-inset 対応
+
+**Tech Stack**
+HTML / CSS / Vanilla JavaScript (ES Modules) / Canvas 2D / Web Audio API / Service Worker / localStorage / Python 標準ライブラリ (アイコン PNG 生成)
+
+**Key Files**
+```
+takibi/
+├── index.html              エントリ
+├── style.css               ダーク + 温かみのあるグロウ
+├── app.js                  バインディング層
+├── fire.js                 Doom fire 焚火
+├── ambience.js             Web Audio 環境音
+├── timer.js                純粋ロジック状態機械
+├── manifest.json + service-worker.js + icons/
+└── tests/timer.test.mjs    14 テスト
+```
+
+**How to Run**
+```bash
+cd takibi
+python3 -m http.server 8000
+# ブラウザで http://localhost:8000 を開く
+```
+
+スマホ: 同 LAN から `http://<PCのIP>:8000` → 共有 → ホーム画面に追加で PWA インストール。
+
+**Tests**: 14 passing (`node --test tests/timer.test.mjs`) | **Files**: 11 | **LOC**: ~830 | **Build time**: ~30 min
+
+**Challenges & Fixes**
+- 「炎らしさ」は Doom fire アルゴリズムをベースに、パレットを黒→こげ茶→朱→橙→白の 12 段階に組み直して温度感を出した。中心からの距離で底辺の熱量を減衰させることでロウソク型のシルエットになる
+- パチパチ音は短いノイズバーストにバンドパスフィルタ（周波数・Q をランダム化）を通して合成。30% の確率で二発目を 60-180ms 後にトリガーする「跳ね返り」感を入れた
+- iOS Safari は AudioContext がユーザータップ起因でしか開始できないため、「音を聞く」ボタン押下時に明示的に `ctx.resume()` を呼ぶ設計
+
+**Potential Next Steps**
+- 「薪をくべる」演出をもっと派手に（火の粉が大量に舞う、視覚的なご褒美感）
+- 一日の集中ログを別画面で見せる（火の年輪のような可視化）
+- 環境音のバリエーション（雨の音モード、火だけモード）
+- 「誰かと一緒に焚火を囲む」モード（複数端末同期で同じ火を見る）

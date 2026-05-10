@@ -1,0 +1,26 @@
+{
+  "name": "焚火 takibi",
+  "short_name": "焚火",
+  "description": "カフェで作業するノマドのための、ポケットの中の小さな焚火。",
+  "lang": "ja",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0807",
+  "theme_color": "#0a0807",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

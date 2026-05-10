@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0d0a08" />
+  <title>焚火 — takibi</title>
+  <meta name="description" content="カフェで作業するノマドのための、ポケットの中の小さな焚火。" />
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="app" class="app sleeping">
+    <canvas id="fire" class="fire-canvas" aria-label="焚火"></canvas>
+
+    <header class="hud-top" aria-live="polite">
+      <span class="phase-label" id="phase-label">焚火は眠っています</span>
+    </header>
+
+    <section class="hud-bottom">
+      <div class="time-display" id="time-display">--:--</div>
+
+      <div class="controls">
+        <button id="btn-fire" class="btn btn-primary" type="button">
+          <span class="btn-label">火を灯す</span>
+        </button>
+        <button id="btn-sound" class="btn btn-ghost" type="button" aria-pressed="false">
+          <span class="btn-label">音を聞く</span>
+        </button>
+      </div>
+
+      <div class="cycle-row">
+        <span class="cycle-label">今日くべた薪</span>
+        <span class="cycle-count" id="cycle-count">0</span>
+      </div>
+
+      <p class="hint" id="hint">タップで焚火を灯します。集中25分・休憩5分の静かなサイクル。</p>
+    </section>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

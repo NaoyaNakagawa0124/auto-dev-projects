@@ -89,5 +89,6 @@
 | 83 | mado | 窓 — 静かな語学旅 (Rust+WASM ambient scenes) | Rust+WASM/Canvas/Web Audio | 8 |
 | 84 | bug-zumou | バグずもう — 60秒バグ発見お相撲 | Swift 5.9/SwiftUI/SwiftPM | 19 |
 | 85 | danboaru-za | 段ボール座 — 引っ越し未開封箱を星座にする | p5.js/HTML/CSS/ESM | 24 |
+| 86 | takibi | 焚火 — カフェノマドの寄り添う集中PWA | Vanilla JS/Canvas/Web Audio/PWA | 14 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.
