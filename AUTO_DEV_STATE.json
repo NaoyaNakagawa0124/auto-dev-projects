@@ -1,5 +1,5 @@
 {
-  "apps_completed": 90,
+  "apps_completed": 91,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -543,6 +543,12 @@
       "persona": 9,
       "platform": 10,
       "intent": 5
+    },
+    {
+      "source": 15,
+      "persona": 13,
+      "platform": 20,
+      "intent": 7
     }
   ],
   "history": [
@@ -842,6 +848,16 @@
         "persona": 9,
         "platform": 10,
         "intent": 5
+      }
+    },
+    {
+      "name": "eiga-ichiba",
+      "completed": "2026-05-17T00:10:00Z",
+      "discovery_roll": {
+        "source": 15,
+        "persona": 13,
+        "platform": 20,
+        "intent": 7
       }
     }
   ]

@@ -94,5 +94,6 @@
 | 88 | madori-zukan | 間取り図鑑 — アニメの家を物件カタログにする PWA | PWA/Vanilla JS/SVG | 16 |
 | 89 | hoshi-yomi | 星詠み — 星座をなぞって語彙を覚える夜空ゲーム | Godot 4/GDScript | 238 |
 | 90 | ryogae-kan | 両替勘 — 5秒勝負の値段感覚トレーニング | Rust+WASM/Vanilla JS | 23 |
+| 91 | eiga-ichiba | 映画市場 — 2人で囲む映画株式投資ゲーム | C/Raylib 5.5 | 2,566 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

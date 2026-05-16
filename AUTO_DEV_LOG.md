@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-16 16:05 | Total apps: 90 | Total tests: 11,021
+> Last updated: 2026-05-17 00:10 | Total apps: 91 | Total tests: 13,587
 
 ## Quick Overview
 
@@ -96,6 +96,7 @@
 | 88 | [madori-zukan](#madori-zukan) | 間取り図鑑 — アニメの家を物件カタログにする PWA | PWA/Vanilla JS/SVG | 16 | complete | `python3 -m http.server 8000` |
 | 89 | [hoshi-yomi](#hoshi-yomi) | 星詠み — 星座をなぞって語彙を覚える夜空ゲーム | Godot 4/GDScript | 238 | complete | `godot --path .` |
 | 90 | [ryogae-kan](#ryogae-kan) | 両替勘 — 5秒勝負の値段感覚トレーニング | Rust+WASM/Vanilla JS | 23 | complete | `wasm-pack build --target web -d www/pkg && cd www && python3 -m http.server 8000` |
+| 91 | [eiga-ichiba](#eiga-ichiba) | 映画市場 — 2人で囲む映画株式投資ゲーム | C/Raylib 5.5 | 2,566 | complete | `make && ./eiga-ichiba` |
 
 ---
 
@@ -4366,3 +4367,68 @@ cargo test  # 23 tests
 - 品目もストリークで解放 (医療費、航空券等の高額品目)
 - リーダーボード (Cloudflare Workers)
 - 教育モード (時間制限なし、ヒント表示あり)
+
+---
+
+### <a id="eiga-ichiba"></a>91. eiga-ichiba - 2026-05-17 00:10
+
+**What is this?**
+映画市場 — 二人で同じキーボードを囲んで遊ぶ、映画オタク向けの株式投資ゲーム。12 ヶ月のシーズンを通して毎月 1 本の架空話題作が「上場」する。プレイヤーは 0/25/50/75/100 % で投資割合を選び、月末にリターンが公開される。勝敗より「あの監督なら…」と話し合いながら同じ画面を見る体験が本体。
+
+**Discovery Roll**
+Source: 15 (Economics / fintech / stock market headlines) | Persona: 13 (全作品を記録する映画オタク) | Platform: 20 (Raylib game / C) | Intent: 7 (誰かと一緒にやる — 関係性/共有)
+
+**Features Built**
+- 12 本の架空話題作 (氷の都/日常の地層/ロボットと俺/深い森の声/月面ピクニック/絵筆と都市/海底の図書館/氷河発電所/赤い列車/ねむれない王女/星の検査官/灯火少女)
+- 各映画: 監督名・ジャンル・予算・期待度・seed_return・ピッチライン
+- 2 人パスアンドプレイの状態機械 (TITLE→PREVIEW→ALLOC_P1→HANDOFF→ALLOC_P2→REVEAL→MONTH_RESULT→NEXT or GAME_OVER)
+- 割合選択 UI (0/25/50/75/100% を 5 カードで提示、← → で選択)
+- HANDOFF 画面でプレイヤー交代を促す → 秘密入力を尊重
+- リターン計算: `base × hype_factor × noise(0.78..1.22)`、結果は 0.10x〜4.20x にクランプ
+- リターン公開アニメーション (バーが伸びる演出)
+- 月別決済画面 (現金残高をバーで可視化)
+- シーズン総括 — 勝者宣言、最終残高、全 12 ヶ月の倍率履歴
+- ジャンル別パレットで抽象的なポスター描画
+- macOS のシステム日本語フォント (Hiragino → HelveticaNeue 順) を LoadFontEx で動的読み込み
+- 完全日本語UI、勝者の色 (P1: 青 / P2: 赤) で識別
+
+**Tech Stack**
+C99 / Raylib 5.5 (Homebrew) / pkg-config / xorshift32 RNG / 純粋ロジック層 (Raylib 非依存) / Mach-O arm64 release
+
+**Key Files**
+```
+eiga-ichiba/
+├── Makefile             pkg-config 経由で raylib をリンク
+├── src/
+│   ├── film.h, film.c   12 映画データ
+│   ├── game.h, game.c   状態機械 + リターン計算 (純粋関数、Raylib なし)
+│   ├── render.c         Raylib 描画層
+│   └── main.c           エントリ + 入力ハンドラ
+└── tests/
+    └── test_game.c      ユニットテスト (Raylib 非依存、make test)
+```
+
+**How to Run**
+```bash
+brew install raylib   # 前提
+cd eiga-ichiba
+make                  # ビルド (51KB バイナリ)
+./eiga-ichiba         # 起動 (1280×720, 60FPS)
+
+make test             # 2566 件のユニットテスト
+```
+
+**Tests**: 2,566 passing | **Files**: 11 | **LOC**: ~950 (C) | **Binary**: 51KB arm64 | **Build time**: ~22 min
+
+**Challenges & Fixes**
+- Raylib の DrawText は ASCII のみで日本語が出ない → macOS のシステムフォント (Hiragino 角ゴシック等) を `LoadFontEx` で読み込み、必要 codepoint セットを手動列挙して埋め込む
+- 2 人のパスアンドプレイで秘密を守る → PHASE_HANDOFF を間に挟み、「コントローラーを次のプレイヤーに渡してください」画面でリセット
+- ロジックを Raylib なしでテスト → `game.c` を独立ターゲットで `test_game.c` から直接リンク、純粋関数として検証
+- リターンに偶然性と予測可能性を両立 → `base × hype_factor × noise` の 3 段階で揺らぎ、期待度が高いほど振れ幅も大きい
+
+**Potential Next Steps**
+- 効果音 (raylib audio) — 投資決定時のチャイム、リターン公開時の歓声/嘆息
+- 映画ライブラリの拡張、シーズンごとにシャッフル
+- 月例イベント (監督のスキャンダル / コンペ受賞) で倍率変動
+- 3〜4 人対戦モード
+- リプレイ機能 (各プレイヤーの選択を時系列で振り返る)
