@@ -1,5 +1,5 @@
 {
-  "apps_completed": 101,
+  "apps_completed": 102,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -609,6 +609,12 @@
       "persona": 4,
       "platform": 18,
       "intent": 5
+    },
+    {
+      "source": 28,
+      "persona": 39,
+      "platform": 10,
+      "intent": 4
     }
   ],
   "history": [
@@ -1019,6 +1025,16 @@
         "persona": 4,
         "platform": 18,
         "intent": 5
+      }
+    },
+    {
+      "name": "hibi-no-mukashi",
+      "completed": "2026-05-17T06:15:00Z",
+      "discovery_roll": {
+        "source": 28,
+        "persona": 39,
+        "platform": 10,
+        "intent": 4
       }
     }
   ]

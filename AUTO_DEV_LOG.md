@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 05:30 | Total apps: 101 | Total tests: 14,027
+> Last updated: 2026-05-17 06:15 | Total apps: 102 | Total tests: 14,047
 
 ## Quick Overview
 
@@ -107,6 +107,7 @@
 | 99 | [tane-kawase](#tane-kawase) | 種交わせ — 語学パートナーが種包を交わす CLI | Python 3.10+/Rich 13/argparse/JSON | 42 | complete | `pip install -e . && tane-kawase demo` |
 | **100** | [**denshou-bako**](#denshou-bako) | **🎏 伝承箱 — シニアの知恵を Pi で 10 年残す枕元の箱** | Python 3.10+/Rich 13/Raspberry Pi/espeak-ng/arecord | 41 | complete | `pip install -e . && denshou demo && denshou book ./demo-recordings` |
 | 101 | [chika-channel](#chika-channel) | 地下チャンネル — 動画を地下鉄路線図として育てる中毒系ブラウザゲーム | Bun 1.x/TypeScript/SVG/vanilla | 45 | complete | `bun install && bun run dev` |
+| 102 | [hibi-no-mukashi](#hibi-no-mukashi) | 日々の昔 — 子育て親に夜 3 分の静かな歴史を 1 つ差し出す Rust+WASM | Rust/wasm-bindgen/serde/HTML/CSS/JS | 20 | complete | `wasm-pack build --target web && python3 -m http.server -d web` |
 
 ---
 
@@ -5100,3 +5101,64 @@ bun test                   # 45 tests
 - モバイル縦レイアウト
 - 音響 (控えめに) — 駅追加 / 接続 / 天候変化
 - 「あなたの路線図への辛口コメント」 を AI で 1 ターン 1 回もらえるオプション
+
+---
+
+### <a id="hibi-no-mukashi"></a>102. hibi-no-mukashi - 2026-05-17 06:15
+
+**What is this?**
+子育てで疲れたパパ・ママが、 子供が寝た後の 3 分間に開く、 静かな歴史の小窓。 Rust + WASM の超軽量シングルページ Web アプリ。 「今日と同じ日付に誰かの台所で / 庭で / 机で起きていた、 小さなこと」 を 1 日 1 つだけ、 60-150 文字の vignette として差し出す。 戦争・大事件・偉人の話は一切採用せず、 静けさで心拍を下げることだけが評価軸 (Intent 4)。 ローカルストレージに 1 日 1 行の「今夜の思い」 を保存して、 30 日続ければ本人だけの静かな日記が育つ。
+
+**Discovery Roll**
+Source: 28 (Historical "on this day") | Persona: 39 (子育て中のパパ/ママ) | Platform: 10 (Rust + WASM web app) | Intent: 4 (そっと寄り添う — 心拍が下がるか)
+
+**Features Built**
+- 40 件の手書き vignette を 12 ヶ月にわたり分散 — 「茉莉花が初めて咲いた縁側」 「冬至の柚子湯の一番風呂に皮を 1 枚」 「灯篭の紙に「凪」の字」 など、 すべて domestic / small / specific
+- `vignette_for(date_iso)` — 正確な MM-DD で見つからない時は **最も近い日付** にフォールバックし、 UI は「近い日の話」 と素直に表示
+- 12 のミニ SVG モチーフ (flower / lamp / hand / leaf / bowl / basket / bird / cloud / moon / shadow / step / gate)、 `currentColor` でテーマカラー連動
+- 前後の日付ナビ (`next_md_after` / `prev_md_before`、 年をまたいで wrap)、 キーボード ← → h
+- localStorage に MM-DD キー化した「今夜の思い」 — 過去のものは「最近の思い」 セクションで一覧可能
+- 和紙風配色 + Mincho フォント + 余白多め、 モバイル幅では motif が右下配置に
+- 完全オフライン (WASM 焼き込み)、 通知 / streak / 共有ボタンなし
+
+**Tech Stack**
+Rust 1.94 + wasm-bindgen 0.2 + serde-wasm-bindgen / wasm-pack で 66 KB の WASM + 11 KB の glue JS / Vanilla JS フロントエンド (build tool は wasm-pack のみ) / cargo test で 20 unit tests
+
+**Key Files**
+```
+hibi-no-mukashi/
+├── src/
+│   ├── lib.rs            # wasm-bindgen 公開関数
+│   ├── vignettes.rs      # 40 件の static Vignette
+│   ├── select.rs         # parse_iso, select_for_iso (exact / nearest)
+│   └── motifs.rs         # 12 個の SVG path
+├── tests/                # vignettes 8 / select 9 / motifs 3
+├── web/                  # index.html / style.css / app.js / pkg(generated)
+├── Cargo.toml
+└── ...
+```
+
+**How to Run**
+```bash
+cd hibi-no-mukashi
+wasm-pack build --target web --release --out-dir web/pkg
+python3 -m http.server -d web 8080
+# http://localhost:8080
+cargo test                    # 20 tests
+```
+
+**Tests**: 20 passing (vignettes 8 / select 9 / motifs 3) | **Files**: 17 | **LOC**: ~1,360 | **Build time**: ~28 min
+
+**Challenges & Fixes**
+- `wasm-opt` が古いバージョンで新 WASM 仕様を validate できず失敗 → `[package.metadata.wasm-pack.profile.release] wasm-opt = false` で disable (バイナリは 66 KB と十分小さい)
+- 自分の banned-keyword テスト (`戦争` 禁止) が自作 vignette を落とした → 「戦争で焼けた後も」 を 「店が建て直された後も」 にリワード、 自分のルールを守った
+- 365 件 vs 40 件のトレードオフ — 365 全部を 1 セッションで書くのは雑になる、 40 件を心を込めて書いて nearby fallback で穴を埋める設計に倒した
+- 漢字の選び方 — TTS 読み上げと 9pm の親の集中力に合わせて、 「茉莉花」 のような難読は使うが書き言葉は避ける
+
+**Potential Next Steps**
+- 365 件への漸次充足 (毎月リマインダーで著者が 1 件書く設計)
+- PWA 化 (Service Worker、 6 KB の追加で完全オフライン)
+- Web Speech API で TTS 読み上げ
+- 「子供と一緒に読む」 5-7 歳向け平易版を別 vignette として併記
+- 自分の子の誕生日 / 記念日紐付け
+- 史実ベースか創作かを明示する透明性表記

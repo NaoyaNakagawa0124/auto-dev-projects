@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>日々の昔</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="app" class="loading">
+    <header>
+      <span class="brand">日々の昔</span>
+      <span class="dim" id="today-iso">—</span>
+    </header>
+
+    <section class="card">
+      <div class="row top">
+        <span class="dim year" id="vignette-year">—</span>
+        <span class="title" id="vignette-title">—</span>
+      </div>
+
+      <div class="body-with-motif">
+        <p class="body" id="vignette-body">読み込んでいます…</p>
+        <div class="motif" id="vignette-motif" aria-hidden="true">
+          <svg viewBox="0 0 80 80" width="80" height="80"></svg>
+        </div>
+      </div>
+
+      <p class="nearby" id="vignette-nearby" hidden>(近い日の話)</p>
+    </section>
+
+    <section class="reflect">
+      <label for="reflect-input" class="dim">今夜の思い (任意)</label>
+      <input id="reflect-input" type="text" autocomplete="off"
+             maxlength="80"
+             placeholder="この話を読んで、 ふっと浮かんだひと言を" />
+      <div class="reflect-saved dim" id="reflect-saved" hidden>保存しました</div>
+    </section>
+
+    <nav class="nav">
+      <button id="prev-btn" class="ghost">◀ 前の日</button>
+      <button id="today-btn" class="ghost">今日</button>
+      <button id="next-btn" class="ghost">次の日 ▶</button>
+    </nav>
+
+    <section class="journal" id="journal" hidden>
+      <h3 class="dim">最近の思い</h3>
+      <ul id="journal-list"></ul>
+    </section>
+
+    <footer class="dim">
+      <span id="journal-toggle">最近の思いを見る</span>
+      <span class="sep">·</span>
+      <span class="dim">Rust + WASM ／ オフラインで動きます</span>
+    </footer>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,363 @@
+//! Vignettes — 静かな歴史の小窓のデータセット.
+//!
+//! All vignettes are intentionally small, domestic, calm. The collection
+//! aims for spread across the year so any visitor finds at most a few days
+//! away. Some dates are duplicated (2-3 entries on the same MM-DD) so the
+//! UI can rotate.
+
+use serde::Serialize;
+
+#[derive(Debug, Clone, Serialize)]
+pub struct Vignette {
+    pub date_md: &'static str, // "MM-DD"
+    pub year: u16,
+    pub title: &'static str,
+    pub body: &'static str,
+    pub motif: &'static str,
+    pub mood: &'static str,
+}
+
+// (date_md, year, title, body, motif, mood)
+pub static VIGNETTES: &[Vignette] = &[
+    Vignette {
+        date_md: "01-08",
+        year: 1924,
+        title: "雪の日のお湯",
+        body: "雪の日。 ある宿の女将が、 朝いちばんに沸かしたお湯を、 客より先に、 自分の母にだけそっと運んだ。 「年寄りは、 冷えるのが先だから」 と日記に書いた。",
+        motif: "bowl",
+        mood: "winter",
+    },
+    Vignette {
+        date_md: "01-15",
+        year: 1898,
+        title: "成人の朝",
+        body: "ある町の畳屋の長男が、 成人の日の朝、 父の道具を初めて借りた。 「親の手の重さが、 今日わかった」 と職人帳に書きとめた。 道具は今もある。",
+        motif: "hand",
+        mood: "winter",
+    },
+    Vignette {
+        date_md: "01-22",
+        year: 1909,
+        title: "夜の階段",
+        body: "ある寮の女中が、 階段の途中の踊り場に、 小さな手織りの敷物を敷いた。 「夜中の足が冷えるから」 と理由を聞かれて答えた。 客が皆 ありがたがった。",
+        motif: "step",
+        mood: "night",
+    },
+    Vignette {
+        date_md: "02-03",
+        year: 1932,
+        title: "節分の豆",
+        body: "ある寺の小僧が、 節分の豆を、 寺の犬の分も少し残した。 住職が見つけて何も言わず、 翌年から豆袋に「犬の分」 と書いた紙を入れた。",
+        motif: "bowl",
+        mood: "winter",
+    },
+    Vignette {
+        date_md: "02-14",
+        year: 1953,
+        title: "封を切らない手紙",
+        body: "戦地から戻った夫宛ての手紙が、 妻の机の引き出しに 9 年眠っていた。 この日、 妻は封を切らずに庭で焼いた。 「読まないと決めたの、 今日まで守った」 と娘に言った。",
+        motif: "hand",
+        mood: "winter",
+    },
+    Vignette {
+        date_md: "02-22",
+        year: 1888,
+        title: "猫の名前",
+        body: "ある写真館の主が、 飼い猫に 「みみ」 と名付けた。 理由は 「呼んだ時、 すぐ立つのは、 まず耳だから」 だった。 その猫の写真は今も町の資料館にある。",
+        motif: "shadow",
+        mood: "winter",
+    },
+    Vignette {
+        date_md: "03-03",
+        year: 1916,
+        title: "古い雛人形",
+        body: "ある祖母が、 自分の婚礼の日に持参した雛人形を、 初めて孫娘に譲った。 「お前の手で並べる時が来た」 と書き添えた紙が、 今も箱の底に入っている。",
+        motif: "flower",
+        mood: "spring",
+    },
+    Vignette {
+        date_md: "03-12",
+        year: 1925,
+        title: "椿の枝",
+        body: "ある女医が、 患者の家を出る時に、 庭の椿の枝を 1 本もらった。 帰り道、 電車の中で 「これを描こう」 と決めて、 翌週から絵を描き始めた。",
+        motif: "flower",
+        mood: "spring",
+    },
+    Vignette {
+        date_md: "03-21",
+        year: 1949,
+        title: "春分の昼食",
+        body: "ある学校の用務員が、 春分の日に、 校庭の桜の下で 1 人で握り飯を食べた。 「日が真ん中にある時、 一番うまい」 と日記に書いた。",
+        motif: "bowl",
+        mood: "spring",
+    },
+    Vignette {
+        date_md: "04-01",
+        year: 1908,
+        title: "新入りの傘立て",
+        body: "ある問屋の旦那が、 新入社員の数だけ、 朝、 真新しい傘立てを玄関に並べた。 「君らの傘は、 君らの席だ」 と言った。 店が建て直された後も、 この風習だけは引き継がれた。",
+        motif: "gate",
+        mood: "spring",
+    },
+    Vignette {
+        date_md: "04-08",
+        year: 1936,
+        title: "桜の下の便箋",
+        body: "ある女学生が、 校庭の桜の根元に、 桃色の便箋を 1 枚だけ置いていった。 拾った後輩が読まずに別の桜の根元に置いた。 その春、 6 人の手を渡って消えた。",
+        motif: "flower",
+        mood: "spring",
+    },
+    Vignette {
+        date_md: "04-17",
+        year: 1901,
+        title: "厨の朝顔",
+        body: "ある宿の料理人が、 厨の窓辺に朝顔の種を 3 粒だけ蒔いた。 「鍋の湯気で、 開くのが早くなるかしら」 と言った。 8 月、 ほんとうに早く咲いた。",
+        motif: "flower",
+        mood: "spring",
+    },
+    Vignette {
+        date_md: "04-29",
+        year: 1955,
+        title: "畳の上の影",
+        body: "ある旅館の客が、 帰る日の朝、 畳の上に映った自分の影を、 鉛筆で薄くなぞった。 「ここに、 1 泊いました」 と書き添えた。 仲居が消さずに残した。",
+        motif: "shadow",
+        mood: "spring",
+    },
+    Vignette {
+        date_md: "05-05",
+        year: 1922,
+        title: "鯉のぼりの裏",
+        body: "ある町工場の親方が、 鯉のぼりの裏地に、 工員たちの息子の名前を全員墨で書いた。 「みんなの子が登る」 と言った。 当時の鯉は資料館にあり、 名前は今も読める。",
+        motif: "cloud",
+        mood: "spring",
+    },
+    Vignette {
+        date_md: "05-12",
+        year: 1907,
+        title: "夜なべの茶",
+        body: "ある織物屋の女将が、 夜なべの女工たちに、 12 時を過ぎたら必ず温い茶を出した。 「眠気は人の弱さじゃない」 と言った。 工場規則の最初の行に書かれていた。",
+        motif: "bowl",
+        mood: "night",
+    },
+    Vignette {
+        date_md: "05-17",
+        year: 1923,
+        title: "茉莉花、 はじめて",
+        body: "ある家の縁側で、 茉莉花が今年はじめて咲いた。 八歳の娘が 「お母さん、 ちっちゃい星みたい」 と言った。 母は手紙の余白にその言葉を書きとめた。 その手紙が残っている。",
+        motif: "flower",
+        mood: "spring",
+    },
+    Vignette {
+        date_md: "05-17",
+        year: 1951,
+        title: "歩道の落とし物",
+        body: "ある駅前で、 子どもが落とした片方の手袋を、 通りすがりの人が拾い、 すぐそばの木の枝に掛けた。 1 週間そこにあった後、 もう片方を持った母親が回収していった。",
+        motif: "hand",
+        mood: "spring",
+    },
+    Vignette {
+        date_md: "05-22",
+        year: 1942,
+        title: "靴のかかと",
+        body: "ある靴職人が、 客の靴のかかとに、 客に内緒で小さな「了」 の字を彫った。 「ここまで歩き切った印だ」 と弟子に言った。 弟子の代まで続いた。",
+        motif: "shadow",
+        mood: "spring",
+    },
+    Vignette {
+        date_md: "06-01",
+        year: 1933,
+        title: "梅雨の前の窓拭き",
+        body: "ある旅館で、 梅雨の前に必ず仲居全員が窓を磨いた。 「雨の音が、 きれいに聞こえるように」 という主の口癖だった。 今も同じ日に拭く。",
+        motif: "gate",
+        mood: "summer",
+    },
+    Vignette {
+        date_md: "06-11",
+        year: 1916,
+        title: "庭に来た雀",
+        body: "ある作家の庭に、 1 羽だけ羽の白い雀が来た。 妻が 「珍しいから」 と餌を撒き、 夫が 「珍しがると逃げるよ」 と笑った。 その日記が残っている。",
+        motif: "bird",
+        mood: "summer",
+    },
+    Vignette {
+        date_md: "06-21",
+        year: 1928,
+        title: "夏至の蝋燭",
+        body: "ある修道院で、 夏至の夜にだけ消す蝋燭があった。 「夜が一番短い日は、 火に休ませる日」 という古いしきたりで、 その夜だけは皆早く眠った。",
+        motif: "lamp",
+        mood: "summer",
+    },
+    Vignette {
+        date_md: "07-04",
+        year: 1899,
+        title: "夏蜜柑の皮",
+        body: "ある女将が、 夏蜜柑の皮をすべて干して、 翌冬の風呂に入れた。 「夏を、 冬まで持っていく」 と言った。 風呂屋の常連が皆その湯を楽しみにした。",
+        motif: "basket",
+        mood: "summer",
+    },
+    Vignette {
+        date_md: "07-13",
+        year: 1934,
+        title: "七夕の翌朝",
+        body: "ある幼稚園で、 七夕の翌朝、 子供たちの短冊を全部空に向けて吊り下げた。 「お願いは、 大人より、 空のほうがよく見える」 と保母が言った。",
+        motif: "cloud",
+        mood: "summer",
+    },
+    Vignette {
+        date_md: "07-21",
+        year: 1957,
+        title: "蝉の声、 はじめて",
+        body: "ある下町で、 その夏の蝉の声を最初に聞いた人は、 髪結いの婆さんだった。 「あれは 14 時 27 分でした」 と店の柱にチョークで書き、 翌年も同じ柱に書いた。",
+        motif: "leaf",
+        mood: "summer",
+    },
+    Vignette {
+        date_md: "08-06",
+        year: 1948,
+        title: "灯篭の文字",
+        body: "ある寺で、 灯篭の中の紙に毎年違う一字を書いた。 1948 年のその年は 「凪」 だった。 戦後 3 年目、 まだ凪はなかったけれど。 紙は今も残っている。",
+        motif: "lamp",
+        mood: "summer",
+    },
+    Vignette {
+        date_md: "08-15",
+        year: 1962,
+        title: "盆の卓",
+        body: "ある家で、 盆の卓に、 もう来ない人の分も茶碗を 1 つだけ置いた。 「呼ばれていないと、 来づらいでしょ」 と祖母が言った。 孫がそれを今も覚えている。",
+        motif: "bowl",
+        mood: "summer",
+    },
+    Vignette {
+        date_md: "08-24",
+        year: 1903,
+        title: "井戸の影",
+        body: "ある村の井戸の縁に、 何十年ぶんの手垢で「U」 の字に黒ずんだ場所がある。 1903 年、 ある画家がそれを写生して、 「これは村の手の絵だ」 と書いた。",
+        motif: "shadow",
+        mood: "summer",
+    },
+    Vignette {
+        date_md: "09-01",
+        year: 1939,
+        title: "新学期の鞄",
+        body: "ある母親が、 子供の新学期の鞄の底に、 小さい栞を 1 枚しのばせた。 そこには 「困ったら、 ここに戻っておいで」 と書いてあった。 鞄は今、 孫娘が持っている。",
+        motif: "hand",
+        mood: "autumn",
+    },
+    Vignette {
+        date_md: "09-12",
+        year: 1925,
+        title: "中秋の月見団子",
+        body: "ある料理屋で、 中秋の団子を、 客の人数より必ず 3 つ多く作った。 「先客がいたかもしれない月のお客に」 という主の癖だった。 余った 3 つは犬と猫がもらった。",
+        motif: "moon",
+        mood: "autumn",
+    },
+    Vignette {
+        date_md: "09-23",
+        year: 1911,
+        title: "秋分の窓辺",
+        body: "ある教師が、 秋分の日、 教室の窓辺の植木鉢を全部少しずつ南に動かした。 「これから日が短くなるから、 少しでも長く陽を浴びるように」 と授業の前に言った。",
+        motif: "leaf",
+        mood: "autumn",
+    },
+    Vignette {
+        date_md: "10-02",
+        year: 1944,
+        title: "夜なべの繕い",
+        body: "ある母親が、 子供の上着の肘の繕いに、 ほどけたら見えないように内側に 「無事」 と縫った。 上着が破れた時、 子供がはじめて気づいた。",
+        motif: "hand",
+        mood: "autumn",
+    },
+    Vignette {
+        date_md: "10-13",
+        year: 1907,
+        title: "貸本屋の貸出帳",
+        body: "ある町の貸本屋の貸出帳に、 同じ人が同じ本を 17 回借りた記録がある。 1907 年から 1923 年まで、 季節ごとに 1 回ずつ。 主人は何も書き添えなかった。",
+        motif: "leaf",
+        mood: "autumn",
+    },
+    Vignette {
+        date_md: "10-25",
+        year: 1933,
+        title: "落ち葉の手紙",
+        body: "ある女学校で、 落ち葉を文具屋に売って、 その金で寮の暖房代の足しにした。 1 枚 1 銭。 集めた枚数を全部、 寮母が小さな帳面に書いていた。",
+        motif: "leaf",
+        mood: "autumn",
+    },
+    Vignette {
+        date_md: "11-03",
+        year: 1929,
+        title: "文化の日の宿題",
+        body: "ある小学校の先生が、 文化の日の宿題に 「家にある一番古いものを、 1 行で説明して」 と出した。 200 通の答えが、 校長の机に積まれた。 校長は全部読んだ。",
+        motif: "basket",
+        mood: "autumn",
+    },
+    Vignette {
+        date_md: "11-15",
+        year: 1908,
+        title: "七五三の歩幅",
+        body: "ある宮司が、 七五三の参道に、 子供の歩幅で歩けるように白い砂を撒いた。 「大人の歩幅で行かせると、 神様まで遠い」 と言った。 今でも同じ砂を撒く。",
+        motif: "step",
+        mood: "autumn",
+    },
+    Vignette {
+        date_md: "11-23",
+        year: 1956,
+        title: "新嘗の収穫",
+        body: "ある祖父が、 新嘗の日、 孫娘に自分が今年育てた米を一握りだけ渡した。 「これは、 こんな見た目だ」 と教えた。 孫娘は手のひらの跡を一日中見ていた。",
+        motif: "bowl",
+        mood: "autumn",
+    },
+    Vignette {
+        date_md: "12-01",
+        year: 1937,
+        title: "雪の予告",
+        body: "ある町の駅長が、 12 月のはじめの雪を予告した日に、 駅員全員に手袋を配った。 「ここから、 ホームの空気が変わる」 と言った。 その日に雪が降った。",
+        motif: "cloud",
+        mood: "winter",
+    },
+    Vignette {
+        date_md: "12-13",
+        year: 1922,
+        title: "煤払いの梯子",
+        body: "ある家で、 12 月の煤払いに使う梯子を、 父が孫の身長の印をつけながら立てかけた。 「来年、 ここに届けば、 一段上を任せる」 と言った。 梯子に印がまだ残る。",
+        motif: "step",
+        mood: "winter",
+    },
+    Vignette {
+        date_md: "12-21",
+        year: 1919,
+        title: "冬至の柚子湯",
+        body: "ある銭湯の女将が、 冬至の柚子湯に、 一番風呂の客だけに柚子の皮を 1 枚そっと足した。 「最初の客が、 1 年を割って入るから」 と帳面に書いた。",
+        motif: "bowl",
+        mood: "winter",
+    },
+    Vignette {
+        date_md: "12-25",
+        year: 1947,
+        title: "戦後の灯火",
+        body: "ある教会で、 12 月 25 日、 1 本の蝋燭を皆で 1 つずつ移して、 24 本の灯を作った。 「24 人で 1 つの夜を分ける」 と神父が言った。 翌年は 41 本に増えた。",
+        motif: "lamp",
+        mood: "winter",
+    },
+    Vignette {
+        date_md: "12-31",
+        year: 1910,
+        title: "大晦日の柱時計",
+        body: "ある家の柱時計が、 大晦日に止まった。 父は直さず、 「今年は、 ここで終わったのです」 と言い、 翌朝に新しい時計を掛けた。 古い時計は今も同じ時間で止まっている。",
+        motif: "gate",
+        mood: "winter",
+    },
+];
+
+/// Get all vignettes that fall exactly on the given MM-DD.
+pub fn vignettes_for_md(md: &str) -> Vec<&'static Vignette> {
+    VIGNETTES.iter().filter(|v| v.date_md == md).collect()
+}
+
+/// All distinct MM-DD strings in the dataset.
+pub fn available_mds() -> Vec<&'static str> {
+    let mut seen: Vec<&str> = VIGNETTES.iter().map(|v| v.date_md).collect();
+    seen.sort();
+    seen.dedup();
+    seen
+}
