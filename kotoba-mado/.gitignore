@@ -1,0 +1,4 @@
+kotoba_mado.egg-info/
+__pycache__/
+*.pyc
+.pytest_cache/

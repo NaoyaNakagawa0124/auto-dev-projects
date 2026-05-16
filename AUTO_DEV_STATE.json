@@ -1,5 +1,5 @@
 {
-  "apps_completed": 96,
+  "apps_completed": 97,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -579,6 +579,12 @@
       "persona": 26,
       "platform": 3,
       "intent": 4
+    },
+    {
+      "source": 40,
+      "persona": 34,
+      "platform": 2,
+      "intent": 1
     }
   ],
   "history": [
@@ -938,6 +944,16 @@
         "persona": 26,
         "platform": 3,
         "intent": 4
+      }
+    },
+    {
+      "name": "kotoba-mado",
+      "completed": "2026-05-17T03:25:00Z",
+      "discovery_roll": {
+        "source": 40,
+        "persona": 34,
+        "platform": 2,
+        "intent": 1
       }
     }
   ]

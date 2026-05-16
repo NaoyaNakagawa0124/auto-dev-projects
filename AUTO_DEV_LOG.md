@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 02:55 | Total apps: 96 | Total tests: 13,815
+> Last updated: 2026-05-17 03:25 | Total apps: 97 | Total tests: 13,864
 
 ## Quick Overview
 
@@ -102,6 +102,7 @@
 | 94 | [fukugyou-bubble](#fukugyou-bubble) | 副業バブル — 副業 idle クリッカーゲーム (Tauri) | Tauri 2/Rust/Vanilla JS | 43 | complete | `cd src && python3 -m http.server 8000` |
 | 95 | [ikitsugi](#ikitsugi) | 息継ぎ — 効率厨ゲーマー向け呼吸ドット拡張機能 | Browser Extension MV3/Vanilla JS/Shadow DOM | 27 | complete | Load unpacked from `ikitsugi/src/` in `chrome://extensions` |
 | 96 | [futari-yoho](#futari-yoho) | 二人予報 — 共働き夫婦の判定しない気分予報 TUI | Python 3.10+/Textual 1.0/Rich/JSON | 42 | complete | `pip install -e . && futari-yoho` |
+| 97 | [kotoba-mado](#kotoba-mado) | 言葉の窓 — 365 日の語学旅をターミナルのステンドグラスに | Python 3.10+/Rich 13/argparse/JSON | 49 | complete | `pip install -e . && kotoba-mado demo && kotoba-mado year` |
 
 ---
 
@@ -4751,3 +4752,74 @@ pytest -q                # 42 tests
 - `--no-tui` 用に cron 登録ヘルパー (毎晩 21:00 にチェック)
 - `data.json` を Dropbox / iCloud に置くワンクリック sync 設定
 - 月のふりかえりに気分高低差を薄く重ねる sparkline
+
+---
+
+### <a id="kotoba-mado"></a>97. kotoba-mado - 2026-05-17 03:25
+
+**What is this?**
+語学学習者の 1 年分の学習記録を、ターミナルで 12 × 31 のステンドグラスのモザイクとして描画する CLI。Read = 藍、Listen = 琥珀、Speak = 朱、Write = 翠、Vocab = 紫、Grammar = 金。intensity は学習分数の量。GitHub の contribution heatmap に影響されているが、目的は「実用」ではなく「美しさで殴る — スクショ撮りたくなる」こと。
+
+**Discovery Roll**
+Source: 40 (データ分析・ダッシュボード系) | Persona: 34 (語学を勉強中の人) | Platform: 2 (CLI / terminal tool — Python) | Intent: 1 (美しさで殴る — スクショ撮りたくなるか)
+
+**Features Built**
+- `year` — 12 列 × 31 行のステンドグラスモザイク、鉛枠 (Unicode box) + ジュエルトーン + 合計分数 + 連続日数 + 凡例
+- `month [YYYY-MM]` — ひと月の月火水木金土日グリッド、各日の分数併記、月合計
+- `today [YYYY-MM-DD]` — Rich Panel に大ブロック + カテゴリ別分数のクローズアップ
+- `streak` — 連続日数を ASCII 焚火で 3 サイズ (1-7/8-30/31+) に切り替え、暖色グラデーション
+- `add` (対話 + ワンショット)、日本語カテゴリ名 (読む/聴く/...) も accept
+- `import` で CSV 一括取り込み、`demo` で 270 日サンプル
+- 2 トーンセル — 1 日に複数カテゴリの活動がある場合、▌ + ▐ で半々に色分割
+- intensity quantization (0/1-15/15-30/30-60/60-120/120+) を色の彩度として表現
+
+**Tech Stack**
+Python 3.10+ / Rich 13.x (Text/Panel/Group/Console.record) / argparse / JSON 永続化 (atomic write) / pytest + capsys / 完全 stdout (TUI なし、cat 可)
+
+**Key Files**
+```
+kotoba-mado/
+├── src/kotoba_mado/
+│   ├── cli.py            # argparse + サブコマンド
+│   ├── render.py         # 純粋: year/month/today/streak の Rich renderable
+│   ├── aggregate.py      # by_day / year_summaries / streak / intensity_bucket
+│   ├── models.py         # Session (frozen) + Log
+│   ├── storage.py        # atomic JSON I/O
+│   └── categories.py     # 6 カテゴリ + 日本語 normalize
+└── tests/                # categories 6 / models 7 / storage 5 / aggregate 9 / render 11 / cli 11
+```
+
+**How to Run**
+```bash
+cd kotoba-mado
+pip install -e .
+
+# 即・美しさを見る
+kotoba-mado --data /tmp/demo.json demo
+kotoba-mado --data /tmp/demo.json year
+kotoba-mado --data /tmp/demo.json month 2026-05
+kotoba-mado --data /tmp/demo.json today 2026-05-17
+kotoba-mado --data /tmp/demo.json streak
+
+# 自分のデータで
+kotoba-mado add 読む 30 ja --note "村上春樹"
+kotoba-mado year
+
+# テスト
+pytest -q             # 49 tests
+```
+
+**Tests**: 49 passing (categories 6 / models 7 / storage 5 / aggregate 9 / render 11 / cli 11) | **Files**: 14 | **LOC**: ~1,490 | **Build time**: ~30 min
+
+**Challenges & Fixes**
+- 月ラベルの幅 — `1月` (3 visual cols) と `10月` (4 cols) が同じ Python `len` で扱われて `:^4` ではズレた。月番号を 1 桁/2 桁で分岐して visual width を固定。
+- streak の box が非対称 — 上下のダッシュ数を `inner_width = 13` で揃え、`bar = "─" * 13` で共有。
+- テストで Rich の色タグが残る → `Console(record=True, force_terminal=False, color_system=None)` で完全に剥がしてテキストアサート。
+- 対話モードでテストが固まる → CLI テストでは必ず引数を渡すパスのみテスト。
+
+**Potential Next Steps**
+- `kotoba-mado wall <YEAR>` — 12 ヶ月を 4×3 グリッドの mini-cal で並べる「壁画」モード
+- `--lang ja` で言語別フィルタ
+- `--svg out.svg` でブラウザ・SNS 向け SVG 出力
+- Anki / Duolingo CSV からの直接 import (今は generic CSV のみ)
+- 月単位の目標分数オーバーレイ (ただし 美しさで殴る 原則を侵さない範囲で薄く)

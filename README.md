@@ -100,5 +100,6 @@
 | 94 | fukugyou-bubble | 副業バブル — 副業 idle クリッカーゲーム (Tauri) | Tauri 2/Rust/Vanilla JS | 43 |
 | 95 | ikitsugi | 息継ぎ — 効率厨ゲーマー向け呼吸ドット拡張機能 | Browser Extension MV3/Vanilla JS/Shadow DOM | 27 |
 | 96 | futari-yoho | 二人予報 — 共働き夫婦の判定しない気分予報 TUI | Python 3.10+/Textual 1.0/Rich/JSON | 42 |
+| 97 | kotoba-mado | 言葉の窓 — 365 日の語学旅をターミナルのステンドグラスに | Python 3.10+/Rich 13/argparse/JSON | 49 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.
