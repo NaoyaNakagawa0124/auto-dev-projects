@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 06:15 | Total apps: 102 | Total tests: 14,047
+> Last updated: 2026-05-17 06:50 | Total apps: 103 | Total tests: 14,063
 
 ## Quick Overview
 
@@ -108,6 +108,7 @@
 | **100** | [**denshou-bako**](#denshou-bako) | **🎏 伝承箱 — シニアの知恵を Pi で 10 年残す枕元の箱** | Python 3.10+/Rich 13/Raspberry Pi/espeak-ng/arecord | 41 | complete | `pip install -e . && denshou demo && denshou book ./demo-recordings` |
 | 101 | [chika-channel](#chika-channel) | 地下チャンネル — 動画を地下鉄路線図として育てる中毒系ブラウザゲーム | Bun 1.x/TypeScript/SVG/vanilla | 45 | complete | `bun install && bun run dev` |
 | 102 | [hibi-no-mukashi](#hibi-no-mukashi) | 日々の昔 — 子育て親に夜 3 分の静かな歴史を 1 つ差し出す Rust+WASM | Rust/wasm-bindgen/serde/HTML/CSS/JS | 20 | complete | `wasm-pack build --target web && python3 -m http.server -d web` |
+| 103 | [juugobyou](#juugobyou) | 十五秒 — 片付けが苦手な人の 15 秒だけの小さなボタン (Rust+WASM) | Rust/wasm-bindgen/HTML/CSS/JS | 16 | complete | `wasm-pack build --target web && python3 -m http.server -d web` |
 
 ---
 
@@ -5162,3 +5163,64 @@ cargo test                    # 20 tests
 - 「子供と一緒に読む」 5-7 歳向け平易版を別 vignette として併記
 - 自分の子の誕生日 / 記念日紐付け
 - 史実ベースか創作かを明示する透明性表記
+
+---
+
+### <a id="juugobyou"></a>103. juugobyou - 2026-05-17 06:50
+
+**What is this?**
+ぐったりした時に開く、 15 秒だけの小さなボタン。 タップすると円が 15 秒かけて満ち、 「視界にある〇〇を、 ひとつだけ、 元の場所に。」 のような物体を 1 つだけ指す静かなプロンプトが現れる。 15 秒経つと「ありがとう。 ここまでで、 十分です。」 のフェアウェルに切り替わり、 ボタンは元に戻る。 streak も達成ゲージもなく、 「今日 N 回さわった」 のさわった回数だけが下に残る。Rust + WASM の超軽量シングル HTML アプリ。 「達成」 「完了」 「片付けた」 は banned-word テストで弾かれる。
+
+**Discovery Roll**
+Source: 14 (フィットネス/ウェルネス/メンタルヘルス) | Persona: 32 (片付けが苦手な人) | Platform: 10 (Rust + WASM web app) | Intent: 4 (そっと寄り添う — 心拍が下がるか)
+
+**Features Built**
+- 1 つのデカい円形ボタン (220 × 220、 モバイル 180 × 180) — タップで 15 秒の SVG ring fill アニメーション
+- 40 個の物体プロンプト (コップ / 本 / 紙 / ペン / リモコン / 靴下 / ハンカチ / 皿 / 鞄 / 羽織 / 封筒 / メモ / 鍵 / 眼鏡 / 薬 / 缶 / 瓶 / 袋 / 箱 / 充電器 / イヤホン / 雑誌 / 化粧品 / 髪ゴム / クッション / 枕カバー / タオル / コースター / 鏡 / 領収書 / 葉書 / ティッシュ箱 / リップ / 靴 / 傘 / 電池 / メガネケース / ペンキャップ / 栞) を `touchToday % 40` で循環
+- 3 種類の声 — **静か** (主語なし命令)、 **友達** (「ね」 で終わる)、 **おかあさん** (「ねえ」 で始まる)
+- 15 秒 → 4 秒のフェアウェル → idle、 1 タップ 19 秒のサイクル
+- カウンター 「今日 N 回さわった」 (日付付きで保存、 日が変われば自動リセット)
+- 声選択は localStorage に persist
+- Space / Enter キーでもタップ可
+- 禁止語監査 — `["頑張", "怠け", "汚", "ダメ", "クリア", "達成", "完了", "やり遂げ", "諦めず", "努力"]` を全プロンプト × 全声 × farewell に対して cargo test で audit
+
+**Tech Stack**
+Rust 1.94 + wasm-bindgen 0.2 + serde / serde-wasm-bindgen 0.6 / wasm-pack (target=web) / Vanilla HTML+CSS+ES module / localStorage 2 キー / cargo test で 16 ユニットテスト / wasm-opt は disable (古い binaryen 回避)
+
+**Key Files**
+```
+juugobyou/
+├── src/
+│   ├── lib.rs            # wasm-bindgen 公開: prompt/farewell/voices/total_prompts
+│   ├── prompts.rs        # 40 件の object + BANNED_WORDS
+│   └── voice.rs          # Voice enum + render() + farewell()
+├── tests/                # prompts 8 / voice 8 = 16
+├── web/                  # index.html / style.css / app.js / pkg(generated)
+├── Cargo.toml            # wasm-opt = false
+└── ...
+```
+
+**How to Run**
+```bash
+cd juugobyou
+cargo test                                          # 16 tests
+wasm-pack build --target web --release --out-dir web/pkg
+python3 -m http.server -d web 8080
+# http://localhost:8080
+```
+
+**Tests**: 16 passing (prompts 8 / voice 8) | **Files**: 10 source | **LOC**: ~805 | **Build time**: ~30 min
+
+**Challenges & Fixes**
+- `wasm-opt` の古さを予防適用 — `[package.metadata.wasm-pack.profile.release] wasm-opt = false` を Cargo.toml に最初から入れた (前 cycle の hibi-no-mukashi で学んだ教訓)
+- 「達成」 「完了」 「片付けた」 「クリア」 を避ける言葉選び — BANNED_WORDS の cargo test 監査で毎ビルド保証
+- 「主語を入れない」 規約 — quiet 声は 「あなた」 「君」 「お前」 を一切使わない、 voice.rs::tests で正規表現監査
+- タップを「触る」 と呼ぶ — counter の表示は「今日 N 回さわった」、 「やった」 「完了」 とは絶対書かない (CLAUDE.md 規約)
+
+**Potential Next Steps**
+- 触った時刻だけを保存するログ (週ビュー、 streak ではなく振り返り)
+- PWA 化 (Service Worker、 オフライン)
+- 長押し 7 秒バージョン / 短押し 15 秒の 2 段階
+- Web Audio で 15 秒の極小ピアノ単音 (オプトイン)
+- 「触らない」 ボタン — 円を見ているだけで 15 秒経つモード
+- 物体プロンプトを 40 → 60 にゆっくり拡張、 季節モチーフ (花、 落ち葉、 障子)

@@ -1,0 +1,191 @@
+:root {
+  --paper:    #fbf7ef;
+  --paper-2:  #f3eddf;
+  --ink:      #2b2520;
+  --ink-soft: #4e463a;
+  --gold:     #b8945b;
+  --gold-2:   #9a7a45;
+  --moss:     #6b6f5c;
+  --moon:     #a09abd;
+  --dim:      #8a8170;
+  --rule:     rgba(43, 37, 32, 0.06);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  min-height: 100dvh;
+  background:
+    radial-gradient(circle at 50% -10%, var(--paper-2) 0%, var(--paper) 60%);
+  color: var(--ink);
+  font: 17px/1.85 -apple-system, BlinkMacSystemFont, "Hiragino Sans",
+        "Yu Gothic UI", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+main#app {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 40px 24px 28px;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.brand {
+  font-size: 24px;
+  letter-spacing: 0.32em;
+  color: var(--gold);
+  font-weight: 600;
+}
+.dim {
+  color: var(--dim);
+  letter-spacing: 0.08em;
+  font-size: 12px;
+}
+.sub { margin-top: 4px; }
+
+.stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  min-height: 380px;
+}
+
+.big-btn {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 200ms cubic-bezier(.2,.8,.2,1);
+  -webkit-appearance: none;
+}
+.big-btn:active:not(:disabled) { transform: scale(0.97); }
+.big-btn:disabled { cursor: default; }
+.big-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 8px; }
+
+.ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+.ring-bg {
+  fill: var(--paper-2);
+  stroke: var(--rule);
+  stroke-width: 1.5;
+}
+.ring-fill {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 565.48; /* 2π × 90 */
+  stroke-dashoffset: 565.48;
+  opacity: 0.0;
+  transition: opacity 280ms;
+}
+.btn-label {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 26px;
+  letter-spacing: 0.16em;
+  color: var(--gold);
+  font-weight: 600;
+  transition: opacity 280ms;
+}
+
+main.state-counting .ring-fill {
+  opacity: 1;
+  animation: fillRing 15s linear forwards;
+}
+@keyframes fillRing {
+  to { stroke-dashoffset: 0; }
+}
+main.state-counting .btn-label {
+  opacity: 0;
+}
+
+main.state-fading .ring-fill { opacity: 0.3; }
+main.state-fading .btn-label { opacity: 0; }
+main.state-idle .ring-fill { opacity: 0; stroke-dashoffset: 565.48; animation: none; }
+main.state-idle .btn-label { opacity: 1; }
+
+.prompt, .farewell {
+  text-align: center;
+  font-size: 16px;
+  line-height: 1.8;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  max-width: 32em;
+  min-height: 1.8em;
+  transition: opacity 400ms;
+  opacity: 0;
+}
+.farewell { color: var(--moon); font-style: italic; }
+
+main.state-counting .prompt { opacity: 1; }
+main.state-fading .farewell { opacity: 1; }
+main.state-idle .prompt { opacity: 0; }
+main.state-idle .farewell { opacity: 0; }
+
+footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  padding-top: 24px;
+  border-top: 1px dashed var(--rule);
+}
+.counter {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--dim);
+}
+
+.voice-switch {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 11px;
+}
+.voice-switch .dim { margin-right: 4px; }
+.voice-btn {
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--ink-soft);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: background 160ms, border-color 160ms, color 160ms;
+}
+.voice-btn:hover { background: rgba(184,148,91,0.05); }
+.voice-btn.on {
+  color: var(--gold);
+  border-color: var(--gold);
+  background: rgba(184,148,91,0.08);
+}
+
+@media (max-width: 400px) {
+  .big-btn { width: 180px; height: 180px; }
+  .btn-label { font-size: 22px; }
+}

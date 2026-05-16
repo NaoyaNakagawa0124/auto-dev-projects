@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#fbf7ef" />
+  <title>十五秒</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="app" class="state-idle">
+    <header>
+      <div class="brand">十五秒</div>
+      <div class="dim sub">ぐったりした時の、 小さなボタン</div>
+    </header>
+
+    <section class="stage">
+      <button id="big-btn" class="big-btn" aria-label="今だけ">
+        <svg class="ring" viewBox="0 0 200 200" aria-hidden="true">
+          <circle class="ring-bg"   cx="100" cy="100" r="90"/>
+          <circle class="ring-fill" cx="100" cy="100" r="90"/>
+        </svg>
+        <span class="btn-label">今だけ</span>
+      </button>
+
+      <div class="prompt" id="prompt-text" aria-live="polite"></div>
+      <div class="farewell" id="farewell-text" aria-live="polite"></div>
+    </section>
+
+    <footer>
+      <div class="counter dim" id="counter">きょう、 まだ・・</div>
+
+      <div class="voice-switch">
+        <span class="dim">声</span>
+        <button class="voice-btn" data-voice="quiet">静か</button>
+        <button class="voice-btn" data-voice="friend">友達</button>
+        <button class="voice-btn" data-voice="mother">おかあさん</button>
+      </div>
+    </footer>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

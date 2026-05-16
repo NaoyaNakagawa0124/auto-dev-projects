@@ -1,5 +1,5 @@
 {
-  "apps_completed": 102,
+  "apps_completed": 103,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -1033,6 +1033,16 @@
       "discovery_roll": {
         "source": 28,
         "persona": 39,
+        "platform": 10,
+        "intent": 4
+      }
+    },
+    {
+      "name": "juugobyou",
+      "completed": "2026-05-17T06:50:00Z",
+      "discovery_roll": {
+        "source": 14,
+        "persona": 32,
         "platform": 10,
         "intent": 4
       }
