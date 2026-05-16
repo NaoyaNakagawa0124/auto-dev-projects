@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 00:10 | Total apps: 91 | Total tests: 13,587
+> Last updated: 2026-05-17 00:40 | Total apps: 92 | Total tests: 13,688
 
 ## Quick Overview
 
@@ -97,6 +97,7 @@
 | 89 | [hoshi-yomi](#hoshi-yomi) | 星詠み — 星座をなぞって語彙を覚える夜空ゲーム | Godot 4/GDScript | 238 | complete | `godot --path .` |
 | 90 | [ryogae-kan](#ryogae-kan) | 両替勘 — 5秒勝負の値段感覚トレーニング | Rust+WASM/Vanilla JS | 23 | complete | `wasm-pack build --target web -d www/pkg && cd www && python3 -m http.server 8000` |
 | 91 | [eiga-ichiba](#eiga-ichiba) | 映画市場 — 2人で囲む映画株式投資ゲーム | C/Raylib 5.5 | 2,566 | complete | `make && ./eiga-ichiba` |
+| 92 | [yasai-nikki](#yasai-nikki) | やさい日記 — 子どもの28日間野菜観察アプリ | C/Raylib 5.5 | 101 | complete | `make && ./yasai-nikki` |
 
 ---
 
@@ -4432,3 +4433,64 @@ make test             # 2566 件のユニットテスト
 - 月例イベント (監督のスキャンダル / コンペ受賞) で倍率変動
 - 3〜4 人対戦モード
 - リプレイ機能 (各プレイヤーの選択を時系列で振り返る)
+
+---
+
+### <a id="yasai-nikki"></a>92. yasai-nikki - 2026-05-17 00:40
+
+**What is this?**
+やさい日記 — 6〜12 歳の子どもが 1 日 1 分だけ開く、ピクセルアートの野菜観察アプリ。1 〜 3 種のやさいを選んで「植え」、28 日間毎日 3 つの観察カード (葉の数 / 色 / きょうのきもち) に答えると、最終的に「観察カレンダー」が完成する。10 年後の自分が読み返せるデジタル夏休み日記。
+
+**Discovery Roll**
+Source: 21 (Agriculture / sustainability) | Persona: 22 (小学生の子ども 6-12歳) | Platform: 20 (Raylib / C) | Intent: 6 (記録して残す — アーカイブ/個人史)
+
+**Features Built**
+- 5 種の野菜 (トマト / キュウリ / ピーマン / ナス / トウモロコシ) × 6 段階 (タネ → 芽 → 葉 → つぼみ → 花 → 実) のピクセルアートを矩形・楕円・三角だけで手描き
+- 1 〜 3 種を 1 日 1 分でえらぶ初回シーン
+- 1 日 1 回の観察カード — 葉の数 (1/2/3/4/5+)・色 (みどり/きみどり/きいろ/ちゃいろ)・気分 (たのしい/おだやか/ふしぎ/しんぱい)
+- すべて選択肢式 — キーボード入力なし、← → と Space / Enter だけ
+- 28 日後の「観察カレンダー」 — 4 週 × 7 日のグリッドにその日の野菜成長・mood emoji・色スウォッチ
+- 永続化 — `~/.yasai-nikki.json` に自動保存／読込み (手書きシリアライザ + ad-hoc JSON パーサ)
+- ひらがな中心の語彙、小学校 4 年生までの漢字制限
+- 観察データは絶対に破棄しない (R キーは確認プロンプト経由)
+- Raylib 非依存ロジックレイヤ + 101 件のユニットテスト
+
+**Tech Stack**
+C99 / Raylib 5.5 (Homebrew) / pkg-config / 手書き JSON / 純粋ロジック分離 / Mach-O arm64 release
+
+**Key Files**
+```
+yasai-nikki/
+├── Makefile             pkg-config raylib
+├── src/
+│   ├── crop.{h,c}      5 種 × 6 段階
+│   ├── diary.{h,c}     状態機械 + JSON シリアライズ
+│   ├── render.c        Raylib ピクセルアート描画
+│   └── main.c          入力 + 永続化
+└── tests/
+    └── test_diary.c    101 件のユニットテスト
+```
+
+**How to Run**
+```bash
+brew install raylib
+cd yasai-nikki
+make && ./yasai-nikki
+
+make test               # 101 件のユニットテスト
+```
+
+**Tests**: 101 passing | **Files**: 11 | **LOC**: ~850 (C) | **Binary**: 53KB arm64 | **Build time**: ~26 min
+
+**Challenges & Fixes**
+- 子ども向けの語彙 → ひらがな多め、小学校 4 年生までの漢字に制限。「観察」は使うが「葉のかず」「いろ」「きょうのきもち」と分かりやすく
+- ビルドエラー: `cosf` `sinf` を `<math.h>` なしで使った → `#include <math.h>` を追加し、未使用変数 `rows` を削除
+- 観察データの安全性 → アプリ起動時に自動ロード、各 commit と ESC で自動保存。R キーは確認プロンプト経由のみ
+- JSON ライブラリ依存を避けた → ad-hoc に小さな JSON シリアライザ＋パーサを実装、key 検索＋数値配列読みで完結
+
+**Potential Next Steps**
+- 音 — 観察決定時の優しいチャイム、ステージ進化時の祝福音
+- 親モード — PDF/印刷で「観察日記」をエクスポート
+- 季節を越えてアーカイブ — 完成した 1 シーズンを別ファイルに「卒業」、新シーズンを始める
+- 観察カード追加 — においや手触りなど五感系
+- 親子モード — 親と子が並べて観察を比較

@@ -1,5 +1,5 @@
 {
-  "apps_completed": 91,
+  "apps_completed": 92,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -549,6 +549,12 @@
       "persona": 13,
       "platform": 20,
       "intent": 7
+    },
+    {
+      "source": 21,
+      "persona": 22,
+      "platform": 20,
+      "intent": 6
     }
   ],
   "history": [
@@ -858,6 +864,16 @@
         "persona": 13,
         "platform": 20,
         "intent": 7
+      }
+    },
+    {
+      "name": "yasai-nikki",
+      "completed": "2026-05-17T00:40:00Z",
+      "discovery_roll": {
+        "source": 21,
+        "persona": 22,
+        "platform": 20,
+        "intent": 6
       }
     }
   ]
