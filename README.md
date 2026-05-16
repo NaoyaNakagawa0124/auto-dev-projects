@@ -109,5 +109,6 @@
 | 103 | juugobyou | 十五秒 — 片付けが苦手な人の 15 秒だけの小さなボタン (Rust+WASM) | Rust/wasm-bindgen/HTML/CSS/JS | 16 |
 | 104 | aisaji | 相匙 — 管理職と相手の 90 秒夕飯くじ Vanilla Web | Vanilla HTML/CSS/ES Module/Vitest | 28 |
 | 105 | sekai-wadaichou | 世界話題帳 — 就活生のための深夜の地球儀 Textual TUI | Python 3.10+/Textual 1.0/pytest-asyncio | 31 |
+| 106 | kyuufu | 休符 — 効率厨ゲーマーの「もう十分」 Discord bot | Python 3.10+/discord.py 2.7/pytest | 49 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

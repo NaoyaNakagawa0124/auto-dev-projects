@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kyuufu"
+version = "0.1.0"
+description = "休符 — 効率厨ゲーマーのための、静かな『今日はここまで』 Discord bot"
+requires-python = ">=3.10"
+dependencies = [
+  "discord.py>=2.3",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8", "pytest-asyncio>=0.23"]
+
+[project.scripts]
+kyuufu = "kyuufu.bot:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+asyncio_mode = "auto"

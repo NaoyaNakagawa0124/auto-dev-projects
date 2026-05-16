@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 07:40 | Total apps: 105 | Total tests: 14,122
+> Last updated: 2026-05-17 08:10 | Total apps: 106 | Total tests: 14,171
 
 ## Quick Overview
 
@@ -111,6 +111,7 @@
 | 103 | [juugobyou](#juugobyou) | 十五秒 — 片付けが苦手な人の 15 秒だけの小さなボタン (Rust+WASM) | Rust/wasm-bindgen/HTML/CSS/JS | 16 | complete | `wasm-pack build --target web && python3 -m http.server -d web` |
 | 104 | [aisaji](#aisaji) | 相匙 — 管理職と相手の 90 秒夕飯くじ Vanilla Web | Vanilla HTML/CSS/ES Module/Vitest | 28 | complete | `npm i && python3 -m http.server` (open `/web/`) |
 | 105 | [sekai-wadaichou](#sekai-wadaichou) | 世界話題帳 — 就活生のための深夜の地球儀 Textual TUI | Python 3.10+/Textual 1.0/pytest-asyncio | 31 | complete | `pip install -e ".[test]" && sekai-wadaichou` |
+| 106 | [kyuufu](#kyuufu) | 休符 — 効率厨ゲーマーの「もう十分」 Discord bot | Python 3.10+/discord.py 2.7/pytest | 49 | complete | `pip install -e ".[test]" && DISCORD_TOKEN=... kyuufu` |
 
 ---
 
@@ -5346,3 +5347,65 @@ sekai-wadaichou           # TUI 起動
 - 友達と「話題帳」 を共有 (Intent 7 にスライド)
 - 季節モチーフを globe レンダリングに追加 (春は花、 冬は雪)
 - 都市の音楽を YouTube/Spotify deep link で添える
+
+---
+
+### <a id="kyuufu"></a>106. kyuufu - 2026-05-17 08:10
+
+**What is this?**
+効率厨のゲーマー が深夜 2 時に「あと 1 勝だけ」 を言わなくても良くなる、 静かな Discord bot。 「もう寝ろ」 「効率悪い」 「廃人」 のような命令や蔑称は絶対に言わず、 1 行だけやさしく許可を出す。 4 つのスラッシュコマンド + キーワード反応 + 毎日 hh:mm の自動投稿で構成。 「休符」 は楽譜の中の意図的な無音、 次の音を意味あるものにするための大切な沈黙 — 効率を求める耳には「止まれ」 ではなく「ここを休符にする」 が届きやすい。
+
+**Discovery Roll**
+Source: 27 (Random holiday / cultural event happening today somewhere) | Persona: 7 (効率厨のゲーマー) | Platform: 8 (Discord bot) | Intent: 4 (そっと寄り添う — 心拍が下がるか)
+
+Persona 7 × Intent 4 の組み合わせが本作の魂。 効率厨が最も嫌うのは命令されること、 だから「許可」 の形でだけ伝えるという制約が、 トーン全体を決めた。
+
+**Features Built**
+- `/yasumi` — 「今日 は ここまで」 の 1 行 (時間帯別 40 種類からランダム)
+- `/yamedoki <時間>` — あと N 時間でやめたい時の自然な区切り (22:00 / 22:30 / 23:00 ... 02:00 から最適 1 つ)
+- `/kyou` — 今日 (世界のどこか) の文化イベント、 月別 12 件 + 「ゲームを閉じて 30 秒、 これに思いを馳せませんか」
+- `/oyasumi-time <hh:mm>` — 毎日 hh:mm に自動で /yasumi の 1 行をそのチャンネルへ
+- DM / メンションで「あと 1 勝だけ」 「もうちょっと」 「ラスト 1 回」 「ねむい」 「やめる」 にキーワード反応
+- 時間帯別の語調 (evening / deep / predawn / day、 計 40 メッセージ)
+- BANNED_WORDS audit (「頑張」 「努力」 「寝ろ」 「やめろ」 「もう遅い」 「ダメ」 「だから」 「効率悪い」 「効率厨」 「廃人」)、 命令形「なさい」 検出、 比較表現「他の人 / みんな / ランカー」 検出を pytest で必ず通す
+- bot.py は token 無しで import 可能 (`main()` の中だけで os.environ を読む)
+
+**Tech Stack**
+Python 3.10+ / discord.py 2.7 / dataclasses / 標準ライブラリ + pytest + pytest-asyncio で 49 ユニットテスト / 純ロジック (messages / scheduler / cultural / responder) は src/ に完全分離、 bot.py は薄いラッパー
+
+**Key Files**
+```
+kyuufu/
+├── src/kyuufu/
+│   ├── messages.py        # 40 件 + BANNED_WORDS + tier-aware pick()
+│   ├── scheduler.py       # tier_for / suggest_stop / is_quiet_hour
+│   ├── cultural.py        # 12 月分の文化イベント + framed()
+│   ├── responder.py       # キーワード -> 静かな返事
+│   └── bot.py             # discord.py 統合 (helpers + KyuufuClient)
+└── tests/                 # 5 files / 49 tests
+```
+
+**How to Run**
+```bash
+cd kyuufu
+pip install -e ".[test]"
+pytest                              # 49 tests, Discord 非依存
+export DISCORD_TOKEN="..."          # Discord Dev Portal で発行
+kyuufu                              # Discord に接続
+```
+
+**Tests**: 49 passing (messages 11 / scheduler 11 / cultural 8 / responder 11 / bot_helpers 8) | **Files**: 10 source | **LOC**: ~900 | **Build time**: ~28 min
+
+**Challenges & Fixes**
+- **トーン制約の自己監査**: 「命令しない」 「比較しない」 「効率厨を否定しない」 を自分で破らないために、 BANNED_WORDS + 命令形「なさい」 + 比較表現 (「他の人」 「みんな」 「ランカー」) を pytest で必ず audit
+- **bot.py が token 無しで import 可能**: テスト時に DISCORD_TOKEN を要求されると CI で詰まる。 `main()` 関数の中でだけ os.environ を読み、 モジュール import / KyuufuClient 構築自体は token 不要に
+- **discord.py の app_commands と tasks.loop の組み合わせ**: setup_hook で tree.sync() + tick.start() を呼ぶパターン (これがないと slash command が登録されない / scheduled task が動かない)
+- **「あと 1 勝」 の半角・全角混在対応**: responder.find_reaction で半角・全角スペースを両方除去してから部分一致 (「あと1勝」 「あと 1 勝」 「あと　1　勝」 すべてヒット)
+
+**Potential Next Steps**
+- Slack / LINE bot 版 (responder / messages / cultural は完全に再利用可)
+- ユーザーごとの「やすみ時刻」 を JSON で永続化 (現在 in-memory)
+- 「7 日に 1 度、 寝た時間のフィードバックを 1 行」 (streak ではなく自己観察ログ)
+- 効率厨向けの「最適化された休符」 — REM サイクル目安など、 数字を出すけど煽らない使い方
+- Voice Channel に「やすみ用音楽」 を 1 曲だけ流す機能 (静かなアンビエント)
+- 12 ヶ月分の cultural event を倍に拡張、 北半球/南半球の切り替え

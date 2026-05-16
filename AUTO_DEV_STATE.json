@@ -1,5 +1,5 @@
 {
-  "apps_completed": 105,
+  "apps_completed": 106,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -1066,6 +1066,16 @@
         "persona": 23,
         "platform": 3,
         "intent": 5
+      }
+    },
+    {
+      "name": "kyuufu",
+      "completed": "2026-05-17T08:10:00Z",
+      "discovery_roll": {
+        "source": 27,
+        "persona": 7,
+        "platform": 8,
+        "intent": 4
       }
     }
   ]
