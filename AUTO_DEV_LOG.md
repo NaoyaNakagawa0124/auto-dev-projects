@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-16 14:30 | Total apps: 87 | Total tests: 10,744
+> Last updated: 2026-05-16 15:05 | Total apps: 88 | Total tests: 10,760
 
 ## Quick Overview
 
@@ -93,6 +93,7 @@
 | 85 | [danboaru-za](#danboaru-za) | 段ボール座 — 引っ越し未開封箱を星座にする | p5.js/HTML/CSS/ESM | 24 | complete | `python3 -m http.server 8765` |
 | 86 | [takibi](#takibi) | 焚火 — カフェノマドの寄り添う集中PWA | Vanilla JS/Canvas/Web Audio/PWA | 14 | complete | `python3 -m http.server 8000` |
 | 87 | [bungou-reki](#bungou-reki) | 文豪暦 — 文学暦カードバトル (Tauri) | Tauri 2/Rust/Vanilla JS | 36 | complete | `cd src && python3 -m http.server 8000` |
+| 88 | [madori-zukan](#madori-zukan) | 間取り図鑑 — アニメの家を物件カタログにする PWA | PWA/Vanilla JS/SVG | 16 | complete | `python3 -m http.server 8000` |
 
 ---
 
@@ -4170,3 +4171,67 @@ cd .. && node --test "tests/*.test.mjs"  # 14 tests
 - 同時代作家のクロスオーバーイベント (「漱石と鷗外が同じ年に生きていた」)
 - 友人とシード共有してデッキ比較できる対戦モード
 - 実在の代表作にページ数データを紐づけ、読書XPの精度を上げる
+
+---
+
+### <a id="madori-zukan"></a>88. madori-zukan - 2026-05-16 15:05
+
+**What is this?**
+間取り図鑑 — アニメ・漫画の家を「不動産物件」としてアーカイブする PWA。年100作品を観るオタクの視聴履歴を、間取り図つきの物件カタログとして残す。野比家・磯野家・野原家・草壁家・竈門家・フォージャー家など8件を収録。
+
+**Discovery Roll**
+Source: 22 (Real estate / housing market) | Persona: 16 (アニメ/漫画の視聴管理が必要なオタク) | Platform: 4 (Mobile PWA) | Intent: 6 (記録して残す — アーカイブ/個人史)
+
+**Features Built**
+- 8件の名作の家を手書きデータで収録 (野比/磯野/野原/草壁/竈門/高須/平沢/フォージャー)
+- SVG 間取り図レンダラ — 壁・部屋ラベル・面積・畳数・縮尺バー・方位記号N、畳・庭のハッチング
+- 2階建ては1F/2Fを横並びレイアウト、フロアラベル付き
+- 物件カード一覧 — サムネに mini SVG、住所・築年・延床面積を不動産チラシ風に
+- 物件詳細 — 拡大した間取り図 + 登場人物 + 部屋ごとの印象的シーン (タップで部屋ハイライト)
+- 「観了」「★お気に入り」を localStorage に保存
+- アーカイブ統計画面 — 観了数、累計記録延床面積、時代別構成、お気に入り数
+- 絞り込み — 年代 (大正/昭和/平成)、観了済みのみ、お気に入りのみ
+- PWA フル対応 — manifest.json + service-worker.js + 192/512 PNG アイコン、オフライン動作
+- 全 UI 日本語、375px 縦長モバイルで崩れない
+
+**Tech Stack**
+Vanilla HTML / CSS / ES Modules / SVG (手書き) / localStorage / Service Worker / Web App Manifest / Python標準ライブラリ (アイコンPNG生成)
+
+**Key Files**
+```
+madori-zukan/
+├── index.html              4ビュー (一覧/詳細/アーカイブ/使い方)
+├── style.css               paper + ink + blueprint
+├── app.js                  コントローラ
+├── modules/{floorplan,store}.js
+├── data/homes.json         8件 / 85部屋
+├── manifest.json + service-worker.js + icons/
+└── tests/{floorplan,store}.test.mjs
+```
+
+**How to Run**
+```bash
+cd madori-zukan
+python3 -m http.server 8000
+# ブラウザで http://localhost:8000
+
+# テスト
+node --test "tests/*.test.mjs"
+```
+
+スマホ: 同 LAN 経由でアクセス → 共有メニュー → ホーム画面に追加で PWA インストール。
+
+**Tests**: 16 passing (floorplan 10 + store 6) | **Files**: 16 | **LOC**: ~1,200 | **Build time**: ~32 min
+
+**Challenges & Fixes**
+- 各家の正確な間取りは公式には存在しないため、「オマージュ的再現」と明示。原作のレイアウト感に準拠する範囲で plausible な配置を設計
+- SVG を建築図面風に見せるため、太い黒い壁線・薄い部屋色・畳ハッチング・縮尺バー・方位記号(N) を手書きで配置
+- 2階建てを単一SVGで表現するため、1Fと2Fを横並びに配置し、各フロアの bbox 左上に "1F"/"2F" ラベルを描画
+- サムネ用と詳細用で同じ renderer を使い回すため、`scale` と `showAnnotations` を引数化
+
+**Potential Next Steps**
+- 物件を増やす (もののけ姫アシタカの家、千と千尋の油屋、進撃エレン家、SLAM DUNK桜木家、ハイキュー影山家など)
+- 部屋にシーンの開始時刻を紐づけて「時刻別の家」ビュー
+- ユーザーが自分の手で新規物件を追加できる UI
+- 友人とアーカイブを比較できる URL シェア
+- ダークモード (建築青焼き風)

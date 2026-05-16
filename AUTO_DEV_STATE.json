@@ -1,5 +1,5 @@
 {
-  "apps_completed": 87,
+  "apps_completed": 88,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -525,6 +525,12 @@
       "persona": 38,
       "platform": 17,
       "intent": 5
+    },
+    {
+      "source": 22,
+      "persona": 16,
+      "platform": 4,
+      "intent": 6
     }
   ],
   "history": [
@@ -794,6 +800,16 @@
         "persona": 38,
         "platform": 17,
         "intent": 5
+      }
+    },
+    {
+      "name": "madori-zukan",
+      "completed": "2026-05-16T15:05:00Z",
+      "discovery_roll": {
+        "source": 22,
+        "persona": 16,
+        "platform": 4,
+        "intent": 6
       }
     }
   ]

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f4ee">
+  <meta name="description" content="アニメ・漫画の家を間取り図でアーカイブする PWA">
+  <title>間取り図鑑 — madori-zukan</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-stamp">図</div>
+      <div>
+        <h1>間取り図鑑</h1>
+        <p class="brand-sub">アニメ・漫画の家を、不動産物件として記録する</p>
+      </div>
+    </div>
+    <nav class="tab-strip" role="tablist">
+      <button class="tab is-active" data-view="catalog" role="tab">物件一覧</button>
+      <button class="tab" data-view="archive" role="tab">アーカイブ</button>
+      <button class="tab" data-view="info" role="tab">使い方</button>
+    </nav>
+  </header>
+
+  <main id="app">
+    <!-- 物件一覧 -->
+    <section class="view is-active" id="view-catalog">
+      <div class="filter-bar">
+        <label class="chk">
+          <input type="checkbox" id="filter-watched"> 観了済みのみ
+        </label>
+        <label class="chk">
+          <input type="checkbox" id="filter-favorite"> ★お気に入りのみ
+        </label>
+        <select id="filter-era" class="select">
+          <option value="">すべての年代</option>
+          <option value="大正">大正</option>
+          <option value="昭和">昭和</option>
+          <option value="平成">平成</option>
+          <option value="その他">架空・その他</option>
+        </select>
+      </div>
+      <div id="home-grid" class="home-grid"></div>
+      <p id="home-empty" class="empty-note hidden">該当する物件がありません。絞り込みを解除してみてください。</p>
+    </section>
+
+    <!-- 物件詳細 -->
+    <section class="view detail-view" id="view-detail" hidden>
+      <button id="back-btn" class="btn-back">‹ 一覧に戻る</button>
+      <div class="detail-grid">
+        <div class="detail-plan">
+          <div class="plan-wrap" id="plan-wrap"></div>
+        </div>
+        <div class="detail-info">
+          <h2 id="detail-title"></h2>
+          <p class="show-name" id="detail-show"></p>
+          <div class="info-table" id="detail-table"></div>
+          <p class="summary" id="detail-summary"></p>
+          <div class="actions">
+            <button id="toggle-watched" class="btn-action">観了に追加</button>
+            <button id="toggle-favorite" class="btn-action btn-fav">★お気に入り</button>
+          </div>
+          <h3 class="sec">登場人物</h3>
+          <ul id="detail-characters" class="chip-list"></ul>
+          <h3 class="sec">主な場面</h3>
+          <ul id="detail-scenes" class="scene-list"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- アーカイブ -->
+    <section class="view" id="view-archive" hidden>
+      <h2 class="section-h">あなたのアーカイブ</h2>
+      <div class="stat-cards" id="stat-cards"></div>
+      <h3 class="sec">観了済み物件</h3>
+      <div id="watched-grid" class="home-grid mini"></div>
+      <p id="watched-empty" class="empty-note hidden">まだ観了済みの物件がありません。物件詳細画面で「観了に追加」を押してください。</p>
+    </section>
+
+    <!-- 使い方 -->
+    <section class="view" id="view-info" hidden>
+      <h2 class="section-h">使い方</h2>
+      <ol class="howto">
+        <li>「物件一覧」から見たい家を選びます。</li>
+        <li>間取り図と登場人物、印象的なシーンが表示されます。</li>
+        <li>観たことのある作品は「観了に追加」、特に好きな家は「★お気に入り」をタップ。</li>
+        <li>「アーカイブ」タブで、自分が観てきた家の総延床面積などを振り返ります。</li>
+      </ol>
+      <h3 class="sec">PWA としてインストールする</h3>
+      <p class="muted">スマホで開いて「ホーム画面に追加」を選ぶと、アプリのように起動できます。オフラインでも閲覧可能です。</p>
+      <h3 class="sec">注意</h3>
+      <p class="muted">各作品名・キャラクター名は各権利者の所有物です。本アプリは個人視聴記録のためのオマージュ的アーカイブツールであり、間取りは原作のオマージュ的再現です。</p>
+    </section>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script type="module" src="app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js").catch(e => console.warn("SW登録失敗", e));
+      });
+    }
+  </script>
+</body>
+</html>
