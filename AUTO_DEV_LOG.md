@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 03:25 | Total apps: 97 | Total tests: 13,864
+> Last updated: 2026-05-17 03:55 | Total apps: 98 | Total tests: 13,899
 
 ## Quick Overview
 
@@ -103,6 +103,7 @@
 | 95 | [ikitsugi](#ikitsugi) | 息継ぎ — 効率厨ゲーマー向け呼吸ドット拡張機能 | Browser Extension MV3/Vanilla JS/Shadow DOM | 27 | complete | Load unpacked from `ikitsugi/src/` in `chrome://extensions` |
 | 96 | [futari-yoho](#futari-yoho) | 二人予報 — 共働き夫婦の判定しない気分予報 TUI | Python 3.10+/Textual 1.0/Rich/JSON | 42 | complete | `pip install -e . && futari-yoho` |
 | 97 | [kotoba-mado](#kotoba-mado) | 言葉の窓 — 365 日の語学旅をターミナルのステンドグラスに | Python 3.10+/Rich 13/argparse/JSON | 49 | complete | `pip install -e . && kotoba-mado demo && kotoba-mado year` |
+| 98 | [meme-fuda](#meme-fuda) | ミーム札 — シニア×家族で作る思い出ミームカード TUI | Python 3.10+/Textual 1.0/Rich/JSON | 35 | complete | `pip install -e . && meme-fuda` |
 
 ---
 
@@ -4823,3 +4824,63 @@ pytest -q             # 49 tests
 - `--svg out.svg` でブラウザ・SNS 向け SVG 出力
 - Anki / Duolingo CSV からの直接 import (今は generic CSV のみ)
 - 月単位の目標分数オーバーレイ (ただし 美しさで殴る 原則を侵さない範囲で薄く)
+
+---
+
+### <a id="meme-fuda"></a>98. meme-fuda - 2026-05-17 03:55
+
+**What is this?**
+シニアと家族が一台のラップトップを挟んで二人で「思い出ミーム札」を作る Textual TUI。12 種類の柔らかい顔文字テンプレ (うれしい/こまった/なつかしい/...) のひとつを選び、 上下 2 行に状況と落ちを書く。 札には「話: ばあちゃん / 書: 孫」が記録され、 ローカルの "家のデッキ" に積まれる。 起動画面が「話す人 / 書く人」を聞いてくる ── Intent 7「2人で開けるか」をプログラム的に確認する設計。
+
+**Discovery Roll**
+Source: 5 (Viral memes and internet culture of the week) | Persona: 36 (老後を楽しんでいるシニア) | Platform: 3 (Python desktop — Textual TUI) | Intent: 7 (誰かと一緒にやる — 2 人で開けるか)
+
+**Features Built**
+- 12 templates — 棘のない柔らかい顔文字のみ、 1-3 行のかなり丁寧な ASCII アートと hint 例文
+- SetupScreen — 起動直後に「話す人 / 書く人」 入力、 Esc で skip 可
+- ComposeScreen — `Ctrl+←` / `Ctrl+→` でテンプレ切替、 上下 Input が live preview に反映、 `Ctrl+S` 保存、 `Ctrl+D` デッキへ
+- DeckScreen — `← →` で札をめくる、 `Delete` で捨てる、 `Esc` で戻る、 空の時は invitation message
+- 鈍金 #b8945b と薄紅 #c47b76 と墨 #2b2820 の「和紙」配色、 罫線は dim グレー、 余白多めでシニアの目に優しく
+- タグ #昭和 #旅行 のように小さな chip 風にレンダリング
+- `~/.meme-fuda/deck.json` atomic write
+- TUI と純ロジックを分離: templates / models / render は Textual を一切 import しない
+
+**Tech Stack**
+Python 3.10+ / Textual 1.x / Rich 13 / JSON atomic write / pytest + pytest-asyncio + Textual run_test pilot
+
+**Key Files**
+```
+meme-fuda/
+├── src/meme_fuda/
+│   ├── cli.py           # entry, --speaker/--writer で setup skip
+│   ├── app.py           # MemeFudaApp + SetupScreen + ComposeScreen + DeckScreen
+│   ├── render.py        # render_card / render_card_plain / render_thumbnail
+│   ├── models.py        # Card + Deck (CRUD, atomic)
+│   ├── storage.py       # JSON I/O
+│   └── templates.py     # 12 kaomoji + hint
+└── tests/               # templates 6 / models 6 / storage 5 / render 7 / app_smoke 11
+```
+
+**How to Run**
+```bash
+cd meme-fuda
+pip install -e .
+meme-fuda                                       # setup → compose → deck
+meme-fuda --speaker ばあちゃん --writer 孫       # setup skip
+pytest -q                                       # 35 tests
+```
+
+**Tests**: 35 passing (templates 6 / models 6 / storage 5 / render 7 / app_smoke 11) | **Files**: 13 | **LOC**: ~1,340 | **Build time**: ~28 min
+
+**Challenges & Fixes**
+- `_render` 名前衝突 (3 度目) — Textual Widget の内部 `_render` と画面の `_render(self)` メソッドがぶつかって ComposeScreen が空表示。 全部 `_refresh_view` にリネームで解決。 ── このバグは記憶に刻んだ。
+- Input が arrow key を吸う — テンプレ切替を `left/right` にしていたら Input cursor 移動に取られて反応せず。 `Ctrl+←` / `Ctrl+→` + `priority=True` で解決。 UX 的にも「カテゴリ切替」感が強くなった。
+- `Ctrl+D` も priority 指定必要 — Input focus 下では bubble 前に消費される。
+- "二人で開く" を強制せず、 でも誘導する設計 — Setup screen は Esc で skip 可。 でも、 飛ばさずに名前を入れた方が札に意味が宿る、 という構造そのものが Intent 7 のチェック。
+
+**Potential Next Steps**
+- 「今日の一枚」 — 起動オーバーレイで過去のランダムな札を 1 枚表示
+- ポストカードサイズの SVG / PNG エクスポート (印刷して年賀状の隅に)
+- ボイスメモ添付 (m4a を Card に紐付け、 再生)
+- 多人数 — 今は speaker/writer の 2 人だけ。 父・母・孫・親戚と複数登録可に
+- LINE 貼り付け用 OG 画像エクスポート (画像化サーバー → ローカル PIL レンダリング)
