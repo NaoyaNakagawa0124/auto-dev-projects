@@ -1,5 +1,5 @@
 {
-  "apps_completed": 86,
+  "apps_completed": 87,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -519,6 +519,12 @@
       "persona": 30,
       "platform": 4,
       "intent": 4
+    },
+    {
+      "source": 28,
+      "persona": 38,
+      "platform": 17,
+      "intent": 5
     }
   ],
   "history": [
@@ -779,6 +785,16 @@
     },
     {
       "name": "takibi"
+    },
+    {
+      "name": "bungou-reki",
+      "completed": "2026-05-16T14:30:00Z",
+      "discovery_roll": {
+        "source": 28,
+        "persona": 38,
+        "platform": 17,
+        "intent": 5
+      }
     }
   ]
 }

@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-10 14:50 | Total apps: 86 | Total tests: 10,708
+> Last updated: 2026-05-16 14:30 | Total apps: 87 | Total tests: 10,744
 
 ## Quick Overview
 
@@ -92,6 +92,7 @@
 | 84 | [bug-zumou](#bug-zumou) | バグずもう — 60秒バグ発見お相撲 | Swift 5.9/SwiftUI/SwiftPM | 19 | complete | `swift run` |
 | 85 | [danboaru-za](#danboaru-za) | 段ボール座 — 引っ越し未開封箱を星座にする | p5.js/HTML/CSS/ESM | 24 | complete | `python3 -m http.server 8765` |
 | 86 | [takibi](#takibi) | 焚火 — カフェノマドの寄り添う集中PWA | Vanilla JS/Canvas/Web Audio/PWA | 14 | complete | `python3 -m http.server 8000` |
+| 87 | [bungou-reki](#bungou-reki) | 文豪暦 — 文学暦カードバトル (Tauri) | Tauri 2/Rust/Vanilla JS | 36 | complete | `cd src && python3 -m http.server 8000` |
 
 ---
 
@@ -4105,3 +4106,67 @@ python3 -m http.server 8000
 - 一日の集中ログを別画面で見せる（火の年輪のような可視化）
 - 環境音のバリエーション（雨の音モード、火だけモード）
 - 「誰かと一緒に焚火を囲む」モード（複数端末同期で同じ火を見る）
+
+---
+
+### <a id="bungou-reki"></a>87. bungou-reki - 2026-05-16 14:30
+
+**What is this?**
+文豪暦 — 文学史の「この日」を素材にしたカードバトル型 Tauri デスクトップアプリ。年間100冊読む読書家向け、今日に縁ある文豪が召喚され、コレクション・対戦・読書ログでXPが貯まる。
+
+**Discovery Roll**
+Source: 28 (Historical "on this day" event) | Persona: 38 (読書家・年100冊読む人) | Platform: 17 (Tauri desktop app) | Intent: 5 (夢中にさせる — ゲーム性/中毒/競う)
+
+**Features Built**
+- 文学暦データセット (61名の文豪を実データで収録、日本＋世界文豪、4軸ステータス)
+- 「今日の召喚」— 当日の誕生・命日に該当する作家を3〜5枚カードとして提示、1日1名のみ蔵書追加
+- ±3日のフォールバック探索 (該当ゼロの日でも近隣から拾う)
+- 蔵書ビュー — 集めた作家をXPレベル順にカード表示
+- 3ラウンド対戦 — 文才→多作→影響軸の比較。デッキ3枚を組み、本日の挑戦者と対決
+- 決定論的「本日の挑戦者」— 日付シードベース、同じ日は同じ相手
+- 読書ログ — 書名・ページ数を記録すると対応作家にXP (4ページ=1XP、最低5XP)
+- 文学暦カレンダー — 月単位で全366日の文豪イベントを閲覧、誕生・命日を色分け
+- 古書館アエステティック — パーチメント＋墨＋金箔＋朱、明朝体スタック
+- Rust/JS両側に実装したロジック層、共通テスト方針
+
+**Tech Stack**
+Tauri 2.0 / Rust 1.94 (chrono + serde) / Vanilla HTML+CSS+ES Modules / 静的JSONデータ / localStorage 永続化
+
+**Key Files**
+```
+bungou-reki/
+├── src/                       フロントエンド (Tauri/ブラウザ共通)
+│   ├── index.html / style.css / app.js
+│   ├── modules/{calendar,battle,store}.js
+│   └── data/authors.json      61名の文豪
+├── src-tauri/
+│   ├── Cargo.toml / tauri.conf.json
+│   └── src/{lib,data,calendar,battle,state,main}.rs
+└── tests/{battle,calendar}.test.mjs
+```
+
+**How to Run**
+```bash
+# ブラウザで即時試す
+cd src && python3 -m http.server 8000
+# Tauri デスクトップ
+cargo install tauri-cli --version "^2.0"
+cd src-tauri && cargo tauri dev --features desktop
+# テスト
+cd src-tauri && cargo test            # 22 tests
+cd .. && node --test "tests/*.test.mjs"  # 14 tests
+```
+
+**Tests**: 36 passing (Rust 22 + JS 14) | **Files**: 18 | **LOC**: ~1,700 | **Build time**: ~28 min
+
+**Challenges & Fixes**
+- Tauri CLIインストール時間を回避するため、`desktop` features を optional 化。`cargo run` 単体で CLI smoke モードが動き、テストは Tauri 依存なしで完結
+- ロジック層を Rust と JS で1:1ミラーし、両側にユニットテスト。データセットは双方が同じJSONを読む
+- 5月16日は文学暦上の該当が少ないため、データセットに Studs Terkel・Adrienne Rich (実在May 16生まれ) を含め、±3日フォールバックも実装
+
+**Potential Next Steps**
+- 作家ポートレートのSVG生成 (現状はイニシャル1文字)
+- 連続ログイン報酬 / 称号システム
+- 同時代作家のクロスオーバーイベント (「漱石と鷗外が同じ年に生きていた」)
+- 友人とシード共有してデッキ比較できる対戦モード
+- 実在の代表作にページ数データを紐づけ、読書XPの精度を上げる

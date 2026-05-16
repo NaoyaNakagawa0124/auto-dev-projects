@@ -1,0 +1,9 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "文豪暦の基本機能",
+  "windows": ["main"],
+  "permissions": [
+    "core:default"
+  ]
+}

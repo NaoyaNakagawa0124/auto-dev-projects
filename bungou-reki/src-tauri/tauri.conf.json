@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "文豪暦",
+  "version": "0.1.0",
+  "identifier": "com.autodev.bungoureki",
+  "build": {
+    "frontendDist": "../src",
+    "devUrl": "http://localhost:8000"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "文豪暦",
+        "width": 1100,
+        "height": 800,
+        "minWidth": 720,
+        "minHeight": 560,
+        "resizable": true,
+        "fullscreen": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; script-src 'self'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/icon.png"
+    ]
+  }
+}

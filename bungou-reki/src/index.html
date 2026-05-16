@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>文豪暦 — Bungou-reki</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="vellum"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">文</span>
+      <div>
+        <h1>文豪暦</h1>
+        <p class="brand-sub" id="today-label">読み込み中…</p>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab is-active" data-screen="summon" role="tab">召喚</button>
+      <button class="tab" data-screen="collection" role="tab">蔵書</button>
+      <button class="tab" data-screen="battle" role="tab">対戦</button>
+      <button class="tab" data-screen="reading" role="tab">読書</button>
+      <button class="tab" data-screen="calendar" role="tab">暦</button>
+    </nav>
+  </header>
+
+  <main id="screens">
+    <!-- 召喚 -->
+    <section class="screen is-active" id="screen-summon">
+      <div class="screen-head">
+        <h2 id="summon-title">本日の召喚</h2>
+        <p id="summon-subtitle" class="muted">本日に縁ある文豪が現れています</p>
+      </div>
+      <div id="summon-cards" class="card-row"></div>
+      <div id="summon-message" class="seal-banner hidden"></div>
+    </section>
+
+    <!-- 蔵書 -->
+    <section class="screen" id="screen-collection">
+      <div class="screen-head">
+        <h2>蔵書 — Collection</h2>
+        <p class="muted">召喚した文豪を眺める書架。読書ログで XP が貯まり、レベルが上がる。</p>
+      </div>
+      <div id="collection-grid" class="card-grid"></div>
+      <p id="collection-empty" class="empty-note hidden">まだ召喚した文豪がいません。「召喚」タブから一人選びましょう。</p>
+    </section>
+
+    <!-- 対戦 -->
+    <section class="screen" id="screen-battle">
+      <div class="screen-head">
+        <h2>本日の対戦</h2>
+        <p class="muted">3 ラウンドの文学比較。<strong>文才→多作→影響</strong> の順に勝負します。</p>
+      </div>
+
+      <div class="battle-layout">
+        <div class="deck-builder">
+          <h3>あなたのデッキ <span class="deck-count" id="deck-count">0 / 3</span></h3>
+          <div id="deck-slots" class="deck-slots"></div>
+          <h4 class="picker-label">蔵書から選ぶ</h4>
+          <div id="deck-picker" class="card-grid mini"></div>
+          <button id="start-battle" class="btn-primary" disabled>対戦開始</button>
+        </div>
+
+        <div class="battle-stage" id="battle-stage">
+          <p class="muted center">デッキを 3 枚編成して「対戦開始」を押してください。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 読書 -->
+    <section class="screen" id="screen-reading">
+      <div class="screen-head">
+        <h2>読書ログ</h2>
+        <p class="muted">読んだ本を記録すると、対応する文豪に XP が入ります。<br>※ 4 ページごとに 1 XP（最低 5 XP）</p>
+      </div>
+      <form id="reading-form" class="reading-form">
+        <label>
+          <span>作家</span>
+          <select id="reading-author" required></select>
+        </label>
+        <label>
+          <span>書名</span>
+          <input type="text" id="reading-title" placeholder="例：こころ" required>
+        </label>
+        <label>
+          <span>ページ数</span>
+          <input type="number" id="reading-pages" min="1" max="3000" value="100" required>
+        </label>
+        <button type="submit" class="btn-primary">記録する</button>
+      </form>
+      <h3 class="section-h">最近の読書</h3>
+      <ul id="reading-list" class="reading-list"></ul>
+      <p id="reading-empty" class="empty-note hidden">まだ読書記録はありません。</p>
+    </section>
+
+    <!-- 暦 -->
+    <section class="screen" id="screen-calendar">
+      <div class="screen-head row-between">
+        <div>
+          <h2 id="cal-title">2026年 1月の文学暦</h2>
+          <p class="muted">日付をタップすると、その日の出来事と作家が一覧表示されます。</p>
+        </div>
+        <div class="cal-nav">
+          <button id="cal-prev" class="btn-ghost">‹ 前月</button>
+          <button id="cal-next" class="btn-ghost">翌月 ›</button>
+        </div>
+      </div>
+      <div id="calendar-grid" class="calendar-grid"></div>
+      <div id="calendar-detail" class="cal-detail hidden"></div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
