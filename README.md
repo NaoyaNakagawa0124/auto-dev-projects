@@ -97,5 +97,6 @@
 | 91 | eiga-ichiba | 映画市場 — 2人で囲む映画株式投資ゲーム | C/Raylib 5.5 | 2,566 |
 | 92 | yasai-nikki | やさい日記 — 子どもの28日間野菜観察アプリ | C/Raylib 5.5 | 101 |
 | 93 | gochisou-goyomi | ごちそう暦 — 世界の祝祭日メシ提案 TUI | Python/Textual 8 | 15 |
+| 94 | fukugyou-bubble | 副業バブル — 副業 idle クリッカーゲーム (Tauri) | Tauri 2/Rust/Vanilla JS | 43 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

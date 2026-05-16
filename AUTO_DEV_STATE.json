@@ -1,5 +1,5 @@
 {
-  "apps_completed": 93,
+  "apps_completed": 94,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -561,6 +561,12 @@
       "persona": 6,
       "platform": 3,
       "intent": 2
+    },
+    {
+      "source": 5,
+      "persona": 33,
+      "platform": 17,
+      "intent": 5
     }
   ],
   "history": [
@@ -890,6 +896,16 @@
         "persona": 6,
         "platform": 3,
         "intent": 2
+      }
+    },
+    {
+      "name": "fukugyou-bubble",
+      "completed": "2026-05-17T01:50:00Z",
+      "discovery_roll": {
+        "source": 5,
+        "persona": 33,
+        "platform": 17,
+        "intent": 5
       }
     }
   ]

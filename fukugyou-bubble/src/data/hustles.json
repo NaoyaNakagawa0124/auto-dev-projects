@@ -1,0 +1,97 @@
+{
+  "version": 1,
+  "win_target": 10000000,
+  "viral_period_sec": 90,
+  "viral_duration_sec": 30,
+  "viral_multiplier": 3.0,
+  "hustles": [
+    {
+      "id": "blog",
+      "name_jp": "テックブログ",
+      "emoji": "📝",
+      "click_reward": 10,
+      "base_income": 0.5,
+      "upgrade_base_cost": 50,
+      "cost_growth": 1.15,
+      "viral_blurb": "Qiita で 100 いいね",
+      "color": "#7ad9e8"
+    },
+    {
+      "id": "youtube",
+      "name_jp": "YouTube vlog",
+      "emoji": "🎥",
+      "click_reward": 15,
+      "base_income": 0.8,
+      "upgrade_base_cost": 100,
+      "cost_growth": 1.15,
+      "viral_blurb": "10万再生で広告収入が爆増",
+      "color": "#ff7373"
+    },
+    {
+      "id": "dropship",
+      "name_jp": "ドロップシッピング",
+      "emoji": "🛒",
+      "click_reward": 25,
+      "base_income": 1.5,
+      "upgrade_base_cost": 250,
+      "cost_growth": 1.15,
+      "viral_blurb": "韓国コスメが TikTok でバズり",
+      "color": "#ffb35c"
+    },
+    {
+      "id": "ai_art",
+      "name_jp": "AIアート販売",
+      "emoji": "🎨",
+      "click_reward": 40,
+      "base_income": 2.5,
+      "upgrade_base_cost": 500,
+      "cost_growth": 1.15,
+      "viral_blurb": "Etsy で AIブームが再燃",
+      "color": "#c870e8"
+    },
+    {
+      "id": "tiktok",
+      "name_jp": "TikTok",
+      "emoji": "📱",
+      "click_reward": 60,
+      "base_income": 4.0,
+      "upgrade_base_cost": 1000,
+      "cost_growth": 1.15,
+      "viral_blurb": "「副業 TikTok」がトレンド入り",
+      "color": "#ff2d6f"
+    },
+    {
+      "id": "design",
+      "name_jp": "フリーランスデザイン",
+      "emoji": "✏️",
+      "click_reward": 100,
+      "base_income": 6.0,
+      "upgrade_base_cost": 2500,
+      "cost_growth": 1.15,
+      "viral_blurb": "ロゴデザイン依頼が殺到",
+      "color": "#4a90e2"
+    },
+    {
+      "id": "dev",
+      "name_jp": "プログラミング案件",
+      "emoji": "💻",
+      "click_reward": 150,
+      "base_income": 10.0,
+      "upgrade_base_cost": 5000,
+      "cost_growth": 1.15,
+      "viral_blurb": "ChatGPT 連携案件が急増",
+      "color": "#16d68d"
+    },
+    {
+      "id": "tutor",
+      "name_jp": "オンライン家庭教師",
+      "emoji": "👩‍🏫",
+      "click_reward": 250,
+      "base_income": 15.0,
+      "upgrade_base_cost": 10000,
+      "cost_growth": 1.15,
+      "viral_blurb": "中学受験ブームで生徒が急増",
+      "color": "#f5c542"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+[package]
+name = "fukugyou-bubble"
+version = "0.1.0"
+edition = "2021"
+description = "副業バブル — 副業 idle クリッカーゲーム"
+license = "MIT"
+rust-version = "1.70"
+
+[lib]
+name = "fukugyou_bubble_lib"
+crate-type = ["lib"]
+path = "src/lib.rs"
+
+[[bin]]
+name = "fukugyou-bubble"
+path = "src/main.rs"
+
+[build-dependencies]
+tauri-build = { version = "2.0", optional = true }
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tauri = { version = "2.0", optional = true }
+
+[features]
+default = []
+desktop = ["tauri", "tauri-build"]
+
+[dev-dependencies]

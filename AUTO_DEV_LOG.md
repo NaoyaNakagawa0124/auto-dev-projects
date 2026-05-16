@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 01:10 | Total apps: 93 | Total tests: 13,703
+> Last updated: 2026-05-17 01:50 | Total apps: 94 | Total tests: 13,746
 
 ## Quick Overview
 
@@ -99,6 +99,7 @@
 | 91 | [eiga-ichiba](#eiga-ichiba) | 映画市場 — 2人で囲む映画株式投資ゲーム | C/Raylib 5.5 | 2,566 | complete | `make && ./eiga-ichiba` |
 | 92 | [yasai-nikki](#yasai-nikki) | やさい日記 — 子どもの28日間野菜観察アプリ | C/Raylib 5.5 | 101 | complete | `make && ./yasai-nikki` |
 | 93 | [gochisou-goyomi](#gochisou-goyomi) | ごちそう暦 — 世界の祝祭日メシ提案 TUI | Python/Textual 8 | 15 | complete | `pip install -e . && gochisou-goyomi` |
+| 94 | [fukugyou-bubble](#fukugyou-bubble) | 副業バブル — 副業 idle クリッカーゲーム (Tauri) | Tauri 2/Rust/Vanilla JS | 43 | complete | `cd src && python3 -m http.server 8000` |
 
 ---
 
@@ -4558,3 +4559,72 @@ pytest                    # 15 passing
 - 「近くで食べられる店」マップ連携
 - アレルギー・ベジ対応モード
 - 友人と踏破国マップを共有するモード
+
+---
+
+### <a id="fukugyou-bubble"></a>94. fukugyou-bubble - 2026-05-17 01:50
+
+**What is this?**
+副業バブル — 副業 TikTok 文化の「いつか副業を始めたい」を健全なゲーム性で消化するクリッカー idle ゲーム。8 種類の副業 (テックブログ/YouTube/ドロップシッピング/AIアート/TikTok/デザイン/プログラミング/家庭教師) をクリックで稼ぎ、アップグレードで放置収入を増やしながら ¥10,000,000 を目指す。90 秒に 1 度バイラルイベントで特定副業に 3 倍ボーナス。Tauri ＆ ブラウザ両対応。
+
+**Discovery Roll**
+Source: 5 (Viral memes / internet culture) | Persona: 33 (副業を始めたい人) | Platform: 17 (Tauri desktop app) | Intent: 5 (夢中にさせる — ゲーム性/中毒/競う)
+
+**Features Built**
+- 8 種類の副業 — 各々 click_reward / base_income / upgrade_base_cost / cost_growth (=1.15) / viral_blurb / color
+- クリック報酬 ¥10〜¥250、放置収入 ¥0.5〜¥15/秒、アップグレードコストは×1.15 で増える定番の idle 曲線
+- バイラルイベント — 90 秒に 1 度、決定論的 RNG (引数として渡せる) で 1 副業に 3× ボーナス 30 秒間
+- ガラスモーフィズム UI — 半透明カード + backdrop-filter + ピンク/金/緑の流れるオーブ
+- フローティング +¥ ポップ演出、バイラル中はカードが脈動 (CSS animation)
+- 進捗バー (ピンク→金→緑グラデ、¥10M に対する%)
+- HUD 3 カード (現金 / 放置収入/秒 / クリック数)
+- 自動保存 (5 秒毎 + ページ離脱時に localStorage)
+- 達成オーバーレイ — クリック回数と経過時間を表示、「もう一度はじめる」ボタン
+- 完全日本語UI、375px モバイル対応 (HUD 縦並び、グリッド 1 列に折りたたみ)
+- ¥ フォーマッタ (¥1.2K / ¥3.4M / ¥1.2 億 と桁省略)
+
+**Tech Stack**
+Tauri 2.0 / Rust 1.94 (chrono は使わず純数値) / Vanilla HTML+CSS+ES Modules / localStorage / Glassmorphism CSS / Rust ロジック層と JS ロジック層の 1:1 ミラー
+
+**Key Files**
+```
+fukugyou-bubble/
+├── src/                          フロント (Tauri / ブラウザ共通)
+│   ├── index.html / style.css / app.js
+│   ├── modules/game.js           純粋ロジック (Rust と 1:1)
+│   └── data/hustles.json         8 副業
+└── src-tauri/
+    ├── Cargo.toml (desktop feature optional)
+    └── src/{lib,data,game,main}.rs   game.rs に 26 件のテスト
+└── tests/game.test.mjs           JS テスト 17 件
+```
+
+**How to Run**
+```bash
+cd src
+python3 -m http.server 8000
+# http://localhost:8000
+
+# Tauri デスクトップとして
+cargo install tauri-cli --version "^2.0"
+cd src-tauri && cargo tauri dev --features desktop
+
+# テスト
+cd src-tauri && cargo test           # 26 tests
+cd .. && node --test "tests/*.test.mjs"  # 17 tests
+```
+
+**Tests**: 43 passing (Rust 26 + JS 17) | **Files**: 19 | **LOC**: ~1,150 | **Build time**: ~34 min
+
+**Challenges & Fixes**
+- Tauri CLI 不在でもビルドを通したい → `desktop` features を optional 化、`cargo run` で CLI smoke (副業一覧 + 100 クリックシミュレーション) が表示される設計
+- バイラル発生をテスト可能にしたい → `try_start_viral(state, rng_value)` シグネチャで RNG 値を外から渡せるようにし、決定論的にテスト
+- Rust と JS でロジック乖離が起きそう → 同じテストケースを両方に書いて 43 件で挙動を担保
+- アップグレードコストが線形だと飽きる → ×1.15 の幾何級数で、選択肢のテンポを定番の idle カーブに
+
+**Potential Next Steps**
+- 効果音 (クリック・バイラル発生・達成ファンファーレ)
+- 副業間の相乗効果 — 同副業を 25 個アップグレードで隣の副業に 10% ボーナス
+- ¥10M 達成時間のリーダーボード
+- バイラル種類の拡張 (税制改正イベント、円安円高イベント)
+- リプレイ機能 — ¥1K → ¥10M までのタイムラインをチャート表示
