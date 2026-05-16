@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 04:25 | Total apps: 99 | Total tests: 13,941
+> Last updated: 2026-05-17 04:55 | Total apps: 100 | Total tests: 13,982
 
 ## Quick Overview
 
@@ -105,6 +105,7 @@
 | 97 | [kotoba-mado](#kotoba-mado) | 言葉の窓 — 365 日の語学旅をターミナルのステンドグラスに | Python 3.10+/Rich 13/argparse/JSON | 49 | complete | `pip install -e . && kotoba-mado demo && kotoba-mado year` |
 | 98 | [meme-fuda](#meme-fuda) | ミーム札 — シニア×家族で作る思い出ミームカード TUI | Python 3.10+/Textual 1.0/Rich/JSON | 35 | complete | `pip install -e . && meme-fuda` |
 | 99 | [tane-kawase](#tane-kawase) | 種交わせ — 語学パートナーが種包を交わす CLI | Python 3.10+/Rich 13/argparse/JSON | 42 | complete | `pip install -e . && tane-kawase demo` |
+| **100** | [**denshou-bako**](#denshou-bako) | **🎏 伝承箱 — シニアの知恵を Pi で 10 年残す枕元の箱** | Python 3.10+/Rich 13/Raspberry Pi/espeak-ng/arecord | 41 | complete | `pip install -e . && denshou demo && denshou book ./demo-recordings` |
 
 ---
 
@@ -4956,3 +4957,87 @@ pytest -q                                       # 42 tests
 - 「最後に交わしたのは 12 日前」 とフッターでそっと促すリマインド
 - 双方向ペアビュー — 英語学者の畑と日本語学者の畑を左右に並べる
 - 種の「枯れる」 機能 — 30 日触れないとアーカイブ送りで畑から消える (収穫したものはカウント永続)
+
+---
+
+### <a id="denshou-bako"></a>100. denshou-bako - 2026-05-17 04:55
+
+> 🎏 **100 件目のアプリ.** `/loop 30m /auto-dev` の自動ビルドが、 12 時間の累積で
+> 偶然たどり着いた「本人がいなくなった後に価値が出る」 装置。
+
+**What is this?**
+Raspberry Pi の枕元の小さな箱。 シニアが押しボタンを 1 度押すと、 365 個の
+B2B 知恵問いから今日の問いが espeak-ng の声で読み上げられる。 もう一度押すと
+赤 LED が点いて録音が始まり、 最長 2 分で 1 日分の音声 + JSON メタが SD カードに
+保存される。 別マシンで `denshou book` を実行すると、 1 年分のアーカイブが
+Markdown / HTML の「知恵帳」 として書き出され、 各エントリには手動 or Whisper
+での書き起こし欄が残してある。
+
+10 年後に孫・後輩・後継者が再生したときに、 まだ価値があるかどうか — それだけが
+評価軸 (Intent 6)。
+
+**Discovery Roll**
+Source: 18 (B2B enterprise pain points — CRM/ERP/HR/logistics) | Persona: 36 (老後を楽しんでいるシニア) | Platform: 16 (Arduino / Raspberry Pi IoT — code + wiring guide) | Intent: 6 (記録して残す — 10 年後も価値があるか)
+
+**Features Built**
+- **365 問の B2B 知恵問い** を 7 カテゴリ (仕事の哲学 / ひととの距離 / お金の感覚 / 失敗から学んだ / 道具と現場 / 時代の変化 / 後輩へ) に分けて手書き、 1 週間に全カテゴリを一巡する interleave
+- **Backend 抽象化** — `MockBackend` (テスト・dev)、 `MacBackend` (say + sox)、 `PiBackend` (espeak-ng + arecord + GPIO 押しボタン + LED 2 つ)
+- **`run_session()`** が 1 サイクル (TTS → ボタン → 録音 → メタ) を編成、 2 秒長押しで「今日は飛ばす」 をサポート
+- **`denshou book`** が フォルダから Markdown / HTML の「知恵帳」 を生成、 「書き起こしを貼ってください」 のプレースホルダ付き
+- **`denshou demo`** で MockBackend を使った N 日分のサンプルアーカイブを即生成 (Pi 不要で全体感を確認可能)
+- **`denshou parts`** で BOM 約 ¥14,500、 `denshou wiring --systemd` で配線図 + systemd unit テンプレ
+- **RUNNING.md** に Raspberry Pi の組み立て・配線・systemd 設定・トラブルシューティングを一通り記載
+
+**Tech Stack**
+Python 3.10+ / Rich 13.x / argparse / 標準 `wave` / subprocess (espeak-ng/arecord/say/sox) / RPi.GPIO (lazy, extras: `pi`) / pytest + capsys
+
+**Key Files**
+```
+denshou-bako/
+├── src/denshou_bako/
+│   ├── cli.py            # 6 subcommands
+│   ├── audio.py          # Backend / MockBackend / MacBackend / PiBackend
+│   ├── session.py        # run_session() の orchestration
+│   ├── book.py           # Markdown / HTML wisdom book
+│   ├── questions.py      # 365 questions + interleave + question_for(date)
+│   ├── categories.py     # 7 categories
+│   └── wiring.py         # BOM + ASCII schematic + systemd unit
+├── tests/                # categories 5 / questions 8 / audio 7 / session 6 / book 6 / cli 9
+├── RUNNING.md            # 組み立て・配線・systemd 完全ガイド
+└── ...
+```
+
+**How to Run**
+```bash
+# 開発機で
+cd denshou-bako && pip install -e .
+denshou                                # 今日の問いを表示
+denshou demo --out /tmp/d --days 14   # サンプルアーカイブ生成 (Pi 不要)
+denshou book /tmp/d                    # Markdown 知恵帳
+denshou book /tmp/d --html --out wisdom.html
+denshou parts                          # BOM
+denshou wiring --systemd               # 配線図 + systemd unit
+pytest -q                              # 41 tests
+
+# Pi で
+sudo apt install -y espeak-ng alsa-utils
+pip install -e .[pi]
+denshou record --backend pi --out ~/recordings --loop
+# (詳細は RUNNING.md)
+```
+
+**Tests**: 41 passing (categories 5 / questions 8 / audio 7 / session 6 / book 6 / cli 9) | **Files**: 18 | **LOC**: ~2,050 | **Build time**: ~32 min
+
+**Challenges & Fixes**
+- カテゴリが連続ブロックで並んでいて、 デモ 7 日が全部 「お金の感覚」 になった — `_interleave_by_category` で 7 カテゴリを 1 ずつ取り出すラウンドロビン形に再配列して 1 週間で全カテゴリに触れる形にした
+- ハードウェアなしで信頼できるテストを書く — `MockBackend` を最初から設計の中心に置き、 PiBackend は lazy import で RPi.GPIO 未インストール環境でも import が通る
+- Whisper を組み込むか迷ったが、 依存が重い + Pi で動かすには Whisper.cpp 必要 + 10 年後により良い書き起こし AI が出る — 「録音 + 書き起こし空欄」 で止めて、 ユーザーが好きな経路で埋める前提にした (10 年保管の哲学にも合う)
+
+**Potential Next Steps**
+- Whisper.cpp を Pi 4 でローカル走らせる pipeline (optional extras)
+- VOICEVOX / Coqui TTS でもっと自然な声に
+- `--audience family|industry` で問いの選択を切り替え
+- macOS Menu Bar 版 (毎晩 22:00 通知 + 録音、 Pi 持ってない人向け)
+- 「言わなくていい問い」 のユーザー除外設定
+- 録音 E2E 暗号化 (10 年後の家族のみ passphrase で開封可)
+- 知恵帳 HTML のカテゴリ密度 sparkline

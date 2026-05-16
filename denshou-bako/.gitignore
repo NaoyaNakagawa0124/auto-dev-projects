@@ -1,0 +1,4 @@
+denshou_bako.egg-info/
+__pycache__/
+*.pyc
+.pytest_cache/

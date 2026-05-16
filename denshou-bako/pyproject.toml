@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "denshou-bako"
+version = "0.1.0"
+description = "シニアの仕事の知恵を 1 日 1 問ずつ録音して 10 年残す Raspberry Pi 箱"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "auto-dev" }]
+dependencies = [
+    "rich>=13.7",
+]
+
+[project.optional-dependencies]
+pi = ["RPi.GPIO>=0.7.1"]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+denshou = "denshou_bako.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

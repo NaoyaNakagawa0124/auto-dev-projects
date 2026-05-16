@@ -1,5 +1,5 @@
 {
-  "apps_completed": 99,
+  "apps_completed": 100,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -597,6 +597,12 @@
       "persona": 34,
       "platform": 2,
       "intent": 7
+    },
+    {
+      "source": 18,
+      "persona": 36,
+      "platform": 16,
+      "intent": 6
     }
   ],
   "history": [
@@ -986,6 +992,17 @@
         "persona": 34,
         "platform": 2,
         "intent": 7
+      }
+    },
+    {
+      "name": "denshou-bako",
+      "completed": "2026-05-17T04:55:00Z",
+      "milestone": "100th app",
+      "discovery_roll": {
+        "source": 18,
+        "persona": 36,
+        "platform": 16,
+        "intent": 6
       }
     }
   ]
