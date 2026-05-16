@@ -1,5 +1,5 @@
 {
-  "apps_completed": 100,
+  "apps_completed": 101,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -603,6 +603,12 @@
       "persona": 36,
       "platform": 16,
       "intent": 6
+    },
+    {
+      "source": 19,
+      "persona": 4,
+      "platform": 18,
+      "intent": 5
     }
   ],
   "history": [
@@ -1003,6 +1009,16 @@
         "persona": 36,
         "platform": 16,
         "intent": 6
+      }
+    },
+    {
+      "name": "chika-channel",
+      "completed": "2026-05-17T05:30:00Z",
+      "discovery_roll": {
+        "source": 19,
+        "persona": 4,
+        "platform": 18,
+        "intent": 5
       }
     }
   ]

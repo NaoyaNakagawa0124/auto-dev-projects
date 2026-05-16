@@ -1,0 +1,17 @@
+{
+  "name": "chika-channel",
+  "version": "0.1.0",
+  "description": "駆け出し YouTuber が動画を地下鉄路線図として設計する Bun ブラウザゲーム",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "bun build src/client/app.ts --outfile public/app.js --target browser",
+    "dev": "bun build src/client/app.ts --outfile public/app.js --target browser && bun run src/server/index.ts",
+    "start": "bun run src/server/index.ts",
+    "test": "bun test"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.4.0"
+  }
+}

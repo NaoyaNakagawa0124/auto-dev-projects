@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>地下チャンネル</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>地下チャンネル</h1>
+      <div class="sub">あなたの動画を、 地下鉄路線図として育てよう。</div>
+    </header>
+
+    <section id="hud">
+      <div class="stat"><span class="label">登録者</span><span class="value" id="hud-subs">—</span></div>
+      <div class="stat"><span class="label">累計再生</span><span class="value" id="hud-views">—</span></div>
+      <div class="stat"><span class="label">日</span><span class="value" id="hud-day">—</span></div>
+      <div class="stat"><span class="label">天候</span><span class="value" id="hud-weather">—</span></div>
+      <div class="stat"><span class="label">AP</span><span class="value" id="hud-ap">—</span></div>
+      <div class="stat phase"><span class="value" id="hud-phase">準備中</span></div>
+    </section>
+
+    <main>
+      <div id="map-wrap">
+        <svg id="map" viewBox="0 0 800 520" xmlns="http://www.w3.org/2000/svg"></svg>
+        <div id="map-hint">クリックで駅を新設、 ドラッグで線を接続</div>
+      </div>
+
+      <aside id="panel">
+        <div class="panel-section">
+          <h3>夜のアクション</h3>
+          <div class="action-btns">
+            <button data-action="new-station" id="btn-new">+ 駅を作る</button>
+            <button data-action="upgrade" id="btn-upgrade" disabled>↑ vibe を上げる</button>
+            <button data-action="connect" id="btn-connect" disabled>━ 線を引く</button>
+            <button data-action="delete" id="btn-delete" disabled>− 駅を消す</button>
+          </div>
+          <div class="hint" id="panel-hint">駅を選ぶと、 アクションが開きます</div>
+        </div>
+
+        <div class="panel-section">
+          <h3>駅の詳細</h3>
+          <div id="station-detail" class="empty">駅は未選択</div>
+        </div>
+
+        <div class="panel-section">
+          <h3>履歴 (直近 7 日)</h3>
+          <ul id="history" class="history-list"></ul>
+        </div>
+
+        <div class="panel-section">
+          <button id="btn-next-day">→ 次の日へ</button>
+          <button id="btn-reset" class="ghost">最初からやり直す</button>
+        </div>
+      </aside>
+    </main>
+
+    <div id="toast" class="toast"></div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -104,5 +104,6 @@
 | 98 | meme-fuda | ミーム札 — シニア×家族で作る思い出ミームカード TUI | Python 3.10+/Textual 1.0/Rich/JSON | 35 |
 | 99 | tane-kawase | 種交わせ — 語学パートナーが種包を交わす CLI | Python 3.10+/Rich 13/argparse/JSON | 42 |
 | **100** | **denshou-bako** | **🎏 伝承箱 — シニアの仕事の知恵を Raspberry Pi で 10 年残す枕元の箱** | Python 3.10+/Rich 13/Raspberry Pi/espeak-ng | 41 |
+| 101 | chika-channel | 地下チャンネル — 動画を地下鉄路線図として育てる中毒系ブラウザゲーム | Bun 1.x/TypeScript/SVG/vanilla | 45 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

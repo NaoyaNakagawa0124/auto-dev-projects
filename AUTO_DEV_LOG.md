@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 04:55 | Total apps: 100 | Total tests: 13,982
+> Last updated: 2026-05-17 05:30 | Total apps: 101 | Total tests: 14,027
 
 ## Quick Overview
 
@@ -106,6 +106,7 @@
 | 98 | [meme-fuda](#meme-fuda) | ミーム札 — シニア×家族で作る思い出ミームカード TUI | Python 3.10+/Textual 1.0/Rich/JSON | 35 | complete | `pip install -e . && meme-fuda` |
 | 99 | [tane-kawase](#tane-kawase) | 種交わせ — 語学パートナーが種包を交わす CLI | Python 3.10+/Rich 13/argparse/JSON | 42 | complete | `pip install -e . && tane-kawase demo` |
 | **100** | [**denshou-bako**](#denshou-bako) | **🎏 伝承箱 — シニアの知恵を Pi で 10 年残す枕元の箱** | Python 3.10+/Rich 13/Raspberry Pi/espeak-ng/arecord | 41 | complete | `pip install -e . && denshou demo && denshou book ./demo-recordings` |
+| 101 | [chika-channel](#chika-channel) | 地下チャンネル — 動画を地下鉄路線図として育てる中毒系ブラウザゲーム | Bun 1.x/TypeScript/SVG/vanilla | 45 | complete | `bun install && bun run dev` |
 
 ---
 
@@ -5041,3 +5042,61 @@ denshou record --backend pi --out ~/recordings --loop
 - 「言わなくていい問い」 のユーザー除外設定
 - 録音 E2E 暗号化 (10 年後の家族のみ passphrase で開封可)
 - 知恵帳 HTML のカテゴリ密度 sparkline
+
+---
+
+### <a id="chika-channel"></a>101. chika-channel - 2026-05-17 05:30
+
+**What is this?**
+駆け出しの YouTuber/TikToker が、 動画を 1 本 = 1 駅、 ジャンル = 1 路線として **地下鉄路線図そのもの** に育てていく Bun ベースの中毒系ブラウザゲーム。 1 日 4 秒のテンポで時間が流れ、 視聴者点が線を流れて登録者数を伸ばす。 夜のアクションフェーズで駅を追加・接続・更新。 毎週ランダムなアルゴリズム天候 (Vlog 季節、 ショート嵐、 サムネ戦争、 アルゴリズム再構成 etc.) が路線図を揺らす。 「時間を忘れる」 だけが評価軸 (Intent 5)。
+
+**Discovery Roll**
+Source: 19 (Infrastructure / civil engineering / urban planning) | Persona: 4 (YouTuber / TikToker 志望) | Platform: 18 (Deno / Bun) | Intent: 5 (夢中にさせる — 時間を忘れるか)
+
+**Features Built**
+- 6 topic (料理 ○ / ゲーム □ / Vlog △ / 学び ✕ / 笑い ◇ / ショート ▽) × 専用 base_views と紙地下鉄図風パレット
+- SVG 路線図、 紙背景の薄罫線、 transfer 駅は二重丸、 vibe で半径変化、 age 14日以降は薄くなる
+- traffic シミュ: base × vibe × age_decay × line_bonus × weather × low_vibe_penalty、 transfer +50% + 登録者 +5/日
+- 7 種の algorithm weather: calm / vlog_season / gaming_chill / thumb_war / algo_reset / shorts_storm / edu_renaissance
+- 1 日 4 秒のアニメーション、 view counter が ease-out で滑らかに伸びる、 夜は AP 制 (1-6、 登録者で増)
+- チェックポイント解放 (1k / 10k / 100k 登録者で 新トピック・新タイプ駅) + トースト通知
+- localStorage 自動 save / load、 `/api/leaderboard` の in-memory POST/GET
+- `bun build` で client TS を bundle、 server は Bun.serve 直書き
+
+**Tech Stack**
+Bun 1.3.x / TypeScript / Vanilla TS + SVG クライアント / `bun build --target browser` でバンドル / `bun:test` で全テスト / localStorage save / in-memory leaderboard
+
+**Key Files**
+```
+chika-channel/
+├── src/
+│   ├── game/             # 純ロジック (rng, topics, network, weather, traffic, game, save)
+│   ├── server/index.ts   # Bun.serve + static + /api/leaderboard
+│   └── client/app.ts     # SVG レンダラ + day/night loop + HUD
+├── public/               # index.html / style.css / app.js (bundled)
+└── tests/                # topics 5 / network 9 / traffic 8 / weather 7 / game 5 / save 4 / server 7
+```
+
+**How to Run**
+```bash
+cd chika-channel
+bun install
+bun run dev                # builds client → starts http://localhost:5173
+bun test                   # 45 tests
+```
+
+**Tests**: 45 passing (topics 5 / network 9 / traffic 8 / weather 7 / game 5 / save 4 / server 7) | **Files**: 18 | **LOC**: ~1,850 | **Build time**: ~30 min
+
+**Challenges & Fixes**
+- `removeStation` がプルーニングした線の back-reference を残していた → `station.line_ids` から pruned_line_ids を Set でストリップするよう修正
+- URL parser が `/../` を正規化するので path-traversal テストの意味が薄かった → テスト期待値を「400 か 404 のどちらか」 に緩めて、 実セキュリティはファイルが public/ 外にないことで担保
+- 「50 日 advanceDay で 1000 登録者に届く」 テストが現実離れ → unlock 関数のテストは subs を直接設定して 1 回 advanceDay する形にし、 unlock フラグのトグルだけ確認
+- Bun の static は TS をブラウザに直に投げると text/plain になり実行不可 → `bun build --target browser` で client を bundle するように package.json に build スクリプト追加、 dev は build → serve の連鎖
+
+**Potential Next Steps**
+- 真のドラッグで線を引く UX (今は「接続」 ボタン後に 2 駅クリック)
+- 視聴者点が線に沿って流れるアニメーション (passenger dots) で 「視聴者が来ている」 を可視化
+- 競争モード — leaderboard を活用、 「30 日で何 k 届いた?」 を競う
+- モバイル縦レイアウト
+- 音響 (控えめに) — 駅追加 / 接続 / 天候変化
+- 「あなたの路線図への辛口コメント」 を AI で 1 ターン 1 回もらえるオプション
