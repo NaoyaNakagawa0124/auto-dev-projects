@@ -98,5 +98,6 @@
 | 92 | yasai-nikki | やさい日記 — 子どもの28日間野菜観察アプリ | C/Raylib 5.5 | 101 |
 | 93 | gochisou-goyomi | ごちそう暦 — 世界の祝祭日メシ提案 TUI | Python/Textual 8 | 15 |
 | 94 | fukugyou-bubble | 副業バブル — 副業 idle クリッカーゲーム (Tauri) | Tauri 2/Rust/Vanilla JS | 43 |
+| 95 | ikitsugi | 息継ぎ — 効率厨ゲーマー向け呼吸ドット拡張機能 | Browser Extension MV3/Vanilla JS/Shadow DOM | 27 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

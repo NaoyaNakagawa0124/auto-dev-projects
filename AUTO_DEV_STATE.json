@@ -1,5 +1,5 @@
 {
-  "apps_completed": 94,
+  "apps_completed": 95,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -567,6 +567,12 @@
       "persona": 33,
       "platform": 17,
       "intent": 5
+    },
+    {
+      "source": 35,
+      "persona": 7,
+      "platform": 5,
+      "intent": 4
     }
   ],
   "history": [
@@ -906,6 +912,16 @@
         "persona": 33,
         "platform": 17,
         "intent": 5
+      }
+    },
+    {
+      "name": "ikitsugi",
+      "completed": "2026-05-17T02:25:00Z",
+      "discovery_roll": {
+        "source": 35,
+        "persona": 7,
+        "platform": 5,
+        "intent": 4
       }
     }
   ]

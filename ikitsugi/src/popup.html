@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>息継ぎ</title>
+  <style>
+    :root {
+      --night: #0a0e1a;
+      --amber: #f5c84a;
+      --blue: #82c0ff;
+      --ink: #f1ead2;
+      --dim: rgba(241, 234, 210, 0.55);
+      --line: rgba(255,255,255,0.08);
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--night);
+      color: var(--ink);
+      width: 280px;
+      font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic UI", system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap { padding: 16px 16px 14px; }
+    h1 {
+      margin: 0 0 12px;
+      font-size: 14px;
+      letter-spacing: 0.16em;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    h1::before {
+      content: "";
+      width: 9px; height: 9px; border-radius: 50%;
+      background: var(--amber);
+      box-shadow: 0 0 10px rgba(245, 200, 74, 0.55);
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .stat {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+    .stat .num {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--amber);
+      letter-spacing: 0.04em;
+    }
+    .stat .lbl {
+      font-size: 10px;
+      color: var(--dim);
+      letter-spacing: 0.12em;
+    }
+    .picker { margin-bottom: 12px; }
+    .picker .lbl {
+      font-size: 10px;
+      color: var(--dim);
+      letter-spacing: 0.16em;
+      margin-bottom: 6px;
+    }
+    .patterns {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+    }
+    .patterns button {
+      appearance: none;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: var(--ink);
+      padding: 8px 4px;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: background 160ms, border-color 160ms;
+    }
+    .patterns button:hover { background: rgba(245, 200, 74, 0.08); }
+    .patterns button.on {
+      border-color: var(--amber);
+      background: rgba(245, 200, 74, 0.16);
+      color: var(--amber);
+    }
+    .toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-top: 1px solid var(--line);
+    }
+    .toggle .name { font-size: 12px; }
+    .toggle input { accent-color: var(--amber); }
+    .now {
+      display: block;
+      width: 100%;
+      margin-top: 12px;
+      padding: 11px 0;
+      border: 0;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--amber), #ffd97a);
+      color: #1a1408;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(245, 200, 74, 0.28);
+    }
+    .now:hover { filter: brightness(1.05); }
+    .now:disabled { opacity: 0.4; cursor: default; box-shadow: none; }
+    .foot {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--dim);
+      letter-spacing: 0.08em;
+    }
+    .foot a { color: var(--dim); text-decoration: none; }
+    .foot a:hover { color: var(--ink); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>息継ぎ</h1>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="num" id="num-today">0</div>
+        <div class="lbl">きょう</div>
+      </div>
+      <div class="stat">
+        <div class="num" id="num-streak">0</div>
+        <div class="lbl">連続日数</div>
+      </div>
+    </div>
+
+    <div class="picker">
+      <div class="lbl">パターン</div>
+      <div class="patterns" id="patterns">
+        <button type="button" data-p="f448">4-4-8</button>
+        <button type="button" data-p="box">ボックス</button>
+        <button type="button" data-p="r478">4-7-8</button>
+      </div>
+    </div>
+
+    <div class="toggle">
+      <span class="name">ドットを表示</span>
+      <label><input type="checkbox" id="enabled" /></label>
+    </div>
+
+    <button class="now" id="now" type="button">いま 60 秒</button>
+
+    <div class="foot">
+      <a href="#" id="open-options">詳細設定</a>
+      <span id="total-cycles">合計 0 サイクル</span>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

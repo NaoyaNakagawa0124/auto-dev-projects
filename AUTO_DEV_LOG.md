@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 01:50 | Total apps: 94 | Total tests: 13,746
+> Last updated: 2026-05-17 02:25 | Total apps: 95 | Total tests: 13,773
 
 ## Quick Overview
 
@@ -100,6 +100,7 @@
 | 92 | [yasai-nikki](#yasai-nikki) | やさい日記 — 子どもの28日間野菜観察アプリ | C/Raylib 5.5 | 101 | complete | `make && ./yasai-nikki` |
 | 93 | [gochisou-goyomi](#gochisou-goyomi) | ごちそう暦 — 世界の祝祭日メシ提案 TUI | Python/Textual 8 | 15 | complete | `pip install -e . && gochisou-goyomi` |
 | 94 | [fukugyou-bubble](#fukugyou-bubble) | 副業バブル — 副業 idle クリッカーゲーム (Tauri) | Tauri 2/Rust/Vanilla JS | 43 | complete | `cd src && python3 -m http.server 8000` |
+| 95 | [ikitsugi](#ikitsugi) | 息継ぎ — 効率厨ゲーマー向け呼吸ドット拡張機能 | Browser Extension MV3/Vanilla JS/Shadow DOM | 27 | complete | Load unpacked from `ikitsugi/src/` in `chrome://extensions` |
 
 ---
 
@@ -4628,3 +4629,63 @@ cd .. && node --test "tests/*.test.mjs"  # 17 tests
 - ¥10M 達成時間のリーダーボード
 - バイラル種類の拡張 (税制改正イベント、円安円高イベント)
 - リプレイ機能 — ¥1K → ¥10M までのタイムラインをチャート表示
+
+---
+
+### <a id="ikitsugi"></a>95. ikitsugi - 2026-05-17 02:25
+
+**What is this?**
+全ページの隅で常に呼吸し続ける小さなドットを inject するブラウザ拡張機能 (Chrome/Firefox MV3)。クリックで 60 秒のガイドセッションに展開し、吸う/止める/吐く/止めるをリングと色 (amber↔blue) で誘導する。効率厨ゲーマーが画面に集中しすぎて呼吸を忘れる問題に、「邪魔しないけど確かに居る」存在で寄り添う。
+
+**Discovery Roll**
+Source: 35 (デベロッパーツール) | Persona: 7 (効率厨のゲーマー) | Platform: 5 (Browser extension Chrome/Firefox MV3) | Intent: 4 (そっと寄り添う — 癒し / 静か)
+
+**Features Built**
+- 3 パターンの呼吸 (4-4-8 / box / 4-7-8) を `phaseAt` / `fullnessAt` / `colorAt` で計算
+- Shadow DOM (closed) で content script を全 CSS 干渉から完全隔離
+- 60 秒ガイドセッション (リング拡縮 + フェーズラベル + 残り秒数 + プログレスバー)
+- フルスクリーン / 大画面動画 (画面 60% 以上占有) 検出で自動的に opacity:0
+- 統計 (今日のセッション、連続日数 streak、累計サイクル)、`chrome.storage.local` 永続化
+- popup (今日/連続/パターン/表示 ON-OFF/「いま 60 秒」) と options (位置、サイズ 18-48px、ラベル、邪魔しない設定、統計リセット)
+
+**Tech Stack**
+Manifest V3 / Vanilla JS (ES2022) / Shadow DOM / chrome.storage.local / chrome.runtime messaging / node:test — 依存ゼロ
+
+**Key Files**
+```
+ikitsugi/
+├── src/
+│   ├── manifest.json
+│   ├── content.js          # 呼吸ドット (Shadow DOM, IIFE, 自前で breath ロジックを mirror)
+│   ├── background.js       # session-complete → stats accumulator
+│   ├── popup.html/.js
+│   ├── options.html/.js
+│   ├── icons/              # 16/32/48/128 px
+│   └── modules/breath.js, stats.js, settings.js   # 副作用ゼロ logic
+└── tests/                  # breath/stats/settings/smoke
+```
+
+**How to Run**
+```bash
+# 拡張機能を読み込む
+# chrome://extensions → デベロッパーモード ON → 「パッケージ化されていない拡張機能を読み込む」
+# → ikitsugi/src/ を選択
+
+# テスト
+cd ikitsugi && node --test "tests/*.test.mjs"
+```
+
+**Tests**: 27 passing (breath 12 / stats 7 / settings 6 / smoke 2) | **Files**: 19 | **LOC**: ~1,560 | **Build time**: ~35 min
+
+**Challenges & Fixes**
+- Content scripts は ES module をシンプルには使えない → `src/modules/breath.js` のロジックを `content.js` に inline で mirror。テストでは module 版を別途検証して同期を担保。
+- 任意のページの CSS が拡張機能の見た目を壊す → Shadow DOM (closed) + `:host { all: initial }` で完全リセット。
+- ゲーマーがフルスクリーン中に邪魔されたくない → `document.fullscreenElement` と `<video>` の占有率検出 (>=60%) で自動的に opacity:0、`visibilitychange` でも非表示。
+- smoke test のため最小 DOM スタブで innerHTML を解析するのは大袈裟 → `querySelector` を常に新規スタブ要素を返す形にし、IIFE 初期化が例外を投げないことだけを担保。
+
+**Potential Next Steps**
+- 呼吸履歴のグラフ (recent N 日 trend) を options に追加
+- `chrome.alarms` で 20 分集中したらシステム通知「一息どう?」
+- ボイスガイド (Web Speech API: 「吸って」「吐いて」)
+- ユーザー定義パターン (吸 X / 止 Y / 吐 Z 秒)
+- 心拍計 / Apple Watch との連携 (将来)
