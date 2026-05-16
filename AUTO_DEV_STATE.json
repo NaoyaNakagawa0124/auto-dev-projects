@@ -1,5 +1,5 @@
 {
-  "apps_completed": 92,
+  "apps_completed": 93,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -555,6 +555,12 @@
       "persona": 22,
       "platform": 20,
       "intent": 6
+    },
+    {
+      "source": 27,
+      "persona": 6,
+      "platform": 3,
+      "intent": 2
     }
   ],
   "history": [
@@ -874,6 +880,16 @@
         "persona": 22,
         "platform": 20,
         "intent": 6
+      }
+    },
+    {
+      "name": "gochisou-goyomi",
+      "completed": "2026-05-17T01:10:00Z",
+      "discovery_roll": {
+        "source": 27,
+        "persona": 6,
+        "platform": 3,
+        "intent": 2
       }
     }
   ]

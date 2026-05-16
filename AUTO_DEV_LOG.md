@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 00:40 | Total apps: 92 | Total tests: 13,688
+> Last updated: 2026-05-17 01:10 | Total apps: 93 | Total tests: 13,703
 
 ## Quick Overview
 
@@ -98,6 +98,7 @@
 | 90 | [ryogae-kan](#ryogae-kan) | 両替勘 — 5秒勝負の値段感覚トレーニング | Rust+WASM/Vanilla JS | 23 | complete | `wasm-pack build --target web -d www/pkg && cd www && python3 -m http.server 8000` |
 | 91 | [eiga-ichiba](#eiga-ichiba) | 映画市場 — 2人で囲む映画株式投資ゲーム | C/Raylib 5.5 | 2,566 | complete | `make && ./eiga-ichiba` |
 | 92 | [yasai-nikki](#yasai-nikki) | やさい日記 — 子どもの28日間野菜観察アプリ | C/Raylib 5.5 | 101 | complete | `make && ./yasai-nikki` |
+| 93 | [gochisou-goyomi](#gochisou-goyomi) | ごちそう暦 — 世界の祝祭日メシ提案 TUI | Python/Textual 8 | 15 | complete | `pip install -e . && gochisou-goyomi` |
 
 ---
 
@@ -4494,3 +4495,66 @@ make test               # 101 件のユニットテスト
 - 季節を越えてアーカイブ — 完成した 1 シーズンを別ファイルに「卒業」、新シーズンを始める
 - 観察カード追加 — においや手触りなど五感系
 - 親子モード — 親と子が並べて観察を比較
+
+---
+
+### <a id="gochisou-goyomi"></a>93. gochisou-goyomi - 2026-05-17 01:10
+
+**What is this?**
+ごちそう暦 — 毎日外食するフーディーの「今日何食べる？」を、世界の文化暦から提案する Textual TUI。今日 (または近隣日) に祝祭を持つ国を 1 つ提示し、その国の伝統食をおすすめ。実食ログを 5 段階で記録、踏破国数とストリークを統計化。5/17 起動なら 🇳🇴 ノルウェー憲法記念日 → ホットドッグ・イ・ロンペ。
+
+**Discovery Roll**
+Source: 27 (Random holiday/cultural event today) | Persona: 6 (毎日外食するフーディー) | Platform: 3 (Python desktop / Textual TUI) | Intent: 2 (困ってる人を助ける — 毎日使える)
+
+**Features Built**
+- 81 件の文化暦エントリ — 50+ 国の国民祝日・宗教行事・食の日。料理の日本語＋現地語、入手難度 (家/店/専門店) ヒント付き
+- 今日のおすすめ画面 — 国旗・行事名・料理・由来・入手難度を 1 パネルに
+- ±3 日のフォールバック探索 — 該当日がなくても近隣から拾う
+- 14 日以内のリピート除外 — 同じ祝日が連続提案されないよう recent フィルタ
+- 暦画面 — 月単位で全祝日と料理を一覧、過去のログ評価も★で表示、前月/翌月切替
+- 統計画面 — 今年の踏破国 / 総記録数 / 平均★ / 連続記録 / 国別ランキング
+- 永続化 — `~/.gochisou-goyomi/state.json` (人読み可能 JSON、同日 commit は上書き、時系列ソート)
+- キーバインド — Ctrl+C 暦、Ctrl+S 統計、Ctrl+1〜5 評価記録 (priority=True で Input フォーカス中も有効)
+- 完全日本語UI + ターゲット言語の料理名併記
+- パスポート/レシート意匠の鮮やかなカラーパレット
+
+**Tech Stack**
+Python 3.10+ / Textual 8.2 / Rich 13 / pyproject.toml + setuptools / pytest
+
+**Key Files**
+```
+gochisou-goyomi/
+├── pyproject.toml
+├── src/gochisou_goyomi/
+│   ├── holidays.py      81 件の文化暦データ
+│   ├── calendar.py      ±3 日探索 / 月サマリ
+│   ├── state.py         Store / MealEntry / 統計
+│   └── app.py           TodayScreen / CalendarScreen / StatsScreen
+└── tests/test_calendar.py  15 件
+```
+
+**How to Run**
+```bash
+pip install -e .
+gochisou-goyomi
+# あるいは
+python3 -m gochisou_goyomi
+
+# テスト
+pytest                    # 15 passing
+```
+
+**Tests**: 15 passing | **Files**: 12 | **LOC**: ~900 (Python) | **Build time**: ~38 min
+
+**Challenges & Fixes**
+- Textual 8.x で `Static(Panel(...))` を直接渡すと描画失敗 → `Static(id=...)` を空で yield して `on_mount` で `update(panel)` を呼ぶパターンに統一
+- 致命的バグ: `_render` メソッド名が Textual Widget の内部メソッドと衝突して Panel が render_strips を呼ばれてクラッシュ → 描画ヘルパを `_build_panel` にリネーム
+- Input フォーカス中に screen binding が効かない問題 → c/s/1-5/q に Ctrl+ 修飾を追加し `priority=True` を付与
+- 同日の重複提案を避けるため `recent_holiday_ids(window=14)` を実装、毎日違う祝日に
+
+**Potential Next Steps**
+- 動的祝日 (旧正月・イースター) の計算
+- 実祝日カレンダー API 連携 (Holidays API)
+- 「近くで食べられる店」マップ連携
+- アレルギー・ベジ対応モード
+- 友人と踏破国マップを共有するモード
