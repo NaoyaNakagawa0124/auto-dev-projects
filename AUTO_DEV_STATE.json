@@ -1,5 +1,5 @@
 {
-  "apps_completed": 98,
+  "apps_completed": 99,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -591,6 +591,12 @@
       "persona": 36,
       "platform": 3,
       "intent": 7
+    },
+    {
+      "source": 21,
+      "persona": 34,
+      "platform": 2,
+      "intent": 7
     }
   ],
   "history": [
@@ -969,6 +975,16 @@
         "source": 5,
         "persona": 36,
         "platform": 3,
+        "intent": 7
+      }
+    },
+    {
+      "name": "tane-kawase",
+      "completed": "2026-05-17T04:25:00Z",
+      "discovery_roll": {
+        "source": 21,
+        "persona": 34,
+        "platform": 2,
         "intent": 7
       }
     }

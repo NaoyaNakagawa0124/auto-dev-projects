@@ -102,5 +102,6 @@
 | 96 | futari-yoho | 二人予報 — 共働き夫婦の判定しない気分予報 TUI | Python 3.10+/Textual 1.0/Rich/JSON | 42 |
 | 97 | kotoba-mado | 言葉の窓 — 365 日の語学旅をターミナルのステンドグラスに | Python 3.10+/Rich 13/argparse/JSON | 49 |
 | 98 | meme-fuda | ミーム札 — シニア×家族で作る思い出ミームカード TUI | Python 3.10+/Textual 1.0/Rich/JSON | 35 |
+| 99 | tane-kawase | 種交わせ — 語学パートナーが種包を交わす CLI | Python 3.10+/Rich 13/argparse/JSON | 42 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

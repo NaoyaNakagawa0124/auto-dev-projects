@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 03:55 | Total apps: 98 | Total tests: 13,899
+> Last updated: 2026-05-17 04:25 | Total apps: 99 | Total tests: 13,941
 
 ## Quick Overview
 
@@ -104,6 +104,7 @@
 | 96 | [futari-yoho](#futari-yoho) | 二人予報 — 共働き夫婦の判定しない気分予報 TUI | Python 3.10+/Textual 1.0/Rich/JSON | 42 | complete | `pip install -e . && futari-yoho` |
 | 97 | [kotoba-mado](#kotoba-mado) | 言葉の窓 — 365 日の語学旅をターミナルのステンドグラスに | Python 3.10+/Rich 13/argparse/JSON | 49 | complete | `pip install -e . && kotoba-mado demo && kotoba-mado year` |
 | 98 | [meme-fuda](#meme-fuda) | ミーム札 — シニア×家族で作る思い出ミームカード TUI | Python 3.10+/Textual 1.0/Rich/JSON | 35 | complete | `pip install -e . && meme-fuda` |
+| 99 | [tane-kawase](#tane-kawase) | 種交わせ — 語学パートナーが種包を交わす CLI | Python 3.10+/Rich 13/argparse/JSON | 42 | complete | `pip install -e . && tane-kawase demo` |
 
 ---
 
@@ -4884,3 +4885,74 @@ pytest -q                                       # 35 tests
 - ボイスメモ添付 (m4a を Card に紐付け、 再生)
 - 多人数 — 今は speaker/writer の 2 人だけ。 父・母・孫・親戚と複数登録可に
 - LINE 貼り付け用 OG 画像エクスポート (画像化サーバー → ローカル PIL レンダリング)
+
+---
+
+### <a id="tane-kawase"></a>99. tane-kawase - 2026-05-17 04:25
+
+**What is this?**
+語学を勉強中の二人が、 5-10 個のことばを「種包」 として `packet.json` で交わす CLI。 受け取った包を `plant` すると自分の畑 (ASCII art の野菜畑) にトピック別の列が一行ずつ伸びていく。 春菜 (新表現) / 夏野菜 (動詞) / 秋穀 (慣用句) / 冬根 (丁寧体) / 草花 (スラング) の 5 トピック × 専用作物グリフ (ψ ◯ ‖ ▽ ✿)。 採点しない、 マスター率を出さない、 ただ二人の交換の儀式そのものをツール化した、 Intent 7 の純度を最優先にした作品。
+
+**Discovery Roll**
+Source: 21 (Agriculture / sustainability) | Persona: 34 (語学を勉強中の人) | Platform: 2 (CLI Python) | Intent: 7 (誰かと一緒にやる — 2 人で開けるか)
+
+**Features Built**
+- 5 トピック × 専用作物グリフ + 自然色パレット (若草 / 朱赤 / 黄金 / 焦茶 / 薄紫)
+- 包 (Packet): JSON ファイル、 1-10 種、 送り主・受け取り手・言語・1-2 行の手紙
+- `pack` 対話モード、 `send` one-shot モード (`--seed "term|gloss|reading|example|note"`)
+- `open` (プレビュー)、 `plant` (畑に追加)、 `field` (ASCII farm)、 `stats` (数字)、 `harvest` (マスター化)、 `demo`
+- 畑は 1 トピック 1 行、 13 種以上は「+N」 で省略、 送り主の名前が右端に並ぶ
+- 「最近もらった / 最近送った / 交わした包の総数」 がフッターに常時表示
+
+**Tech Stack**
+Python 3.10+ / Rich 13.x / argparse / atomic JSON I/O / pytest + capsys / 依存ゼロのコア (topics / models / render / storage)
+
+**Key Files**
+```
+tane-kawase/
+├── src/tane_kawase/
+│   ├── cli.py           # argparse + 8 subcommands
+│   ├── render.py        # render_field / render_packet / render_stats
+│   ├── models.py        # Seed / Packet / Field (validated)
+│   ├── storage.py       # atomic JSON I/O for field & packet
+│   └── topics.py        # 5 topics (key/name/glyph/color)
+└── tests/               # topics 7 / models 10 / storage 6 / render 6 / cli 13
+```
+
+**How to Run**
+```bash
+cd tane-kawase && pip install -e .
+
+# 一人で雰囲気を見る
+tane-kawase --field /tmp/me.json demo --name "ちあき"
+tane-kawase --field /tmp/me.json field
+
+# 友人へ包を渡す
+tane-kawase --field /tmp/me.json send \
+    --name "週末の動詞" --topic natsu_yasai --out /tmp/p.json \
+    --sender "ちあき" --receiver "りん" --language en \
+    --letter "りんへ" \
+    --seed "hang out|だらだら過ごす|hæŋ aʊt|We hung out at the park.|よく使う"
+
+# 友人から受け取った包を植える
+tane-kawase plant ~/Downloads/p.json
+
+# テスト
+pytest -q                                       # 42 tests
+```
+
+**Tests**: 42 passing (topics 7 / models 10 / storage 6 / render 6 / cli 13) | **Files**: 13 | **LOC**: ~1,420 | **Build time**: ~26 min
+
+**Challenges & Fixes**
+- 「ファイル交換 vs クラウド sync」 — Dropbox / Gist / S3 sync を組み込もうかと一瞬考えたが、 ユーザーがどこ経由で渡すかに介入しない方が儀式が壊れない。 LINE / メール / USB / Slack — どこからでも `plant` できる設計を維持。
+- 対話モード (`pack`) はテストしづらい — `console.input()` が stdin を読むため、 同等機能を `send` (one-shot) として実装し、 テストは `send` 経由で書いた。 `pack` は人間用 UX。
+- 作物色が黒背景で見にくい — Rich のデフォルト color_system で確認、 若草と焦茶が暗く沈んでいたので、 黄金と朱赤を強めにして明度差を確保。
+- 「種を集める」 のではなく 「種を交わす」 — 単語帳系アプリは「自分のコレクション」 を膨らませる方向に行きがちだが、 Intent 7 を守るため 「送った量 vs 受けた量」 を同列に並べた statsにし、 「友人がいないと帳が育たない」 構造にした。
+
+**Potential Next Steps**
+- `field --lang en` で言語ごとの畑フィルタ
+- 「あなたとさくらが共通して持っている春菜」 ── 友人間の重なりを集計
+- 包の暗号化 — 受け取り手しか open できない passphrase 化
+- 「最後に交わしたのは 12 日前」 とフッターでそっと促すリマインド
+- 双方向ペアビュー — 英語学者の畑と日本語学者の畑を左右に並べる
+- 種の「枯れる」 機能 — 30 日触れないとアーカイブ送りで畑から消える (収穫したものはカウント永続)
