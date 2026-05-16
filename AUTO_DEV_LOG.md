@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 08:10 | Total apps: 106 | Total tests: 14,171
+> Last updated: 2026-05-17 08:40 | Total apps: 107 | Total tests: 14,199
 
 ## Quick Overview
 
@@ -112,6 +112,7 @@
 | 104 | [aisaji](#aisaji) | 相匙 — 管理職と相手の 90 秒夕飯くじ Vanilla Web | Vanilla HTML/CSS/ES Module/Vitest | 28 | complete | `npm i && python3 -m http.server` (open `/web/`) |
 | 105 | [sekai-wadaichou](#sekai-wadaichou) | 世界話題帳 — 就活生のための深夜の地球儀 Textual TUI | Python 3.10+/Textual 1.0/pytest-asyncio | 31 | complete | `pip install -e ".[test]" && sekai-wadaichou` |
 | 106 | [kyuufu](#kyuufu) | 休符 — 効率厨ゲーマーの「もう十分」 Discord bot | Python 3.10+/discord.py 2.7/pytest | 49 | complete | `pip install -e ".[test]" && DISCORD_TOKEN=... kyuufu` |
+| 107 | [asu-no-eki](#asu-no-eki) | 明日の駅 — 1 時間通勤者の山手線 30 駅 dashboard FastAPI | Python 3.10+/FastAPI 0.136/Jinja2/Vanilla JS | 28 | complete | `pip install -e ".[test]" && asu-no-eki` |
 
 ---
 
@@ -5409,3 +5410,66 @@ kyuufu                              # Discord に接続
 - 効率厨向けの「最適化された休符」 — REM サイクル目安など、 数字を出すけど煽らない使い方
 - Voice Channel に「やすみ用音楽」 を 1 曲だけ流す機能 (静かなアンビエント)
 - 12 ヶ月分の cultural event を倍に拡張、 北半球/南半球の切り替え
+
+---
+
+### <a id="asu-no-eki"></a>107. asu-no-eki - 2026-05-17 08:40
+
+**What is this?**
+1 時間電車通勤する会社員のための、 山手線 30 駅 × 都市計画イベントを 1 駅 3-4 件 (合計 80 件) まとめた FastAPI dashboard。 ブラウザを開くと「今日の一駅」 が日付 (YYYY-MM-DD) を seed にして deterministic に選ばれ、 その駅で進行中の再開発 / OPEN / 工事 / 交通改良 / 閉鎖が 1 行ずつ表示される。 30 日で全駅一周。 通勤の窓越しに見える駅が 5 年後にどう変わるのか、 「ただ移動するだけの 1 時間」 を「明日の街を知る 1 時間」 に変える静かな実用ツール。 streak も「今日も訪問」 のプレッシャーも無し。
+
+**Discovery Roll**
+Source: 19 (Infrastructure / civil engineering / urban planning) | Persona: 19 (電車通勤 1 時間の会社員) | Platform: 13 (API service + dashboard / FastAPI) | Intent: 2 (困ってる人を助ける — 翌日も開きたくなるか)
+
+Source と Persona が両方 19 という偶然 — infrastructure を作る側と乗る側は同じものを別角度で見ているという気付きから、 「変化の側 (infrastructure)」 を「乗る側 (通勤者)」 に届ける構造にした。
+
+**Features Built**
+- 山手線 30 駅 (時計回り、 ring_index 0-29) を環状図 SVG で配置、 client-side レンダリング
+- 1 日 1 駅、 `date.toordinal() % 30` で deterministic に選ばれる「今日の一駅」
+- 5 種類の event type (redev / open / close / transit / construction)、 カラータグで視認性確保
+- API endpoints: `/healthz`、 `/api/stations`、 `/api/stations/{id}`、 `/api/today`、 `/`
+- HTML dashboard: 「今日の一駅」 + 環状図 + 駅クリックで右ペイン詳細
+- 禁止語監査 (「絶対」 「必ず」 「驚愕」 「衝撃」 「ヤバい」 「神レベル」 「最強」 「革命的」 「今すぐ訪問」 「毎日チェック」) を pytest で全 blurb に対して audit
+- 公開情報ベース + 一部創作、 README で「2026 年 5 月時点で公知の情報をベースに」 と明記
+
+**Tech Stack**
+Python 3.10+ / FastAPI 0.136 / uvicorn / Jinja2 3.1 / Vanilla JS / SVG / 標準ライブラリ / 純ロジック (stations / rotator) は src/asu_no_eki/ に分離、 server.py は薄いラッパー / pytest + FastAPI TestClient + httpx で 28 テスト
+
+**Key Files**
+```
+asu-no-eki/
+├── src/asu_no_eki/
+│   ├── stations.py        # 30 駅 × 80+ events + BANNED_WORDS
+│   ├── rotator.py         # today_station(date) + station_for_offset
+│   └── server.py          # FastAPI app + Jinja2 templates
+├── templates/index.html   # Jinja2 + SVG + 3 ペイン
+├── static/
+│   ├── style.css          # 紙 / 墨 / 鈍金 / 朝色
+│   └── app.js             # client-side SVG レンダリング + fetch
+└── tests/                 # 3 files / 28 tests
+```
+
+**How to Run**
+```bash
+cd asu-no-eki
+pip install -e ".[test]"
+pytest                          # 28 tests
+asu-no-eki                      # uvicorn で起動
+# http://localhost:8000/
+```
+
+**Tests**: 28 passing (stations 12 / rotator 6 / api 10) | **Files**: 12 source | **LOC**: ~919 | **Build time**: ~28 min
+
+**Challenges & Fixes**
+- **FastAPI 0.136 + Starlette の TemplateResponse シグネチャ変更**: 新版で `TemplateResponse` の第 1 引数が context dict から request になっていた。 古いシグネチャ `TemplateResponse("index.html", {"request": ..., ...})` を使うと「unhashable type: 'dict'」 が cache key 解決時に発生。 新シグネチャ `TemplateResponse(request, "index.html", {...})` に修正
+- **Jinja2 で sin / cos が無い**: テンプレート内で SVG dot を配置しようとしたが、 Jinja2 にはデフォルトで cos / sin フィルタが無い。 client-side (app.js) で SVG dot 配置する方式に切り替え、 template から SVG ループを撤去。 これでデータと表現が分離、 メンテも楽になった
+- **80 イベントを書くトーン管理**: 「絶対」 「驚愕」 「ヤバい」 のような煽り語が混入しないよう、 BANNED_WORDS を test で全 blurb に対して audit
+- **公開情報と創作のバランス**: 高輪ゲートウェイ、 リニア中央新幹線、 八重洲三丁目、 渋谷サクラステージ など公知の再開発計画をベースに、 細部は「2026 年 5 月時点で公知」 のディスクレーマー付きで埋めた
+
+**Potential Next Steps**
+- 中央線・京王線・小田急など、 他路線への拡張 (stations.py のスキーマはそのまま使える)
+- 「明日訪問予定の駅」 を localStorage に保存、 該当駅の events を朝にプッシュ
+- event の type フィルタ (「再開発だけ」 「工事だけ」)
+- マップ統合 (Leaflet で実際の駅座標と紐付け)
+- 駅周辺の現在の写真 (Google Street View deep link)
+- 「今週通る駅」 を 7 駅ピックアップする週ビュー

@@ -1,5 +1,5 @@
 {
-  "apps_completed": 106,
+  "apps_completed": 107,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -1076,6 +1076,17 @@
         "persona": 7,
         "platform": 8,
         "intent": 4
+      }
+    },
+    {
+      "name": "asu-no-eki",
+      "completed": "2026-05-17T08:40:00Z",
+      "discovery_roll": {
+        "source": 19,
+        "persona": 19,
+        "platform": 13,
+        "intent": 2,
+        "note": "source/persona both rolled 19 — same number from different sides of the same coin"
       }
     }
   ]

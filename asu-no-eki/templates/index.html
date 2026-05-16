@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#faf6ee" />
+  <title>明日の駅 — 山手線 30 駅の都市計画</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <main class="layout">
+    <header>
+      <div class="brand">明日の駅</div>
+      <div class="sub dim">山手線 30 駅 &middot; 通勤の窓越しの 1 行</div>
+      <div class="today-date dim">{{ today }}</div>
+    </header>
+
+    <section class="today">
+      <div class="today-label dim">今日の一駅</div>
+      <div class="today-name">{{ today_station.jp }}</div>
+      <div class="today-kana dim">{{ today_station.kana }}</div>
+      <ul class="today-events">
+        {% for ev in today_station.events %}
+          <li>
+            <span class="ev-date">{{ ev.year }}.{{ "%02d"|format(ev.month) }}</span>
+            <span class="ev-type tag t-{{ ev.type }}">{{ {"redev":"再開発","open":"OPEN","close":"閉鎖","transit":"交通","construction":"工事"}[ev.type] }}</span>
+            <span class="ev-blurb">{{ ev.blurb }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <section class="ring-wrap">
+      <svg id="ring" viewBox="-110 -110 220 220" role="img" aria-label="山手線環状図">
+        <circle cx="0" cy="0" r="90" fill="none" stroke="#9aaab8" stroke-width="2.5"
+                stroke-dasharray="2,4" />
+        <!-- Station dots and labels are inserted by app.js -->
+      </svg>
+      <script type="application/json" id="ring-data">{{ stations | tojson }}</script>
+      <script type="application/json" id="today-id">"{{ today_station.id }}"</script>
+    </section>
+
+    <section class="detail">
+      <h3 class="dim small">駅 詳細</h3>
+      <div id="detail-name">クリックで 駅 を 選んで ください</div>
+      <ul id="detail-events"></ul>
+    </section>
+
+    <footer class="dim">
+      毎朝 1 駅、 通勤の楽しみを少しだけ。
+    </footer>
+  </main>
+  <script src="/static/app.js" defer></script>
+</body>
+</html>
