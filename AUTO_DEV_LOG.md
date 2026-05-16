@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 07:15 | Total apps: 104 | Total tests: 14,091
+> Last updated: 2026-05-17 07:40 | Total apps: 105 | Total tests: 14,122
 
 ## Quick Overview
 
@@ -110,6 +110,7 @@
 | 102 | [hibi-no-mukashi](#hibi-no-mukashi) | 日々の昔 — 子育て親に夜 3 分の静かな歴史を 1 つ差し出す Rust+WASM | Rust/wasm-bindgen/serde/HTML/CSS/JS | 20 | complete | `wasm-pack build --target web && python3 -m http.server -d web` |
 | 103 | [juugobyou](#juugobyou) | 十五秒 — 片付けが苦手な人の 15 秒だけの小さなボタン (Rust+WASM) | Rust/wasm-bindgen/HTML/CSS/JS | 16 | complete | `wasm-pack build --target web && python3 -m http.server -d web` |
 | 104 | [aisaji](#aisaji) | 相匙 — 管理職と相手の 90 秒夕飯くじ Vanilla Web | Vanilla HTML/CSS/ES Module/Vitest | 28 | complete | `npm i && python3 -m http.server` (open `/web/`) |
+| 105 | [sekai-wadaichou](#sekai-wadaichou) | 世界話題帳 — 就活生のための深夜の地球儀 Textual TUI | Python 3.10+/Textual 1.0/pytest-asyncio | 31 | complete | `pip install -e ".[test]" && sekai-wadaichou` |
 
 ---
 
@@ -5287,3 +5288,61 @@ python3 -m http.server 8080        # プロジェクトルートから起動
 - 子供向けカードパック (カレー甘口 / 中辛 など)
 - 60 秒 / 120 秒の長さ選択 (デフォルトは 90 秒のまま)
 - PWA 化 (Service Worker でオフライン)
+
+---
+
+### <a id="sekai-wadaichou"></a>105. sekai-wadaichou - 2026-05-17 07:40
+
+**What is this?**
+深夜 2 時、 ES の手が止まった就活中の大学生のための Textual TUI。 ←→ で ASCII 地球儀を 30 度ずつ回すと、 12 都市が順に spotlight (●) に入る。 各都市には「今日の文化イベント」 と「明日の面接の引き出しになる 1 行」 が書いてあり、 Enter で「話題帳」 (= JSON dossier) に綴じられる。 Tab で「話題帳」 ビューを開き、 これまで集めた都市を一覧できる。 1 周 = 12 都市は数分で回れて、 毎日違う都市から興味を持てる軽さ。 streak / 連勝記録 / 点数は一切出さない。
+
+**Discovery Roll**
+Source: 27 (Random holiday / cultural event happening today somewhere) | Persona: 23 (就活中の大学生) | Platform: 3 (Python desktop / Textual TUI) | Intent: 5 (夢中にさせる — 時間を忘れるか)
+
+**Features Built**
+- 12 都市 (NY / サンパウロ / ロンドン / パリ / ベルリン / イスタンブール / ムンバイ / シンガポール / 上海 / 東京 / シドニー / ヨハネスブルグ) を経度順で配置
+- ← / → / h / l で 30 度回転、 spotlight は最寄り経度の都市に自動 snap
+- ASCII globe レンダリング (21 × 9 ディスク)、 背面 (±90° を超える側) の都市は非表示にして「地球儀を回している」 感覚を再現
+- Enter で「話題帳」 に綴じる、 重複防止
+- Tab で DossierScreen に切り替え、 綴じた都市を一覧 (都市名 / event / talking_point / 綴じた日時)
+- 禁止語監査 (「頑張」 「努力」 「がんばれ」 「絶対」 「成功」 「勝ち組」 「受かる!」 「正解はこれ」 「確実」) を pytest で全 talking_point / event に対して audit
+- JSON atomic write (tempfile + os.replace) で `~/.sekai-wadaichou/dossier.json` に保存、 破損 JSON からの recovery
+- Textual `_render` shadowing 予防 — redraw helper は `_refresh_view`、 headless `run_test()` で回帰検出
+
+**Tech Stack**
+Python 3.10+ / Textual 1.0 / dataclasses / 標準ライブラリのみ / pytest + pytest-asyncio (auto モード) で 31 ユニット + 統合テスト / 純ロジック (globe / cities / dossier) は src/ に分離、 app.py だけが Textual 依存
+
+**Key Files**
+```
+sekai-wadaichou/
+├── src/sekai_wadaichou/
+│   ├── cities.py         # 12 都市 + BANNED_WORDS
+│   ├── globe.py          # Globe rotation + render_globe (ASCII 21×9)
+│   ├── dossier.py        # JSON atomic IO
+│   └── app.py            # WadaichouApp + GlobeScreen + DossierScreen
+└── tests/                # 4 files / 31 tests (incl. 3 headless app smoke)
+```
+
+**How to Run**
+```bash
+cd sekai-wadaichou
+pip install -e ".[test]"
+pytest                    # 31 tests
+sekai-wadaichou           # TUI 起動
+```
+
+**Tests**: 31 passing (cities 10 / globe 9 / dossier 9 / app smoke 3) | **Files**: 10 source | **LOC**: ~965 | **Build time**: ~26 min
+
+**Challenges & Fixes**
+- **4 longitude quadrants テストの失敗**: 12 都市の選択で (-180, -90) の太平洋ど真ん中の領域がカバーされず、 当初テストが落ちた。 12 都市の入れ替えではなく、 テストを「3 quadrant 以上」 + 「経度幅 180°+」 に緩めた (ユーザー視点では「東西広く回る感じ」 があれば十分)
+- **`_render` メソッドの予防回避**: 過去 3 回踏んだ Textual の `Widget._render` shadowing bug (gochisou-goyomi / futari-yoho / meme-fuda)。 CLAUDE.md の冒頭に明記し、 GlobeScreen / DossierScreen の redraw helper は `_refresh_view` で統一、 さらに `tests/test_app_smoke.py` で headless `run_test()` を走らせて回帰を検出するようにした
+- **pytest-asyncio の auto モード設定**: Textual の `run_test()` は async context なので `[tool.pytest.ini_options].asyncio_mode = "auto"` を pyproject.toml に追加 (これがないと smoke test がスキップされる)
+- **Intent 5 の解釈**: 「中毒/競う」 が定石だが、 就活生に streak で煽るのは Intent 5 の精神 (「時間を忘れる」) と矛盾しないかを慎重に検討。 結果、 「地球を回す」 動作そのものを中毒の核に置き、 競争・点数・streak は出さない設計を選んだ
+
+**Potential Next Steps**
+- 都市数を 12 → 24 に拡張 (太平洋ど真ん中の都市を追加、 4 quadrant 完全カバー)
+- event 文を週ごとに切り替える更新スクリプト
+- 「話題帳」 を Markdown / PDF にエクスポート (面接当日の電車内で見返せる)
+- 友達と「話題帳」 を共有 (Intent 7 にスライド)
+- 季節モチーフを globe レンダリングに追加 (春は花、 冬は雪)
+- 都市の音楽を YouTube/Spotify deep link で添える

@@ -1,5 +1,5 @@
 {
-  "apps_completed": 104,
+  "apps_completed": 105,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -1056,6 +1056,16 @@
         "platform": 1,
         "intent": 7,
         "note": "original platform 14 (Godot) rerolled to 1 — no godot binary available"
+      }
+    },
+    {
+      "name": "sekai-wadaichou",
+      "completed": "2026-05-17T07:40:00Z",
+      "discovery_roll": {
+        "source": 27,
+        "persona": 23,
+        "platform": 3,
+        "intent": 5
       }
     }
   ]

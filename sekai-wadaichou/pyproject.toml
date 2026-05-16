@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sekai-wadaichou"
+version = "0.1.0"
+description = "世界話題帳 — 就活生のための深夜の地球儀 (Textual TUI)"
+requires-python = ">=3.10"
+dependencies = [
+  "textual>=1.0",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8", "pytest-asyncio>=0.23"]
+
+[project.scripts]
+sekai-wadaichou = "sekai_wadaichou.app:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+asyncio_mode = "auto"
