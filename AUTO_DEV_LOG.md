@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-16 15:35 | Total apps: 89 | Total tests: 10,998
+> Last updated: 2026-05-16 16:05 | Total apps: 90 | Total tests: 11,021
 
 ## Quick Overview
 
@@ -95,6 +95,7 @@
 | 87 | [bungou-reki](#bungou-reki) | 文豪暦 — 文学暦カードバトル (Tauri) | Tauri 2/Rust/Vanilla JS | 36 | complete | `cd src && python3 -m http.server 8000` |
 | 88 | [madori-zukan](#madori-zukan) | 間取り図鑑 — アニメの家を物件カタログにする PWA | PWA/Vanilla JS/SVG | 16 | complete | `python3 -m http.server 8000` |
 | 89 | [hoshi-yomi](#hoshi-yomi) | 星詠み — 星座をなぞって語彙を覚える夜空ゲーム | Godot 4/GDScript | 238 | complete | `godot --path .` |
+| 90 | [ryogae-kan](#ryogae-kan) | 両替勘 — 5秒勝負の値段感覚トレーニング | Rust+WASM/Vanilla JS | 23 | complete | `wasm-pack build --target web -d www/pkg && cd www && python3 -m http.server 8000` |
 
 ---
 
@@ -4296,3 +4297,72 @@ python3 tests/validate.py
 - 12 個解放後の「次の章」、25 個・50 個と段階的に
 - 完成した夜空を PNG にエクスポート (Viewport rendering)
 - ドラッグの軌跡を流れ星のように残す演出
+
+---
+
+### <a id="ryogae-kan"></a>90. ryogae-kan - 2026-05-16 16:05
+
+**What is this?**
+両替勘 — 海外旅行の値段感覚を 5 秒で鍛える Rust+WASM Webゲーム。€38 / ₹4500 / ₩12000 / ฿420 が次々提示され「安い / 妥当 / 高い」を即判定。連続正解でストリークが伸び、難しい通貨が解放される。電卓を使わず指で覚えるまで遊ぶ系の中毒ゲーム。
+
+**Discovery Roll**
+Source: 33 (Hacker News) | Persona: 9 (海外一人旅中の旅行者) | Platform: 10 (Rust+WASM) | Intent: 5 (夢中にさせる — ゲーム性/中毒/競う)
+
+**Features Built**
+- 15 通貨 (USD/EUR/KRW/CNY/GBP/AUD/THB/SGD/INR/VND/TWD/IDR/TRY/BRL/MXN) × 10 品目 (コーヒー/水/屋台メシ/タクシー/ホテル等) = 150 組み合わせ
+- 判定 5 秒、ストリーク 5/10/20/30+ で時間が 4.5→4.0→3.5→3.0 秒に短縮
+- ストリーク 0/5/10/15+ で通貨難度が解放 (簡単→難)
+- バケット式ラウンド生成 (33% 安い / 34% 妥当 / 33% 高い)、価格は通貨ごとの display_step で四捨五入
+- スコア = base 100 + 残り時間に比例した speed_bonus 10〜100
+- xorshift64 決定論 RNG
+- パスポート / スタンプ / レシート意匠 (ダーク紺パスポート、ベージュ和紙地、赤いスタンプ)
+- 円換算と参考価格を答え合わせ画面で開示
+- 数字キー 1/2/3 でも判定可能 (タップと併用)
+- 最高スコア・最高ストリークを localStorage に保存
+- 完全日本語UI、375px モバイル対応
+
+**Tech Stack**
+Rust 1.94 / wasm-bindgen 0.2.121 / serde + serde_json / getrandom (js feature) / Vanilla HTML+CSS+ES Modules / requestAnimationFrame タイマー駆動 / localStorage 永続化
+
+**Key Files**
+```
+ryogae-kan/
+├── Cargo.toml, Makefile
+├── src/
+│   ├── lib.rs                Engine (wasm_bindgen)
+│   ├── currencies.rs         15 通貨 + 難度
+│   ├── items.rs              10 品目
+│   ├── judge.rs              Verdict
+│   ├── rng.rs                xorshift64
+│   ├── round.rs              ラウンド生成
+│   └── game.rs               Game state + scoring
+└── www/
+    ├── index.html / style.css / app.js
+    └── pkg/                  wasm-pack 出力 (38KB wasm + 7.6KB js)
+```
+
+**How to Run**
+```bash
+wasm-pack build --target web --out-dir www/pkg --release
+cd www && python3 -m http.server 8000
+# http://localhost:8000
+
+# テスト
+cargo test  # 23 tests
+```
+
+**Tests**: 23 passing | **Files**: 17 | **LOC**: ~1,000 (Rust ~500 + frontend ~500) | **WASM size**: 38KB release | **Build time**: ~24 min
+
+**Challenges & Fixes**
+- 通貨ごとの桁感を表現するため display_step (USD=1, KRW=100, VND=1000, IDR=500) を導入。価格を step 単位で四捨五入し「異国の値札らしい」桁にする
+- バケット式 (cheap/fair/expensive のどれを引くか先に決めてから ratio を生成) でラウンドの偏りを抑制
+- スコアにテンポ感を持たせるため speed_bonus を導入 — 同じ正解でも素早いほうが点が高い
+- 為替レートはハードコード。練習目的なので厳密な精度より体験を優先
+
+**Potential Next Steps**
+- AudioContext で判定音、背景に空港アンビエント
+- 実 API (exchangerate.host) から起動時にレートをフェッチ
+- フレーバーテキスト「今あなたは バンコク にいる」で没入感
+- 品目もストリークで解放 (医療費、航空券等の高額品目)
+- リーダーボード (Cloudflare Workers)
+- 教育モード (時間制限なし、ヒント表示あり)

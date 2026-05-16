@@ -1,5 +1,5 @@
 {
-  "apps_completed": 89,
+  "apps_completed": 90,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -537,6 +537,12 @@
       "persona": 34,
       "platform": 14,
       "intent": 1
+    },
+    {
+      "source": 33,
+      "persona": 9,
+      "platform": 10,
+      "intent": 5
     }
   ],
   "history": [
@@ -826,6 +832,16 @@
         "persona": 34,
         "platform": 14,
         "intent": 1
+      }
+    },
+    {
+      "name": "ryogae-kan",
+      "completed": "2026-05-16T16:05:00Z",
+      "discovery_roll": {
+        "source": 33,
+        "persona": 9,
+        "platform": 10,
+        "intent": 5
       }
     }
   ]

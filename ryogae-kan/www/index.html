@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#f1ead2">
+  <title>両替勘 — ryogae-kan</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="stamp-bg"></div>
+
+  <main id="app">
+    <!-- Title -->
+    <section id="screen-title" class="screen is-active">
+      <div class="title-block">
+        <div class="passport">
+          <div class="passport-emboss">RYOGAE-KAN</div>
+          <h1 class="title">両替勘</h1>
+          <p class="title-sub">海外旅行の値段感覚を、5 秒で鍛える</p>
+          <div class="passport-stamp">PASSPORT</div>
+        </div>
+        <button id="btn-start" class="btn-primary">出発する</button>
+        <div class="howto">
+          <p>異国の値段が表示されます。<br>5 秒以内に <strong>安い / 妥当 / 高い</strong> を判定してください。</p>
+          <p class="muted">連続正解で通貨が解放されていきます。1 つでも間違えるとゲームオーバー。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Game -->
+    <section id="screen-game" class="screen">
+      <header class="hud">
+        <div class="hud-pill"><span class="lbl">ストリーク</span><span id="hud-streak" class="num">0</span></div>
+        <div class="hud-pill"><span class="lbl">スコア</span><span id="hud-score" class="num">0</span></div>
+        <div class="hud-pill ghost"><span class="lbl">最高</span><span id="hud-high" class="num">0</span></div>
+      </header>
+
+      <div class="stage">
+        <div class="receipt">
+          <div class="receipt-head">
+            <span class="receipt-flag" id="round-flag">🌐</span>
+            <span class="receipt-code" id="round-code">---</span>
+            <span class="receipt-currency-name" id="round-currency-name">通貨名</span>
+          </div>
+          <div class="item-line">
+            <span class="item-emoji" id="item-emoji">💱</span>
+            <span class="item-name" id="item-name">品目</span>
+          </div>
+          <div class="price-line">
+            <span class="price-symbol" id="price-symbol">¥</span>
+            <span class="price-amount" id="price-amount">0</span>
+          </div>
+          <p class="hint muted" id="round-hint">この値段、いくらだと思う？</p>
+        </div>
+
+        <div class="timer-wrap">
+          <svg viewBox="0 0 100 100" class="timer">
+            <circle cx="50" cy="50" r="44" stroke="#e5dcb9" stroke-width="6" fill="none"/>
+            <circle id="timer-arc" cx="50" cy="50" r="44" stroke="#c5342a" stroke-width="6" fill="none"
+              stroke-dasharray="276.46" stroke-dashoffset="0" stroke-linecap="round"
+              transform="rotate(-90 50 50)"/>
+          </svg>
+          <span id="timer-text" class="timer-text">5.0</span>
+        </div>
+
+        <div class="buttons">
+          <button data-choice="0" class="judge-btn cheap"><span class="key">1</span><span class="big">安い</span><span class="sub">&lt; 7 割</span></button>
+          <button data-choice="1" class="judge-btn fair"><span class="key">2</span><span class="big">妥当</span><span class="sub">7〜13 割</span></button>
+          <button data-choice="2" class="judge-btn expensive"><span class="key">3</span><span class="big">高い</span><span class="sub">&gt; 13 割</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reveal overlay -->
+    <div id="overlay-reveal" class="overlay hidden">
+      <div class="reveal-card" id="reveal-card">
+        <div class="reveal-verdict" id="reveal-verdict">正解</div>
+        <div class="reveal-row"><span>表示価格</span><span id="reveal-foreign"></span></div>
+        <div class="reveal-row"><span>円換算</span><span id="reveal-jpy"></span></div>
+        <div class="reveal-row"><span>参考価格</span><span id="reveal-ref"></span></div>
+        <div class="reveal-row"><span>正解</span><span id="reveal-correct"></span></div>
+      </div>
+    </div>
+
+    <!-- Game over -->
+    <section id="screen-over" class="screen">
+      <div class="gameover-block">
+        <div class="passport stamp-fail">
+          <div class="passport-emboss">END OF JOURNEY</div>
+          <h2>ゲームオーバー</h2>
+          <p class="muted" id="over-reason">時間切れ</p>
+          <div class="final-stats">
+            <div><span class="lbl">最終ストリーク</span><span id="over-streak" class="num">0</span></div>
+            <div><span class="lbl">スコア</span><span id="over-score" class="num">0</span></div>
+            <div><span class="lbl">最高ストリーク</span><span id="over-high-streak" class="num">0</span></div>
+            <div><span class="lbl">ベストスコア</span><span id="over-high-score" class="num">0</span></div>
+          </div>
+        </div>
+        <button id="btn-retry" class="btn-primary">もう一度旅に出る</button>
+        <button id="btn-home" class="btn-ghost">タイトルへ</button>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

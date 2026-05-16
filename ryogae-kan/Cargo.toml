@@ -1,0 +1,20 @@
+[package]
+name = "ryogae-kan"
+version = "0.1.0"
+edition = "2021"
+description = "両替勘 — 海外旅行の値段感覚を鍛える5秒勝負ゲーム"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+wasm-bindgen = "0.2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+getrandom = { version = "0.2", features = ["js"] }
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
