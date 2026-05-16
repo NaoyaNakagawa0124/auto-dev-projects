@@ -1,0 +1,194 @@
+:root {
+  --paper:   #faf6ee;
+  --paper-2: #f1ebdb;
+  --ink:     #2a2520;
+  --ink-2:   #4d4538;
+  --lamp:    #d77a3a;
+  --lamp-2:  #b25e23;
+  --asa:     #97a7a0;
+  --rule:    rgba(42, 37, 32, 0.08);
+
+  --rice:   #efe2c0;
+  --meat:   #c9897a;
+  --fish:   #a8b8c4;
+  --veg:    #adc3a3;
+  --soup:   #d6b88a;
+  --sweet:  #d4a8b1;
+  --escape: #cdc3b6;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  min-height: 100dvh;
+  background:
+    radial-gradient(ellipse at 50% -10%, var(--paper-2) 0%, var(--paper) 60%);
+  color: var(--ink);
+  font: 17px/1.75 -apple-system, BlinkMacSystemFont, "Hiragino Sans",
+        "Yu Gothic UI", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  overflow: hidden;
+}
+
+main#app {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 28px 20px 20px;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+header {
+  text-align: center;
+}
+.brand {
+  font-size: 26px;
+  letter-spacing: 0.32em;
+  color: var(--lamp);
+  font-weight: 700;
+}
+.dim   { color: var(--asa); }
+.sub   { margin-top: 4px; letter-spacing: 0.08em; font-size: 12px; }
+.micro { font-size: 11px; letter-spacing: 0.14em; }
+
+/* ---- Screen switching --------------------------------------------- */
+.intro, .round, .result { display: none; flex: 1; flex-direction: column;
+                          align-items: center; justify-content: center; gap: 22px; }
+.screen-intro  .intro  { display: flex; }
+.screen-round  .round  { display: flex; }
+.screen-result .result { display: flex; }
+
+/* ---- INTRO --------------------------------------------------------- */
+.lead       { text-align: center; font-size: 16px; line-height: 1.85; color: var(--ink-2); margin: 0; }
+.lead-soft  { text-align: center; font-size: 14px; color: var(--asa); margin: 0; }
+.primary-btn {
+  appearance: none; border: 0; background: var(--lamp); color: var(--paper);
+  font: inherit; font-size: 18px; font-weight: 600; letter-spacing: 0.2em;
+  padding: 16px 56px; border-radius: 999px; cursor: pointer;
+  box-shadow: 0 8px 24px rgba(215, 122, 58, 0.22);
+  transition: transform 160ms cubic-bezier(.2,.8,.2,1), box-shadow 160ms;
+}
+.primary-btn:active { transform: translateY(1px) scale(0.98); box-shadow: 0 4px 14px rgba(215, 122, 58, 0.18); }
+.ghost-btn {
+  appearance: none; background: transparent; border: 1px solid var(--rule);
+  color: var(--ink-2); font: inherit; padding: 10px 22px; border-radius: 999px;
+  letter-spacing: 0.18em; font-size: 13px; cursor: pointer;
+}
+.ghost-btn:hover { background: rgba(215, 122, 58, 0.06); }
+
+/* ---- ROUND --------------------------------------------------------- */
+.ring-wrap { position: relative; width: 120px; height: 120px; }
+.ring      { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring-bg   { fill: var(--paper-2); stroke: var(--rule); stroke-width: 1.5; }
+.ring-fill {
+  fill: none; stroke: var(--lamp); stroke-width: 5; stroke-linecap: round;
+  stroke-dasharray: 565.48;
+  stroke-dashoffset: 565.48;
+  transition: stroke-dashoffset 240ms linear;
+}
+.ring-time {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font-size: 28px; letter-spacing: 0.04em; font-weight: 600; color: var(--ink);
+}
+.ring-time .micro { display: block; text-align: center; margin-top: 2px; }
+
+.card-stage { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.card-tile  {
+  width: 180px; height: 180px; border-radius: 26px;
+  display: grid; place-items: center;
+  background: var(--rice);
+  box-shadow:
+    inset 0 0 0 1px rgba(42, 37, 32, 0.06),
+    0 10px 30px rgba(42, 37, 32, 0.08);
+  transition: background 320ms ease, transform 280ms cubic-bezier(.2,.8,.2,1);
+  animation: cardEnter 320ms cubic-bezier(.2,.8,.2,1);
+}
+.card-tile[data-tone="rice"]   { background: var(--rice); }
+.card-tile[data-tone="meat"]   { background: var(--meat); }
+.card-tile[data-tone="fish"]   { background: var(--fish); }
+.card-tile[data-tone="veg"]    { background: var(--veg); }
+.card-tile[data-tone="soup"]   { background: var(--soup); }
+.card-tile[data-tone="sweet"]  { background: var(--sweet); }
+.card-tile[data-tone="escape"] {
+  background: var(--escape);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(42, 37, 32, 0.04) 0 6px,
+    transparent 6px 12px);
+}
+.card-glyph { font-size: 84px; font-weight: 700; color: var(--ink); letter-spacing: -0.03em; }
+.card-name  { font-size: 22px; font-weight: 600; letter-spacing: 0.1em; color: var(--ink); }
+.card-kind  { font-size: 11px; letter-spacing: 0.2em; min-height: 1em; }
+
+@keyframes cardEnter {
+  from { transform: translateY(6px) scale(0.97); opacity: 0; }
+  to   { transform: translateY(0) scale(1);      opacity: 1; }
+}
+
+/* ---- Tap zones ----------------------------------------------------- */
+.tap-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  width: 100%; max-width: 380px;
+}
+.tap-btn {
+  appearance: none; border: 1px dashed var(--rule); background: transparent;
+  color: var(--ink-2); font: inherit; padding: 18px 0; border-radius: 18px;
+  cursor: pointer; display: flex; flex-direction: column; align-items: center;
+  gap: 6px; transition: background 180ms, border-color 180ms, transform 120ms, color 180ms;
+}
+.tap-btn:active   { transform: scale(0.98); }
+.tap-btn.is-on    {
+  background: rgba(215, 122, 58, 0.12);
+  border-color: var(--lamp);
+  color: var(--lamp-2);
+  border-style: solid;
+}
+.tap-mark         { font-size: 16px; letter-spacing: 0.18em; font-weight: 600; }
+.tap-btn.is-on .tap-mark::before { content: "✓ "; }
+
+/* ---- RESULT -------------------------------------------------------- */
+.result-card {
+  width: 200px; height: 200px; border-radius: 28px;
+  display: grid; place-items: center;
+  background: var(--rice);
+  box-shadow:
+    inset 0 0 0 1px rgba(42, 37, 32, 0.06),
+    0 14px 36px rgba(42, 37, 32, 0.10);
+  animation: cardEnter 380ms cubic-bezier(.2,.8,.2,1);
+}
+.result-card[data-tone="rice"]   { background: var(--rice); }
+.result-card[data-tone="meat"]   { background: var(--meat); }
+.result-card[data-tone="fish"]   { background: var(--fish); }
+.result-card[data-tone="veg"]    { background: var(--veg); }
+.result-card[data-tone="soup"]   { background: var(--soup); }
+.result-card[data-tone="sweet"]  { background: var(--sweet); }
+.result-card[data-tone="escape"] {
+  background: var(--escape);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(42, 37, 32, 0.04) 0 6px,
+    transparent 6px 12px);
+}
+.result-name    { font-size: 24px; font-weight: 700; letter-spacing: 0.12em; }
+.result-message { font-size: 16px; color: var(--ink-2); text-align: center; max-width: 22em; line-height: 1.8; }
+.result-closer  { font-size: 13px; color: var(--asa); text-align: center; letter-spacing: 0.06em; font-style: italic; }
+
+footer { text-align: center; padding-top: 8px; border-top: 1px dashed var(--rule); }
+
+@media (max-width: 380px) {
+  .card-tile   { width: 160px; height: 160px; }
+  .card-glyph  { font-size: 76px; }
+  .card-name   { font-size: 20px; }
+  .ring-wrap   { width: 108px; height: 108px; }
+  .ring-time   { font-size: 24px; }
+  .result-card { width: 180px; height: 180px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring-fill, .card-tile, .result-card { transition: none; animation: none; }
+}

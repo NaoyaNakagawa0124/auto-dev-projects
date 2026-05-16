@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#faf6ee" />
+  <title>相匙 - 夕飯どうする?</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="app" class="screen-intro">
+    <header>
+      <div class="brand">相匙</div>
+      <div class="dim sub">あいさじ &middot; 夕飯どうする? を 90 秒で</div>
+    </header>
+
+    <!-- INTRO -->
+    <section class="intro">
+      <p class="lead">
+        スマホ を 2 人で 持ってください。<br/>
+        左半分 と 右半分、 それぞれの 親指 を 置いて、<br/>
+        気が向く カード が 出たら<br/>
+        <strong>同時に</strong> 自分の側を タップ。
+      </p>
+      <p class="lead-soft">
+        90 秒で、 二人 とも 気が向いた 料理 が、<br/>
+        今夜 の 夕飯 に なります。
+      </p>
+      <button id="start-btn" class="primary-btn">始める</button>
+      <p class="dim micro">タップで 90 秒 始まります</p>
+    </section>
+
+    <!-- ROUND -->
+    <section class="round">
+      <div class="ring-wrap" aria-hidden="true">
+        <svg class="ring" viewBox="0 0 200 200">
+          <circle class="ring-bg"   cx="100" cy="100" r="90"/>
+          <circle class="ring-fill" cx="100" cy="100" r="90"/>
+        </svg>
+        <div class="ring-time">
+          <span id="time-left">90</span>
+          <span class="dim micro">秒</span>
+        </div>
+      </div>
+
+      <div class="card-stage">
+        <div class="card-tile" id="card-tile" data-tone="rice">
+          <div class="card-glyph" id="card-glyph">カ</div>
+        </div>
+        <div class="card-name" id="card-name">カレー</div>
+        <div class="card-kind dim" id="card-kind"></div>
+      </div>
+
+      <div class="tap-row">
+        <button class="tap-btn tap-left" id="tap-left" aria-label="あなた">
+          <span class="dim micro">あなた</span>
+          <span class="tap-mark" id="left-mark">気が向く</span>
+        </button>
+        <button class="tap-btn tap-right" id="tap-right" aria-label="相手">
+          <span class="dim micro">相手</span>
+          <span class="tap-mark" id="right-mark">気が向く</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- RESULT -->
+    <section class="result">
+      <div class="result-card" id="result-card" data-tone="rice">
+        <div class="card-glyph" id="result-glyph">?</div>
+      </div>
+      <div class="result-name" id="result-name"></div>
+      <div class="result-message" id="result-message"></div>
+      <div class="result-closer" id="result-closer"></div>
+      <button id="again-btn" class="ghost-btn">もう 一度</button>
+    </section>
+
+    <footer>
+      <div class="dim micro" id="history-line">きょう は まだ 引いて いません</div>
+    </footer>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

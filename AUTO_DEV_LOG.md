@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 06:50 | Total apps: 103 | Total tests: 14,063
+> Last updated: 2026-05-17 07:15 | Total apps: 104 | Total tests: 14,091
 
 ## Quick Overview
 
@@ -109,6 +109,7 @@
 | 101 | [chika-channel](#chika-channel) | 地下チャンネル — 動画を地下鉄路線図として育てる中毒系ブラウザゲーム | Bun 1.x/TypeScript/SVG/vanilla | 45 | complete | `bun install && bun run dev` |
 | 102 | [hibi-no-mukashi](#hibi-no-mukashi) | 日々の昔 — 子育て親に夜 3 分の静かな歴史を 1 つ差し出す Rust+WASM | Rust/wasm-bindgen/serde/HTML/CSS/JS | 20 | complete | `wasm-pack build --target web && python3 -m http.server -d web` |
 | 103 | [juugobyou](#juugobyou) | 十五秒 — 片付けが苦手な人の 15 秒だけの小さなボタン (Rust+WASM) | Rust/wasm-bindgen/HTML/CSS/JS | 16 | complete | `wasm-pack build --target web && python3 -m http.server -d web` |
+| 104 | [aisaji](#aisaji) | 相匙 — 管理職と相手の 90 秒夕飯くじ Vanilla Web | Vanilla HTML/CSS/ES Module/Vitest | 28 | complete | `npm i && python3 -m http.server` (open `/web/`) |
 
 ---
 
@@ -5224,3 +5225,65 @@ python3 -m http.server -d web 8080
 - Web Audio で 15 秒の極小ピアノ単音 (オプトイン)
 - 「触らない」 ボタン — 円を見ているだけで 15 秒経つモード
 - 物体プロンプトを 40 → 60 にゆっくり拡張、 季節モチーフ (花、 落ち葉、 障子)
+
+---
+
+### <a id="aisaji"></a>104. aisaji - 2026-05-17 07:15
+
+**What is this?**
+スマホ 1 台を 2 人で持って、 90 秒で「今夜の夕飯」 を 2 人の匙加減で決める Vanilla Web ゲーム。 帰宅後に「夕飯どうする?」 で 30 分会議するのを止めるためのアプリ。 タップで開始 → 6 秒ごとに料理カード (家庭料理 40 件 + 逃げ道 4 件) が切り替わる → 左半分が「あなた」、 右半分が「相手」 のタップゾーンで、 気が向くカードに各自スタンプ → 90 秒経過後、 両方が「OK」 したカードから 1 枚だけ「今夜の夕飯」 として大表示。 streak も連勝も総タップ数も出さず、 終わったら短いねぎらい文 (「今夜は ここまでで 十分です。」 など) で締める。
+
+**Discovery Roll**
+Source: 9 (食 / レシピ / 外食文化) | Persona: 40 (ストレスを抱えた管理職) | Platform: 1 (Web app - Vanilla) | Intent: 7 (誰かと一緒にやる — 2 人で開けるか) — 元の Platform roll 14 (Godot) はローカル環境に Godot バイナリが無いため Phase 4 quality gate を通せず、 Platform のみ reroll した (Source / Persona / Intent はそのまま)
+
+**Features Built**
+- 1 タップで始まる 90 秒 round、 6 秒ごとに 15 枚のカードが順番表示
+- 各カードに 1-2 文字の glyph + 料理名 + tone (rice / meat / fish / veg / soup / sweet / escape) で色分け、 escape カードは斜線ハッチで視覚的に区別
+- エスケープカード (外食 / 冷凍餃子 / ピザ宅配 / 茶漬けでいい) は必ず 1 枚以上混じる、 deterministic seeded pick
+- 左半分 / 右半分の split tap zone、 タップで「✓ 気が向く」 にトグル、 タッチ + キーボード (A / L) の両対応
+- judge() が結果を返し、 両方が OK したカードからランダム 1 枚を選ぶ (0 枚なら「外食でいい」 結果)
+- ねぎらい文 6 種、 禁止語監査 (`頑張` `努力` `達成` `ナイス` `すごい` `天才` `クリア` `連勝` `完璧` `完了`) を Vitest で audit
+- 履歴は「きょう N 回引きました / さっきは X」 だけを 1 行 footer に (streak / 連勝表示なし)
+- Vibration API でタップフィードバック (対応ブラウザのみ、 opt-in)
+
+**Tech Stack**
+Vanilla HTML / CSS / ES Module、 ビルドツール無し / 純 JS ロジック (cards / rand / pickHand / judge / timer) を src/ に分離、 web/app.js だけが DOM を触る / xorshift32 シードランダム + golden-ratio warmup (小さい seed の偏り対策) / Vitest 1.6 で 28 ユニットテスト / localStorage で 7 日分の履歴
+
+**Key Files**
+```
+aisaji/
+├── src/
+│   ├── rand.js           # xorshift32 + warmup
+│   ├── cards.js          # 40 dishes + 4 escapes
+│   ├── pickHand.js       # deterministic n-card hand
+│   ├── judge.js          # both-ok matching + closers + banned words
+│   └── timer.js          # createRound + fakeClock
+├── tests/                # 5 files / 28 tests
+├── web/                  # index.html / style.css / app.js
+└── package.json          # vitest dev dep
+```
+
+**How to Run**
+```bash
+cd aisaji
+npm install
+npm test                           # 28 tests
+python3 -m http.server 8080        # プロジェクトルートから起動
+# http://localhost:8080/web/
+```
+
+**Tests**: 28 passing (cards 7 / rand 4 / pickHand 6 / judge 7 / timer 4) | **Files**: 10 source | **LOC**: ~700 source + ~250 test | **Build time**: ~28 min
+
+**Challenges & Fixes**
+- **xorshift32 の小さい seed バイアス**: seed=1, 2, 3... のような小さい値だと、 初回 rng() が常に 0 に近い値を返し、 違う seed でも判定結果が同じになる。 `tests/judge.test.js` の「違う seed で違う pick」 テストで顕在化。 修正は seed 初期化時に 0x9e3779b1 と XOR + 3 ラウンドの warmup を入れること
+- **`web/app.js` から `../src/` を import するパス問題**: ES module の relative import が成立するためには HTTP server のルートが プロジェクト直下である必要がある (`-d web` 起動だと src/ が見えない)。 README / SUMMARY で `python3 -m http.server` をプロジェクトルートから起動するよう明記
+- **Platform 14 (Godot) を諦めた判断**: Godot バイナリ が無い環境では Phase 4 の quality gate を通せない (動作確認できない)。 Source / Persona / Intent の組み合わせが面白かったので Platform だけ reroll する戦略を取った
+- **1 人プレイモード / streak の誘惑**: Intent 7 = 「2 人で開けるか」 が魂なので、 1 人モードを実装しなかった。 ストレス管理職向けは「達成感を与えれば中毒する」 が定石だが、 「ねぎらいで終わる」 を優先
+
+**Potential Next Steps**
+- Web Audio で 90 秒のタイマー音 (5 秒ごとの極小ピアノ音、 opt-in)
+- 「外食でいい」 結果のときに付近のお店検索ボタン (Google Maps deep link)
+- 履歴の週ビュー / 月ビュー (中立な一覧のみ、 streak / 連勝として演出しない)
+- 子供向けカードパック (カレー甘口 / 中辛 など)
+- 60 秒 / 120 秒の長さ選択 (デフォルトは 90 秒のまま)
+- PWA 化 (Service Worker でオフライン)

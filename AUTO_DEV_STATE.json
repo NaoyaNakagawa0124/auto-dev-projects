@@ -1,5 +1,5 @@
 {
-  "apps_completed": 103,
+  "apps_completed": 104,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -1045,6 +1045,17 @@
         "persona": 32,
         "platform": 10,
         "intent": 4
+      }
+    },
+    {
+      "name": "aisaji",
+      "completed": "2026-05-17T07:15:00Z",
+      "discovery_roll": {
+        "source": 9,
+        "persona": 40,
+        "platform": 1,
+        "intent": 7,
+        "note": "original platform 14 (Godot) rerolled to 1 — no godot binary available"
       }
     }
   ]

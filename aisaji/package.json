@@ -1,0 +1,14 @@
+{
+  "name": "aisaji",
+  "version": "0.1.0",
+  "description": "90-second 2-player dinner picker for tired managers and their partner",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "vitest": "^1.6.0"
+  }
+}
