@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 02:25 | Total apps: 95 | Total tests: 13,773
+> Last updated: 2026-05-17 02:55 | Total apps: 96 | Total tests: 13,815
 
 ## Quick Overview
 
@@ -101,6 +101,7 @@
 | 93 | [gochisou-goyomi](#gochisou-goyomi) | ごちそう暦 — 世界の祝祭日メシ提案 TUI | Python/Textual 8 | 15 | complete | `pip install -e . && gochisou-goyomi` |
 | 94 | [fukugyou-bubble](#fukugyou-bubble) | 副業バブル — 副業 idle クリッカーゲーム (Tauri) | Tauri 2/Rust/Vanilla JS | 43 | complete | `cd src && python3 -m http.server 8000` |
 | 95 | [ikitsugi](#ikitsugi) | 息継ぎ — 効率厨ゲーマー向け呼吸ドット拡張機能 | Browser Extension MV3/Vanilla JS/Shadow DOM | 27 | complete | Load unpacked from `ikitsugi/src/` in `chrome://extensions` |
+| 96 | [futari-yoho](#futari-yoho) | 二人予報 — 共働き夫婦の判定しない気分予報 TUI | Python 3.10+/Textual 1.0/Rich/JSON | 42 | complete | `pip install -e . && futari-yoho` |
 
 ---
 
@@ -4689,3 +4690,64 @@ cd ikitsugi && node --test "tests/*.test.mjs"
 - ボイスガイド (Web Speech API: 「吸って」「吐いて」)
 - ユーザー定義パターン (吸 X / 止 Y / 吐 Z 秒)
 - 心拍計 / Apple Watch との連携 (将来)
+
+---
+
+### <a id="futari-yoho"></a>96. futari-yoho - 2026-05-17 02:55
+
+**What is this?**
+共働き夫婦が 1 日 30 秒だけ画面の前で気分・体力・距離感を残し、夜の照明のように静かなダッシュボードで「二人の天気」を眺める Textual TUI。スコアもランキングも「もっと話そう」もない。「今夜は並んでいる夜」「今夜はひとりひとりの夜」と、ただ呟くだけのアプリ。
+
+**Discovery Roll**
+Source: 40 (データ分析・ダッシュボード系) | Persona: 26 (共働き夫婦) | Platform: 3 (Python desktop app - Textual TUI) | Intent: 4 (そっと寄り添う — 癒し / メンタル / 静か)
+
+**Features Built**
+- 4 ステップ check-in モーダル (mood / energy / solo_want / note)、矢印キー・1-5・Enter で 30 秒
+- 単独天気と二人天気の pure 関数 (sun/haze/cloud/rain/storm/moon/calm + 話す夜 / 並んでいる夜 / ひとりひとりの夜 / 静かな夜)
+- 今日 / 一週間グリッド / 月のふりかえり 28 点線、すべて判定しない言葉だけ
+- どちらかの check-in が無くても壊れない (「片方だけの空」)
+- `--demo` でサンプル週間データ、`--no-tui` で 1 行 stdout (cron 用)
+
+**Tech Stack**
+Python 3.10+ / Textual 1.0.x / Rich / JSON 永続化 (atomic write) / pytest + pytest-asyncio + Textual run_test pilot
+
+**Key Files**
+```
+futari-yoho/
+├── src/futari_yoho/
+│   ├── cli.py           # entry + --demo + --no-tui
+│   ├── app.py           # Textual app + CheckInModal + formatters
+│   ├── models.py        # CheckIn / Day / Partner / State
+│   ├── storage.py       # atomic JSON I/O
+│   ├── dates.py         # iso / week_dates / days_back
+│   └── weather.py       # single_weather / paired_weather / month_trend
+└── tests/               # models 9 / dates 4 / storage 5 / weather 17 / app_smoke 7
+```
+
+**How to Run**
+```bash
+cd futari-yoho
+pip install -e .
+futari-yoho              # 起動 (c = あの記入、v = いの記入)
+futari-yoho --demo       # サンプル週間 + 起動
+futari-yoho --no-tui     # 今日の二人を 1 行出力
+
+# テスト
+pip install pytest pytest-asyncio
+pytest -q                # 42 tests
+```
+
+**Tests**: 42 passing (models 9 / dates 4 / storage 5 / weather 17 / app_smoke 7) | **Files**: 13 | **LOC**: ~1,430 | **Build time**: ~30 min
+
+**Challenges & Fixes**
+- `_render` 名前衝突 (gochisou-goyomi で踏んだのと同じ) → Textual Widget の内部 `_render` とぶつかって ModalScreen が空表示。すべて `_render_step` にリネームして解決。
+- `push_screen_wait` は worker context 必須 → `push_screen(modal, callback)` のコールバック版に書き換え。
+- Python 3.10.5 と `>=3.11` の不一致 → `from __future__ import annotations` で全 type hint を遅延評価し、`>=3.10` に下げた。
+- 「指示しない」原則 — どんなにエンジニア的に正しくても、scorecard 的な UI を一切置かない方針を維持。week grid のラベルも「話す」「並んで」など名詞句で止めた。
+
+**Potential Next Steps**
+- パートナー名を options 画面で書き換え (今は JSON を直接編集)
+- 過去の一言メモだけを並べて見る「ふりかえりノート」画面
+- `--no-tui` 用に cron 登録ヘルパー (毎晩 21:00 にチェック)
+- `data.json` を Dropbox / iCloud に置くワンクリック sync 設定
+- 月のふりかえりに気分高低差を薄く重ねる sparkline

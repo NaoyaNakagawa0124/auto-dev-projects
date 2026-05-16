@@ -1,5 +1,5 @@
 {
-  "apps_completed": 95,
+  "apps_completed": 96,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -573,6 +573,12 @@
       "persona": 7,
       "platform": 5,
       "intent": 4
+    },
+    {
+      "source": 40,
+      "persona": 26,
+      "platform": 3,
+      "intent": 4
     }
   ],
   "history": [
@@ -921,6 +927,16 @@
         "source": 35,
         "persona": 7,
         "platform": 5,
+        "intent": 4
+      }
+    },
+    {
+      "name": "futari-yoho",
+      "completed": "2026-05-17T02:55:00Z",
+      "discovery_roll": {
+        "source": 40,
+        "persona": 26,
+        "platform": 3,
         "intent": 4
       }
     }
