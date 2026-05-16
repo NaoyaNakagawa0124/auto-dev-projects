@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-16 15:05 | Total apps: 88 | Total tests: 10,760
+> Last updated: 2026-05-16 15:35 | Total apps: 89 | Total tests: 10,998
 
 ## Quick Overview
 
@@ -94,6 +94,7 @@
 | 86 | [takibi](#takibi) | 焚火 — カフェノマドの寄り添う集中PWA | Vanilla JS/Canvas/Web Audio/PWA | 14 | complete | `python3 -m http.server 8000` |
 | 87 | [bungou-reki](#bungou-reki) | 文豪暦 — 文学暦カードバトル (Tauri) | Tauri 2/Rust/Vanilla JS | 36 | complete | `cd src && python3 -m http.server 8000` |
 | 88 | [madori-zukan](#madori-zukan) | 間取り図鑑 — アニメの家を物件カタログにする PWA | PWA/Vanilla JS/SVG | 16 | complete | `python3 -m http.server 8000` |
+| 89 | [hoshi-yomi](#hoshi-yomi) | 星詠み — 星座をなぞって語彙を覚える夜空ゲーム | Godot 4/GDScript | 238 | complete | `godot --path .` |
 
 ---
 
@@ -4235,3 +4236,63 @@ node --test "tests/*.test.mjs"
 - ユーザーが自分の手で新規物件を追加できる UI
 - 友人とアーカイブを比較できる URL シェア
 - ダークモード (建築青焼き風)
+
+---
+
+### <a id="hoshi-yomi"></a>89. hoshi-yomi - 2026-05-16 15:35
+
+**What is this?**
+星詠み — 星をなぞって外国語の単語を覚える Godot 4 ゲーム。12 個の単語にそれぞれ星座が割り当てられ、正しい順で星を繋ぐと夜空に単語が浮かぶ。覚えた星座は永久に灯り続ける。「美しさで殴る」を狙った静かな夜の作品。
+
+**Discovery Roll**
+Source: 31 (GitHub Trending — OSS/ツール) | Persona: 34 (語学を勉強中の人) | Platform: 14 (Godot game/GDScript) | Intent: 1 (美しさで殴る — スクショ撮りたくなる)
+
+**Features Built**
+- 12 個の単語×星座 (海/森/雨/太陽/月/風/山/川/花/鳥/星/夢)、合計 60 星を手書きで配置
+- 背景の星空 (320 個) がゆっくりドリフト、稀に流れ星が横切る
+- カスタムグロー shader (gdshader) — core + halo + spike rays + twinkle
+- 星座トレース UI — タップ済みは金で点り、次に押すべき星は青いリングと番号で示す
+- 連結ラインは 3 段階の太さと透明度を重ねた「金箔」表現
+- 完成すると単語が日本語＋英語＋発音記号＋短い詩で立ち上がる
+- 夜空辞書 — 解き明かした星座 / 未解決の一覧。✦アイコンと番号で進捗を可視化
+- 進捗永続化 — user://progress.json に discovered: [id...] を保存
+- 完全日本語UI、ターゲット言語 (英) は副表示
+
+**Tech Stack**
+Godot 4.2+ / GDScript / カスタムグロー gdshader / JSON データロード (FileAccess + JSON.parse_string) / 静的クラスメソッド (class_name + static func) / 0..1 正規化座標 → 動的ビューポートマッピング
+
+**Key Files**
+```
+hoshi-yomi/
+├── project.godot, icon.svg
+├── scenes/{Main,ConstellationView}.tscn
+├── scripts/{main,starfield,constellation_view,data,progress}.gd
+├── shaders/star_glow.gdshader
+├── data/constellations.json    12 星座 / 60 星
+└── tests/validate.py            Python チェッカー (238 件)
+```
+
+**How to Run**
+```bash
+# Godot 4.2+ を入手
+godot --path hoshi-yomi
+# あるいはエディタで project.godot を Import → 再生
+
+# 検証 (Godot 不要)
+python3 tests/validate.py
+```
+
+**Tests**: 238 validation checks passing | **Files**: 14 | **LOC**: ~670 | **Build time**: ~26 min
+
+**Challenges & Fixes**
+- Godot CLI が環境に無いため実行確認できない → Python で構造・JSON・ファイル参照・スクリプトのインデント整合性まで 238 項目を自動チェック
+- `Progress.load()` が Godot の組み込み `load()` と衝突する恐れ → 静的メソッド名を `read_state` / `write_state` に変更
+- `custom_constants/separation` は Godot 4 の旧表記 → `theme_override_constants/separation` に統一
+- 1280×720 の固定座標 → 正規化座標 (0..1) で持ち、`get_viewport_rect().size` で動的マッピング
+
+**Potential Next Steps**
+- AudioStreamGenerator で星接続時のチャイム、背景にドローンパッド
+- 多言語対応 — JSON の label_target を per-language の dict に
+- 12 個解放後の「次の章」、25 個・50 個と段階的に
+- 完成した夜空を PNG にエクスポート (Viewport rendering)
+- ドラッグの軌跡を流れ星のように残す演出

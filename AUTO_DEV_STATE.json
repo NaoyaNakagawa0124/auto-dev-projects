@@ -1,5 +1,5 @@
 {
-  "apps_completed": 88,
+  "apps_completed": 89,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -531,6 +531,12 @@
       "persona": 16,
       "platform": 4,
       "intent": 6
+    },
+    {
+      "source": 31,
+      "persona": 34,
+      "platform": 14,
+      "intent": 1
     }
   ],
   "history": [
@@ -810,6 +816,16 @@
         "persona": 16,
         "platform": 4,
         "intent": 6
+      }
+    },
+    {
+      "name": "hoshi-yomi",
+      "completed": "2026-05-16T15:35:00Z",
+      "discovery_roll": {
+        "source": 31,
+        "persona": 34,
+        "platform": 14,
+        "intent": 1
       }
     }
   ]
