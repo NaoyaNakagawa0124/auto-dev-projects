@@ -120,5 +120,6 @@
 | 114 | tsukue-no-sumi | 机 の 隅 — ノマド の そっと いる 作業ログ Swift macOS CLI | Swift 5.9+/Foundation/XCTest | 65 |
 | 115 | sokkou-deck | 速攻デッキ — 効率厨 ゲーマー の フラッシュカード スピードラン | Rust + WASM/wasm-bindgen/vanilla JS | 48 |
 | 116 | inu-saiten | 犬採点 — レシピ サイト を 犬 が 採点 する Chrome MV3 拡張 | Chrome MV3/vanilla JS/Vitest | 69 |
+| 117 | hachi-kenshi | 鉢検視 — 観葉 植物 の 死因 を 推理 する Rust+WASM ノワール 法医 ゲーム | Rust + WASM/wasm-bindgen/vanilla JS | 37 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

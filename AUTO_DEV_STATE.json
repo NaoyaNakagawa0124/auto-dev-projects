@@ -1,5 +1,5 @@
 {
-  "apps_completed": 116,
+  "apps_completed": 117,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -633,6 +633,13 @@
       "persona": 10,
       "platform": 5,
       "intent": 3
+    },
+    {
+      "source": 25,
+      "persona": 18,
+      "platform": 10,
+      "intent": 5,
+      "note": "Platform 5 (browser ext) rerolled to 10 (Rust+WASM) — Chrome ext used last cycle"
     }
   ],
   "history": [
@@ -1204,6 +1211,17 @@
         "platform": 5,
         "intent": 3,
         "note": "Food/recipe × dog-obsessed owner × Chrome MV3 × comedy — overlay 'your dog's recipe review'. Comedy framing critical: extension explicitly disclaims feeding advice"
+      }
+    },
+    {
+      "name": "hachi-kenshi",
+      "completed": "2026-05-17T13:40:00Z",
+      "discovery_roll": {
+        "source": 25,
+        "persona": 18,
+        "platform": 10,
+        "intent": 5,
+        "note": "True crime × plant killer × Rust+WASM (rerolled from 5) × addictive — noir houseplant homicide forensic puzzle. Teaches plant care via mystery framing"
       }
     }
   ]

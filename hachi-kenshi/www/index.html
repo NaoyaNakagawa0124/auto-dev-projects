@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>鉢検視 — hachi-kenshi</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="paper">
+    <!-- HOME -->
+    <section class="screen" data-screen="home" data-active="true">
+      <header class="hero">
+        <div class="hero-stamp">鉢 検視 録</div>
+        <h1 class="hero-title">鉢検視</h1>
+        <div class="hero-tag">枯らした 観葉 植物 の 死因 を 推理 する 法医 ゲーム</div>
+        <div class="hero-meta">
+          <span>事件 数: 12</span>
+          <span>章: 4</span>
+          <span>死因 候補: 7</span>
+        </div>
+      </header>
+
+      <div class="board" id="chapter-board"></div>
+
+      <div class="action-row">
+        <button id="start-btn" class="primary-btn">▶  最初 の 事件 を 開く</button>
+        <button id="reset-btn" class="ghost-btn">進捗 を リセット</button>
+      </div>
+
+      <div class="pb-line" id="pb-line"></div>
+    </section>
+
+    <!-- CASE -->
+    <section class="screen" data-screen="case">
+      <header class="case-head">
+        <div class="case-num" id="case-num">#--</div>
+        <div class="case-meta">
+          <div class="case-chapter" id="case-chapter">--</div>
+          <div class="case-victim" id="case-victim">--</div>
+        </div>
+        <div class="case-timer" id="case-timer">00:00.0</div>
+      </header>
+
+      <div class="case-conditions">
+        <div class="row"><span class="row-label">享年</span><span id="case-age">--</span></div>
+        <div class="row"><span class="row-label">発見</span><span id="case-found">--</span></div>
+        <div class="row"><span class="row-label">条件</span><span id="case-cond">--</span></div>
+      </div>
+
+      <div class="case-section">
+        <div class="section-head">─ 物的 証拠 ─</div>
+        <ul class="evidence-list" id="evidence-list"></ul>
+      </div>
+
+      <div class="case-section">
+        <div class="section-head">─ 容疑者 ─</div>
+        <ol class="suspect-list" id="suspect-list"></ol>
+      </div>
+
+      <div class="action-row">
+        <button id="accuse-btn" class="primary-btn" disabled>▶  起訴 する</button>
+        <button id="back-home-btn" class="ghost-btn">ホーム へ 戻る</button>
+      </div>
+    </section>
+
+    <!-- VERDICT -->
+    <section class="screen" data-screen="verdict">
+      <div id="verdict-stamp" class="verdict-stamp"></div>
+      <h2 class="verdict-title" id="verdict-title">--</h2>
+      <div class="verdict-detail">
+        <div class="row"><span class="row-label">あなた の 起訴</span><span id="verdict-accused">--</span></div>
+        <div class="row"><span class="row-label">真 の 死因</span><span id="verdict-culprit">--</span></div>
+      </div>
+      <div class="verdict-explanation" id="verdict-explanation">--</div>
+      <div class="action-row">
+        <button id="next-case-btn" class="primary-btn">次 の 事件 へ</button>
+        <button id="back-home-btn-2" class="ghost-btn">ホーム へ 戻る</button>
+      </div>
+    </section>
+
+    <!-- COMPLETE -->
+    <section class="screen" data-screen="complete">
+      <div class="complete-stamp">全 事件 完了</div>
+      <h2 class="complete-title">12 件 の 検視 終了</h2>
+      <div class="score-card">
+        <div class="score-row"><span>正解</span><span id="score-correct">--</span></div>
+        <div class="score-row"><span>誤起訴</span><span id="score-wrong">--</span></div>
+        <div class="score-row"><span>検視 時間</span><span id="score-time">--</span></div>
+        <div class="score-row total"><span>合計 得点</span><span id="score-total">--</span></div>
+        <div class="score-breakdown">
+          <div class="row"><span class="row-label">基本</span><span id="score-base">--</span></div>
+          <div class="row"><span class="row-label">章 ボーナス</span><span id="score-chapter">--</span></div>
+          <div class="row"><span class="row-label">全 正解 ボーナス</span><span id="score-clear">--</span></div>
+          <div class="row"><span class="row-label">タイム ボーナス</span><span id="score-timebonus">--</span></div>
+        </div>
+        <div id="pb-banner" class="pb-banner"></div>
+      </div>
+      <div class="action-row">
+        <button id="retry-btn" class="primary-btn">▶  再 検視 へ</button>
+      </div>
+    </section>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

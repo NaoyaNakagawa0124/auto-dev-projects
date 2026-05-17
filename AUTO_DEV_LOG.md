@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 13:15 | Total apps: 116 | Total tests: 14,606
+> Last updated: 2026-05-17 13:40 | Total apps: 117 | Total tests: 14,643
 
 ## Quick Overview
 
@@ -122,6 +122,7 @@
 | 114 | [tsukue-no-sumi](#tsukue-no-sumi) | 机 の 隅 — ノマド の そっと いる 作業ログ Swift CLI | Swift 5.9+/Foundation/XCTest | 65 | complete | `swift build -c release && .build/release/tsukue` |
 | 115 | [sokkou-deck](#sokkou-deck) | 速攻デッキ — 効率厨 ゲーマー の フラッシュカード スピードラン | Rust + WASM/wasm-bindgen/vanilla JS | 48 | complete | `wasm-pack build --target web --out-dir www/pkg && python3 -m http.server` |
 | 116 | [inu-saiten](#inu-saiten) | 犬採点 — レシピ サイト を 犬 が 採点 する Chrome MV3 拡張 | Chrome MV3/vanilla JS/Vitest | 69 | complete | Load `inu-saiten/extension/` unpacked in `chrome://extensions` |
+| 117 | [hachi-kenshi](#hachi-kenshi) | 鉢検視 — 観葉 植物 の 死因 を 推理 する Rust+WASM ノワール 法医 ゲーム | Rust + WASM/wasm-bindgen/vanilla JS | 37 | complete | `wasm-pack build --target web --out-dir www/pkg && python3 -m http.server` |
 
 ---
 
@@ -6089,4 +6090,74 @@ npm test                                       # 69 tests
 - 多 言語 (中 / 韓 レシピ サイト + 各国 食材)
 - love brag 時 に 「ワン!」 SFX (Web Audio)
 - 拡張 内 ページ で 過去 全 採点 を 検索 / フィルタ
+
+---
+
+### <a id="hachi-kenshi"></a>117. hachi-kenshi - 2026-05-17 13:40
+
+**What is this?**
+枯らした 観葉 植物 を 「事件」 と して 検視 する Rust + WASM ノワール 推理 ゲーム。 12 件 の 事件 (観葉 / サボテン / ハーブ / 多肉 各 3 件)、 各 事件 は 被害 者 + 享年 + 発見 条件 + 5-7 ヶ条 の 物的 証拠 + 4-5 名 の 容疑 者 (死因) で 構成 さ れ、 容疑 者 は 「私 が 犯人 なら 〜 の は ず」 と 自己 弁明 を 述べる。 起訴 で 判決 が 確定、 正解 で 解説 (過湿 → 根腐れ の 連鎖 / サボテン の 凍害 ライン / 多肉 の 徒長 メカニズム 等) を 読める 教育 設計。 章 完走 / 全 完走 / 5 分 以内 で 得点 ボーナス、 PB を localStorage に 保存。 推理 ゲーム の 文体 で 植物 ケア を 学ばせる ハイブリッド。
+
+**Discovery Roll**
+Source: 25 (True crime / mystery / puzzle culture) | Persona: 18 (植物 を 枯らし まくる プラント キラー) | Platform: 10 (Rust + WASM、 元 5 から リロール) | Intent: 5 (夢中にさせる — ゲーム性 / 競う)
+
+**Features Built**
+- 12 件 の 事件 × 4 章、 各 事件 5-7 ヶ条 の 物的 証拠 + 4-5 名 の 容疑 者
+- 7 死因 (乾燥死 / 過湿死 / 根腐れ / 光 不足 / 寒さ / 害虫 / 肥料 焼け) で 各 死因 に 「私 で は ない」 弁明 文 が 紐付く
+- 章 ロック — 前 章 を 3/3 で 解放、 ホーム の 章 ボード で 進捗 と ロック 状態 が 視認 化
+- 採点 (正解 +100 / 誤起訴 -30 / 章 完走 +50 / 全 完走 +200 / 5 分 以内 +100)
+- リアルタイム タイマー (RAF)、 全 完走 で タイム + 得点 を PB と 比較
+- 各 事件 後 の 解説 文 (20-150 字) で 実 用 的 な 植物 ケア 知識
+- ホーム の 章 ボード で 緑 (正解) / 赤 (誤起訴) で セル を 色 分け
+- 進捗 / PB リセット ボタン (確認 ダイアログ)
+- BANNED_WORDS 監査 (「殺人犯」 「殺害」 「凶悪」 「死刑」 「死亡 確認」 「お前」 「クソ」 「無能」 「失敗 作」 — 「殺す」 単独 は 植物 文脈 で 比喩 と して 残す)
+- セピア 紙 + 古い 検視 メモ 風 CSS、 Hiragino Mincho、 起訴 / 判決 の ハンコ 風 アニメ
+- モバイル 幅 対応 (520px 以下 で 章 ボード 1 列)
+
+**Tech Stack**
+Rust 2021 / wasm-bindgen 0.2 / serde-wasm-bindgen 0.6 / wasm-pack (target web) / vanilla ES module JS / 自前 CSS — ビルド ツール (Vite 等) なし、 静的 配信 で 動く、 cargo test で 純ロジック 全部 カバー
+
+**Key Files**
+```
+hachi-kenshi/
+├── Cargo.toml
+├── README.md / PLAN.md / CLAUDE.md / SUMMARY.md
+├── src/
+│   ├── lib.rs                 # WASM bindings (10 exports)
+│   ├── cause.rs               # 7 cause enum + label + alibi
+│   ├── case.rs                # Case + Chapter + 12 件 データ
+│   ├── verdict.rs             # judge / judge_by_id
+│   ├── score.rs               # 採点 + 章 進捗 / unlock
+│   └── banned.rs
+├── tests/                     # 5 files / 37 tests
+└── www/
+    ├── index.html / style.css / main.js
+    └── pkg/                   # wasm-pack 出力
+```
+
+**How to Run**
+```bash
+cd hachi-kenshi
+cargo test                                     # 37 tests
+wasm-pack build --target web --out-dir www/pkg
+cd www && python3 -m http.server 8000
+# → http://localhost:8000
+```
+
+**Tests**: 37 passing (case 12 / cause 5 / verdict 5 / score 10 / banned 5) | **Files**: 6 src + 5 test + 3 frontend | **LOC**: ~1,400 | **Build time**: ~30 min
+
+**Challenges & Fixes**
+- **「殺す」 vs 「殺人犯」 — 比喩 と NG 語 の 線引き**: 「枯らす = 植物 を 殺す」 が 作品 の 比喩 の 軸 な ので、 「殺す」 「殺害」 単独 は 残し、 「殺人犯」 「凶悪」 「死刑」 等 の 重 名詞 だけ を BANNED_WORDS に。 banned_test で 全 case + UI 文字列 を 監査 し て バランス を 確保
+- **章 ロック を Rust と JS の どちら で 持つ か**: Rust 側 に `chapter_unlocked` を 実装 し、 JS 側 で も 同 ロジック を 軽量 ミラー (Wasm 往復 を 減らす)。 真実 は Rust テスト で 保証
+- **Rust enum の JS 表現**: serde は `Cause::Dryness` を `"Dryness"` に シリアライズ。 JS は 文字列 のまま 扱い、 `causeLabel("Dryness")` で 日本語 化 する 設計
+- **判決 の 「やり直し」 を 許す か**: 1 度 起訴 で 結果 確定 (誤起訴 は -30 で 残る)。 やり直し 可能 に する と 推理 の 緊張 感 が 失われる ため、 「最初 の 一発 で 当てる」 を 優先
+
+**Potential Next Steps**
+- 複合 死因 (2 犯 同時 起訴) の 上級 編
+- 「鎮魂 録」 全 事件 解説 一覧 ページ (全 完走 後 解放)
+- 実 植物 写真 の upload セルフ 検視 モード
+- 章 数 拡張 (ベゴニア / シダ / ラン / 食 虫 植物)
+- 共有 リプレイ (得点 + タイム hash で 比較)
+- 起訴 / 判決 の SFX (ハンコ 押す 音)
+- ハイ コントラスト + reduced-motion アクセシビリティ
 
