@@ -1,5 +1,5 @@
 {
-  "apps_completed": 113,
+  "apps_completed": 114,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -615,6 +615,12 @@
       "persona": 39,
       "platform": 10,
       "intent": 4
+    },
+    {
+      "source": 18,
+      "persona": 30,
+      "platform": 11,
+      "intent": 4
     }
   ],
   "history": [
@@ -1153,6 +1159,17 @@
         "platform": 2,
         "intent": 3,
         "note": "original platform 7 (Unreal) rerolled to 2 (CLI) — no Unreal SDK; Source/Persona/Intent original combo"
+      }
+    },
+    {
+      "name": "tsukue-no-sumi",
+      "completed": "2026-05-17T12:15:00Z",
+      "discovery_roll": {
+        "source": 18,
+        "persona": 30,
+        "platform": 11,
+        "intent": 4,
+        "note": "Swift macOS native (Platform 11) — last used cycle 22 (starlog), fresh enough; Intent 4 (そっと寄り添う) for cafe-nomading freelancers"
       }
     }
   ]

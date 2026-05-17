@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 11:40 | Total apps: 113 | Total tests: 14,424
+> Last updated: 2026-05-17 12:15 | Total apps: 114 | Total tests: 14,489
 
 ## Quick Overview
 
@@ -119,6 +119,7 @@
 | 111 | [sekai-no-choukan](#sekai-no-choukan) | 世界の朝刊 — 就活生の朝 5 分の Electron デスクトップ 朝刊 | Electron 31/Vanilla JS/Vitest | 28 | complete | `npm i && npm start` |
 | 112 | [ashiato-nikki](#ashiato-nikki) | 足跡日記 — 続かない 日記 を 1 タップ で 残す Chrome MV3 | Browser Extension MV3/Vanilla JS/Vitest | 51 | complete | `npm i && load unpacked in chrome://extensions` |
 | 113 | [yofuke-news](#yofuke-news) | 夜更けニュース — 夜型ゲーマー の 深夜 indie ニュース CLI | Node 22/chalk 5/Vitest | 48 | complete | `npm i && node src/cli.js` |
+| 114 | [tsukue-no-sumi](#tsukue-no-sumi) | 机 の 隅 — ノマド の そっと いる 作業ログ Swift CLI | Swift 5.9+/Foundation/XCTest | 65 | complete | `swift build -c release && .build/release/tsukue` |
 
 ---
 
@@ -5868,3 +5869,78 @@ npm install -g .                   # `yofuke-news` を どこ から でも
 - 各 ニュース に 起動 コマンド を 1 行 (Steam app id の deep link)
 - fish / zsh の greeting に 組み込んで ターミナル 起動 時 に 1 件 だけ 出る mode
 - 季節 イベント (大型 セール、 GOTY、 indie fest) を 検知 して banner を 出す
+
+---
+
+### <a id="tsukue-no-sumi"></a>114. tsukue-no-sumi - 2026-05-17 12:15
+
+**What is this?**
+カフェ で 作業 する ノマド フリーランス 向け の、 そっと いる Swift macOS CLI 作業 ログ。 `tsukue start <client> [task]` で 始め、 `tsukue stop` で 終わる、 1 行 だけ の シンプル さ。 通知 し ない、 連勝 を 数え ない、 「集中 して ます か?」 と 聞か ない。 月末 に `tsukue month --copy` で 請求 用 Markdown が pbcopy 経由 で クリップボード に 入る — そのまま 請求書 に 貼れる。 机 の 隅 に 置いた ノート みたい な 存在 感 が Intent 4 の 核。
+
+**Discovery Roll**
+Source: 18 (B2B enterprise pain points — CRM/invoicing) | Persona: 30 (カフェ で 作業 する ノマドワーカー) | Platform: 11 (Swift macOS native) | Intent: 4 (そっと寄り添う — 癒し / メンタル / 静か)
+
+**Features Built**
+- `tsukue start <client> [task]` — 進行中 セッション 1 個 だけ 許容、 二重 開始 は エラー
+- `tsukue stop` — 「お疲れ さま」 と 経過 時間 だけ、 評価 数字 は 出さ ない
+- `tsukue cancel` — 進行中 を 破棄 (誤 start 用)
+- `tsukue status` — 進行中 セッション を 1 行 で 表示
+- `tsukue today` — 今日 の セッション を 表 で、 合計 行 付き
+- `tsukue list [--days N]` — 直近 N 日 (デフォルト 7) を 日 別 グループ で
+- `tsukue month [--copy]` — 今月 の クライアント 別 集計 + 日 別 明細 を Markdown で、 `--copy` で pbcopy
+- `tsukue forget` — 全 データ 削除 (確認 あり、 `--yes` で skip)
+- データ は `~/.tsukue-no-sumi/sessions.json` (UTC ISO8601)、 表示 は JST、 `TSUKUE_DATA` 環境変数 で 上書き 可
+- `NO_COLOR` 対応、 TTY 判定 で 自動 色 制御
+- CJK 2 字幅 認識 で 表 の 列 が 綺麗 に 揃う、 はみ 出し は `…` で 切り詰め
+
+**Tech Stack**
+Swift 5.9+ / Foundation / Swift Package Manager / XCTest / library + executable target / no third-party deps / macOS 13+
+
+**Key Files**
+```
+tsukue-no-sumi/
+├── Package.swift              # SwiftPM、 lib + exec + test の 3 ターゲット
+├── README.md / PLAN.md / CLAUDE.md / .gitignore
+├── Sources/
+│   ├── TsukueCore/            # 純ロジック (8 files)
+│   │   ├── Session.swift
+│   │   ├── SessionStore.swift     # atomic write, JSON persistence
+│   │   ├── Aggregator.swift       # today / last N days / month / by-client
+│   │   ├── MarkdownReport.swift   # 月次 → Markdown
+│   │   ├── TableView.swift        # 表 行 整形
+│   │   ├── TimeFormat.swift       # JST 表示 / duration
+│   │   ├── VisualWidth.swift      # CJK 2 字幅
+│   │   ├── BannedWords.swift      # 監査
+│   │   └── TsukueError.swift
+│   └── tsukue/main.swift      # CLI dispatch + pbcopy
+└── Tests/TsukueCoreTests/     # 7 files / 65 tests
+```
+
+**How to Run**
+```bash
+cd tsukue-no-sumi
+swift build -c release
+.build/release/tsukue --help
+.build/release/tsukue start acme-corp "ランディング 微調整"
+.build/release/tsukue stop
+.build/release/tsukue today
+.build/release/tsukue month --copy   # クリップボード に Markdown
+# どこ から でも 呼べる ように:
+cp .build/release/tsukue /usr/local/bin/
+```
+
+**Tests**: 65 passing (Session 5 / TimeFormat 9 / SessionStore 19 / Aggregator 8 / MarkdownReport 6 / VisualWidth 8 / TableView 4 / BannedWords 6) | **Files**: 9 source / 7 test | **LOC**: ~750 | **Build time**: ~32 min
+
+**Challenges & Fixes**
+- **タイムスタンプ の 大量 誤算**: テスト で 「2026-05-17 14:32 JST」 用 epoch を 暗算 し たら 1779679920 と 書いた が、 実 は それ は 2026-05-25 — 8 日 ズレ。 TimeFormat / Aggregator / Markdown / TableView の 10 テスト が 一斉 に 失敗。 Python で `datetime(...).timestamp()` を 検算 し て 全 数字 を 1778995920 系 に 差し替え。 `date` コマンド の macOS 版 は 24 秒 加算 する 癖 が あり 混乱 の もと
+- **defaultPath の env 引数 を 内部 で 無視**: テスト 用 に `env:` 引数 を 取って いた が、 `fileURLForHome()` ヘルパー が `ProcessInfo.processInfo.environment` を 直接 読み、 渡された env が 反映 さ れ ず。 渡さ れた env を そのまま 使う よう に flatten
+- **未使用 変数 警告**: Aggregator で `let end = s.endedAt ?? now` を 書い た が 結局 使わ なかった (跨ぎ は 開始日 で 判定 する 方針 に した ため)。 `_ = now` で 引数 を 明示 的 に 黙ら せる
+- **進行中 セッション の 表示**: `endedAt: nil` を どう 表 に 出す か、 「進行中」 「…」 「(now)」 で 試行 錯誤、 最終 は `  …  ` (3 文字 で 揃う) + Markdown は `進行中`
+
+**Potential Next Steps**
+- メニュー バー アプリ (SwiftUI) で 常時 「進行中」 表示、 クリック で 1 行 ログ
+- `tsukue edit <id>` で 過去 の セッション を 修正
+- `tsukue start --back 30m acme` で 「30 分前 から 始まって た こと に する」
+- Markdown 出力 を CSV / Numbers 形式 に も
+- iCloud Drive 同期 で デバイス 間 共有
+- 時給 を client 別 に 設定 し 月次 で 概算 請求 額 を 出す (税抜 / 税込)
