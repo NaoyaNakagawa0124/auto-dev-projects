@@ -1,5 +1,5 @@
 {
-  "apps_completed": 109,
+  "apps_completed": 110,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -1109,6 +1109,17 @@
         "platform": 5,
         "intent": 3,
         "note": "original platform 19 (p5.js) rerolled to 5 — cycle 22 yozora-tango just used p5.js"
+      }
+    },
+    {
+      "name": "kyokuori",
+      "completed": "2026-05-17T10:10:00Z",
+      "discovery_roll": {
+        "source": 8,
+        "persona": 37,
+        "platform": 12,
+        "intent": 1,
+        "note": "Intent 1 (beauty) — first appearance since cycle 102, the long Intent 4/5/7 streak finally broken"
       }
     }
   ]

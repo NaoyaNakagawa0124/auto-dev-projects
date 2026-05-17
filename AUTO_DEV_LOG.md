@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 09:40 | Total apps: 109 | Total tests: 14,269
+> Last updated: 2026-05-17 10:10 | Total apps: 110 | Total tests: 14,297
 
 ## Quick Overview
 
@@ -115,6 +115,7 @@
 | 107 | [asu-no-eki](#asu-no-eki) | 明日の駅 — 1 時間通勤者の山手線 30 駅 dashboard FastAPI | Python 3.10+/FastAPI 0.136/Jinja2/Vanilla JS | 28 | complete | `pip install -e ".[test]" && asu-no-eki` |
 | 108 | [yozora-tango](#yozora-tango) | 夜空単語 — 詰め込み暗記を星座完成にする p5.js | Vanilla HTML/CSS/p5.js/ES Module/Vitest | 36 | complete | `npm i && python3 -m http.server` (open `/web/`) |
 | 109 | [hakoake-banner](#hakoake-banner) | 箱開けバナー — HN に 架空 の 引っ越し進捗 を 出す Chrome MV3 | Browser Extension MV3/Vanilla JS/Vitest | 34 | complete | `npm i && load unpacked in chrome://extensions` |
+| 110 | [kyokuori](#kyokuori) | 曲織 — チャート曲を刺繍/編み物/モザイクに織る Jupyter | Python 3.10+/numpy/matplotlib/Jupyter | 28 | complete | `pip install -e ".[test,notebook]" && jupyter notebook notebooks/kyokuori.ipynb` |
 
 ---
 
@@ -5602,3 +5603,66 @@ npm test                                  # 34 tests, Chrome 不要
 - 別 Persona 向け 兄弟拡張: 「あなたは 受験まで 53 日 / 教科書 残り -2 冊」 (受験生向け)
 - 拡張アイコンに「箱残り数」 バッジ表示 (リアルタイムカウンター)
 - 英語版 ghost mode: "You may not be moving at all"
+
+---
+
+### <a id="kyokuori"></a>110. kyokuori - 2026-05-17 10:10
+
+**What is this?**
+30 曲の代表チャート曲 (2026-05 想定) を、 6 つの音楽特徴量 (BPM / key / mode / energy / valence / danceability) から 5 種類のクラフトパターン (Cross stitch / Knit / Quilt / Mosaic / Beading) に決定論的に変換する Jupyter ノートブック + Python ライブラリ。 DIY クラフター が「今週のチャート 1 位の曲を、 刺繍 / 編み物 / モザイクの図案として 持ち込めるか」 を 16×16 grid 1 枚に込めて見せる、 Intent 1 (美しさで殴る) 直球の試み。 Espresso は 黄緑＋朱色の軽快な対角クロスステッチ、 Fortnight は 紺紫の落ち着いた knit ストライプ — 同じ曲は何度開いても同じパターン。
+
+**Discovery Roll**
+Source: 8 (Current music charts / Billboard / Spotify) | Persona: 37 (DIY / 手作りクラフター) | Platform: 12 (Jupyter notebook / data visualization) | Intent: 1 (美しさで殴る — スクショ撮りたくなるか)
+
+Intent 1 は cycle 102-109 で 0 回、 今回が リブートポイント。 「音楽 × 手芸」 という非接続のクロスは、 普通の data viz チュートリアルとは違う、 触覚を持ち帰れるアートピース。
+
+**Features Built**
+- 30 曲の代表チャートデータ (Sabrina Carpenter / Taylor Swift / Billie Eilish / Kendrick Lamar / Rosé & Bruno Mars / Charli xcx / Beyoncé / Olivia Rodrigo / Doja Cat / Tate McRae 等)
+- 16 色 HSL パレット: hue = key×30° + (minor +15°)、 saturation 0.30+valence×0.60、 lightness 0.30+energy×0.45、 ±60° spread + danceability wobble
+- 5 パターン: Cross stitch (対角)、 Knit (横ストライプ + 偶奇陰影)、 Quilt (4×4 三角分割)、 Mosaic (12 anchor 擬似 Voronoi)、 Beading (hex offset)
+- 「plate」 (5 パターン横並び) + 「palette_strip」 (16 色帯) の 2 種類の matplotlib figure
+- 配色: 紙白 / 墨 / 鈍金 で統一、 パレットは曲依存
+- BANNED_WORDS 監査 (「絶対」 「必ず」 「神」 「最強」 「神曲」 「炎上」 「ヤバい」) を 30 曲の artist + title に対して pytest で audit
+- 3 つのデモ PNG (espresso / apt / fortnight) を images/ に保存
+- Notebook: 15 cells (Markdown + コード)、 nbformat で生成 + nbconvert --execute で end-to-end smoke (142KB の outputs を検証、 commit 対象外)
+
+**Tech Stack**
+Python 3.10+ / NumPy 2.2 / matplotlib 3.10 / colorsys (標準ライブラリ) / pure logic を src/kyokuori/ に分離 / numpy.random.default_rng は mosaic の anchor placement のみで seeded 使用 / Jupyter 1.0 + nbformat 5.10 / pytest 9.0 で 28 ユニットテスト
+
+**Key Files**
+```
+kyokuori/
+├── src/kyokuori/
+│   ├── tracks.py           # 30 tracks + BANNED_WORDS
+│   ├── palette.py          # HSL → RGB 16 色生成
+│   ├── patterns.py         # 5 種類 (numpy ndarray)
+│   └── renderer.py         # matplotlib plate + palette_strip
+├── tests/                  # 4 files / 28 tests
+├── notebooks/kyokuori.ipynb # 15 cells
+└── images/                 # espresso.png / apt.png / fortnight.png
+```
+
+**How to Run**
+```bash
+cd kyokuori
+pip install -e ".[test,notebook]"
+pytest                                  # 28 tests
+jupyter notebook notebooks/kyokuori.ipynb
+```
+
+**Tests**: 28 passing (tracks 10 / palette 6 / patterns 9 / renderer 3) | **Files**: 13 source + 3 demo PNGs | **LOC**: ~830 | **Build time**: ~30 min
+
+**Challenges & Fixes**
+- **HSL の hue が 24 通り重ならないか**: key (12) × mode (2) で 24 通り、 mode minor を +15° ずらして major と minor を分離。 これで「A minor」 と「A♭ minor」 が隣同士でも違うトーン
+- **mosaic のランダム性 vs テスト**: numpy.random.default_rng を BPM + key + rank の hash で seed することで、 同じ track は同じ mosaic、 違う track は違う mosaic。 「deterministic」 と「変化に富む」 を両立
+- **Jupyter notebook の自動実行ポリシー**: CLAUDE.md で「test では実行しない (CI で重い)」 と宣言した手前、 一度だけ nbconvert --execute で end-to-end 動作確認、 生成された executed.ipynb は .gitignore で除外
+- **アーティスト / 曲名 の取り扱い**: 公開チャート上位曲の artist / title を素直に書きつつ、 音楽特徴値はシミュレーションであることを README に明記 (Spotify API は叩いていない)
+
+**Potential Next Steps**
+- 実 Spotify API を .env.token 経由で叩いてリアルタイム生成
+- 高解像度 PDF エクスポート (印刷可能な図案)
+- 24×24 / 32×32 grid サイズ選択 (細かい刺繍向け)
+- 「アルバム plate」 — 1 アーティストの全曲を並べる
+- Plotly でインタラクティブ版 (hover で曲名 + 特徴量)
+- ユーザー Spotify プレイリスト を CSV 投入できる input mode
+- BPM だけでなく duration を「段数」 に追加マッピング
