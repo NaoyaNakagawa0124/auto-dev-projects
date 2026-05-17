@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "箱開けバナー",
+  "version": "0.1.0",
+  "description": "Hacker News を 見るたび、 あなたの 架空 の 引っ越し 進捗 が 表示される 拡張機能。",
+  "default_locale": "ja",
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://news.ycombinator.com/*"
+  ],
+  "action": {
+    "default_popup": "src/popup.html",
+    "default_title": "箱開けバナー — 引っ越し 進捗"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://news.ycombinator.com/*"],
+      "js": ["src/content.js"],
+      "css": ["src/content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  }
+}

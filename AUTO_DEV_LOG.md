@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 09:10 | Total apps: 108 | Total tests: 14,235
+> Last updated: 2026-05-17 09:40 | Total apps: 109 | Total tests: 14,269
 
 ## Quick Overview
 
@@ -114,6 +114,7 @@
 | 106 | [kyuufu](#kyuufu) | 休符 — 効率厨ゲーマーの「もう十分」 Discord bot | Python 3.10+/discord.py 2.7/pytest | 49 | complete | `pip install -e ".[test]" && DISCORD_TOKEN=... kyuufu` |
 | 107 | [asu-no-eki](#asu-no-eki) | 明日の駅 — 1 時間通勤者の山手線 30 駅 dashboard FastAPI | Python 3.10+/FastAPI 0.136/Jinja2/Vanilla JS | 28 | complete | `pip install -e ".[test]" && asu-no-eki` |
 | 108 | [yozora-tango](#yozora-tango) | 夜空単語 — 詰め込み暗記を星座完成にする p5.js | Vanilla HTML/CSS/p5.js/ES Module/Vitest | 36 | complete | `npm i && python3 -m http.server` (open `/web/`) |
+| 109 | [hakoake-banner](#hakoake-banner) | 箱開けバナー — HN に 架空 の 引っ越し進捗 を 出す Chrome MV3 | Browser Extension MV3/Vanilla JS/Vitest | 34 | complete | `npm i && load unpacked in chrome://extensions` |
 
 ---
 
@@ -5540,3 +5541,64 @@ python3 -m http.server 8080       # プロジェクトルートから
 - 「友達と同じ星座」 を 2 人で完成させる協力モード (Intent 7 へスライド)
 - 学習履歴の週ビュー (streak ではなく単純な完成カウントの棒グラフ)
 - 暗記カードに Web Speech API で音声合成発音
+
+---
+
+### <a id="hakoake-banner"></a>109. hakoake-banner - 2026-05-17 09:40
+
+**What is this?**
+Hacker News を 開くたび、 ページ上部に 「あなたは引っ越し N 日目 / 箱残り M 個」 という 完全に 根拠ゼロ の 「引っ越し 進捗」 を 表示する Chrome 拡張機能 (MV3)。 箱の数は 訪問が 多すぎると 負 に なる。 50 種類の 絶妙にバカっぽいフレーズ (「電子レンジ の 中 に、 何故 か リモコン が います。」 「あなた は 引っ越して いない 可能性 が あります。」 など) が phase (fresh/settling/stale/ghost) に応じて 出る。 引っ越し直後の人は HN を見ない、 HN を見るのは 開発者で 引っ越し中ではない — その 完全な 非接続 を 笑う 拡張機能。
+
+**Discovery Roll**
+Source: 33 (Hacker News) | Persona: 28 (引っ越したばかりの人) | Platform: 5 (Browser extension Chrome MV3) | Intent: 3 (こんなのアリ? — 人に話したくなるか) — original Platform 19 (p5.js) を cycle 22 で使ったばかりだったので Platform のみ reroll、 Source × Persona × Intent はそのまま
+
+**Features Built**
+- HN を訪問するたびに visits++ → 「箱残り」 が減少 (BOXES_PER_VISIT_FACTOR = 1.7)、 訪問が増えるほど マイナスに 沈む
+- 日数で phase 分け: fresh (0-6 日) / settling (7-29) / stale (30-89) / ghost (90+)
+- 50 種類のフレーズを phase ごとに 12-13 件、 deterministic に 1 件選択
+- バナーは HN の `<body>` 先頭に注入、 `×` で 1 度だけ閉じられる (再訪問でまた出る)
+- 拡張ポップアップ: 大きな日数と箱残り、 phase タグ色分け、 直近 5 件のバナー履歴、 「引っ越しをやり直す」 ボタン
+- BANNED_WORDS 監査 (「絶対」 「神」 「最強」 「ヤバい」 「失敗」 「ダメ人間」 「お疲れさま」 「がんばれ」 「努力」 「天才」 「すごい」) を Vitest で 50 フレーズ全件に対して audit
+- 最小権限 — host_permissions は news.ycombinator.com のみ、 permissions は storage のみ
+
+**Tech Stack**
+Manifest V3 Chrome 拡張 (Firefox 互換) / Vanilla JS、 ビルド不要 / chrome.storage.local で永続化 / 純ロジック (stats / lines) は src/ に分離して Vitest で完全 DOM 非依存にテスト / content.js は src/lines.js の line bank を「インライン化」 して持つ (ES module import が content scripts で使えないため) / icons は Python PIL で 16/48/128 px 段ボール柄 PNG を生成 / Vitest で 34 ユニットテスト
+
+**Key Files**
+```
+hakoake-banner/
+├── manifest.json        # MV3, content script + popup, min permissions
+├── icons/               # 16/48/128 PNG (PIL 生成、 段ボール柄)
+├── src/
+│   ├── stats.js         # pure: phase / box math / storage helpers
+│   ├── lines.js         # 50 phrases + BANNED_WORDS
+│   ├── content.js       # HN page injection (inlines line bank)
+│   ├── content.css      # banner styling
+│   ├── popup.html / popup.css / popup.js  # extension popup
+└── tests/               # 3 files / 34 tests
+```
+
+**How to Run**
+```bash
+cd hakoake-banner
+npm install
+npm test                                  # 34 tests, Chrome 不要
+# Chrome で chrome://extensions -> デベロッパーモード -> 「パッケージ化されていない拡張機能を読み込む」 -> hakoake-banner/
+# https://news.ycombinator.com/ でバナーが出る
+```
+
+**Tests**: 34 passing (stats 16 / lines 12 / manifest 6) | **Files**: 12 source + 3 PNG icons | **LOC**: ~750 source + ~210 test | **Build time**: ~30 min
+
+**Challenges & Fixes**
+- **Content script は ES module import 不可**: src/lines.js のフレーズを content.js にインライン化するしかない (bundler 入れずに済ます)。 line bank が src/lines.js (テスト) と content.js (実行) で二重持ち、 manifest.test.js で同期 audit
+- **icons の PNG 生成**: imagemagick が無いので Python PIL で 3 サイズの段ボール柄アイコンを生成
+- **Persona の意外な解釈**: 「引っ越したばかりの人」 をターゲットと言いつつ、 実際は「HN を見ている人 (= 引っ越したばかりではない人)」 を 引っ越したばかりの人として扱う構造。 ターゲットとペルソナの非接続が Intent 3 の笑いの核
+- **「箱残り -32 個」 が成立する数式**: BOXES_PER_VISIT_FACTOR = 1.7 で 訪問回数が 増えるほど マイナスに 沈む。 バグではなく 設計、 「マイナスに 沈む」 こと自体が ジョーク
+
+**Potential Next Steps**
+- Reddit (r/programming) や Lobsters への対応 (manifest 拡張のみ)
+- 拡張ポップアップに 過去 30 日の visits グラフを Canvas で
+- 引っ越し phase を 特殊イベントで切り替え (4 月 桜引っ越し、 9 月 秋引っ越し)
+- 別 Persona 向け 兄弟拡張: 「あなたは 受験まで 53 日 / 教科書 残り -2 冊」 (受験生向け)
+- 拡張アイコンに「箱残り数」 バッジ表示 (リアルタイムカウンター)
+- 英語版 ghost mode: "You may not be moving at all"

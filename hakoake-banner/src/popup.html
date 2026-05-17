@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>箱開けバナー</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header>
+    <div class="brand">箱開けバナー</div>
+    <div class="dim sub">引っ越し の 進捗 (架空) </div>
+  </header>
+
+  <section class="stats">
+    <div class="big-stat">
+      <span class="num" id="days">—</span>
+      <span class="label dim">引っ越し 日目</span>
+    </div>
+    <div class="big-stat">
+      <span class="num" id="boxes">—</span>
+      <span class="label dim">箱 残り</span>
+    </div>
+  </section>
+
+  <section class="phase">
+    <span class="phase-tag" id="phase-tag">—</span>
+  </section>
+
+  <section class="recent">
+    <div class="label dim">直近 の バナー</div>
+    <ul id="recent-list"></ul>
+  </section>
+
+  <footer>
+    <button id="reset" class="ghost-btn">引っ越し を やり直す</button>
+  </footer>
+
+  <script src="popup.js" defer></script>
+</body>
+</html>

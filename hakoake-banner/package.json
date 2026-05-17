@@ -1,0 +1,14 @@
+{
+  "name": "hakoake-banner",
+  "version": "0.1.0",
+  "description": "Chrome extension that imposes fictional moving-house progress on your HN reading time",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "vitest": "^1.6.0"
+  }
+}

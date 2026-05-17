@@ -1,0 +1,59 @@
+#hakoake-banner {
+  position: relative;
+  z-index: 2147483640;
+  width: 100%;
+  background: linear-gradient(180deg, #faf6ee 0%, #f3eddf 100%);
+  border-bottom: 2px solid #b8945b;
+  padding: 10px 16px;
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans",
+               "Yu Gothic UI", system-ui, sans-serif;
+  color: #2a2520;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+#hakoake-banner .hbb-icon {
+  font-size: 18px;
+  filter: saturate(0.85);
+}
+#hakoake-banner .hbb-stats {
+  flex: 0 0 auto;
+  color: #4d4538;
+}
+#hakoake-banner .hbb-stats .hbb-num {
+  color: #9a7a45;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  padding: 0 4px;
+}
+#hakoake-banner .hbb-divider {
+  color: #c79b6c;
+  user-select: none;
+}
+#hakoake-banner .hbb-line {
+  flex: 1 1 auto;
+  color: #2a2520;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+}
+#hakoake-banner .hbb-close {
+  flex: 0 0 auto;
+  background: transparent;
+  border: 0;
+  color: #97a7a0;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 6px;
+}
+#hakoake-banner .hbb-close:hover { color: #2a2520; }
+
+@media (max-width: 640px) {
+  #hakoake-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}

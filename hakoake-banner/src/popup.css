@@ -1,0 +1,76 @@
+:root {
+  --paper:   #faf6ee;
+  --paper-2: #f3eddf;
+  --ink:     #2a2520;
+  --ink-2:   #4d4538;
+  --asa:     #97a7a0;
+  --gold:    #b8945b;
+  --gold-2:  #9a7a45;
+  --dan:     #c79b6c;
+  --rule:    rgba(42,37,32,0.10);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  width: 320px;
+  background: var(--paper);
+  color: var(--ink);
+  font: 13px/1.65 -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic UI", system-ui, sans-serif;
+  padding: 16px 16px 14px;
+}
+header { text-align: center; margin-bottom: 14px; }
+.brand { font-size: 18px; letter-spacing: 0.28em; color: var(--gold); font-weight: 700; }
+.dim   { color: var(--asa); }
+.sub   { font-size: 11px; letter-spacing: 0.14em; margin-top: 4px; }
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  background: var(--paper-2);
+  border-radius: 12px;
+  padding: 12px 10px;
+  margin-bottom: 12px;
+}
+.big-stat   { text-align: center; }
+.big-stat .num { display: block; font-size: 26px; font-weight: 700; color: var(--gold-2); font-variant-numeric: tabular-nums; }
+.big-stat .label { font-size: 10px; letter-spacing: 0.14em; }
+
+.phase { text-align: center; margin-bottom: 12px; }
+.phase-tag {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  background: var(--dan);
+  color: var(--paper);
+}
+.phase-tag.fresh    { background: #adc3a3; color: var(--ink); }
+.phase-tag.settling { background: #d6b88a; color: var(--ink); }
+.phase-tag.stale    { background: #c79b6c; color: var(--paper); }
+.phase-tag.ghost    { background: #4f5d75; color: var(--paper); }
+
+.recent { margin-bottom: 12px; }
+.recent .label { font-size: 10px; letter-spacing: 0.14em; margin-bottom: 6px; }
+#recent-list {
+  list-style: none; padding: 0; margin: 0;
+  display: flex; flex-direction: column; gap: 6px;
+}
+#recent-list li {
+  font-size: 11px;
+  color: var(--ink-2);
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: var(--paper-2);
+  line-height: 1.5;
+}
+#recent-list li.empty { background: transparent; color: var(--asa); font-style: italic; padding-left: 0; }
+
+footer { text-align: center; }
+.ghost-btn {
+  appearance: none; background: transparent; border: 1px solid var(--rule);
+  color: var(--ink-2); font: inherit; padding: 8px 16px; border-radius: 999px;
+  letter-spacing: 0.14em; font-size: 11px; cursor: pointer;
+}
+.ghost-btn:hover { background: rgba(184,148,91,0.08); }
