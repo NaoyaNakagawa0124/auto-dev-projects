@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="popup.css">
+  <title>犬採点</title>
+</head>
+<body>
+  <div class="brand">
+    <span class="brand-mark">🐕</span>
+    <div>
+      <div class="brand-title">犬採点</div>
+      <div class="brand-sub">レシピ ページ を 犬 が 採点</div>
+    </div>
+  </div>
+
+  <section class="block">
+    <div class="block-title">採点 する 犬</div>
+    <div class="dog-list" id="dog-list"></div>
+  </section>
+
+  <section class="block">
+    <div class="block-title">表示</div>
+    <label class="toggle">
+      <input type="checkbox" id="toggle-enabled">
+      <span>レシピ ページ で 自動 表示</span>
+    </label>
+  </section>
+
+  <section class="block">
+    <div class="block-title">直近 の 採点</div>
+    <ul id="history-list" class="history"></ul>
+  </section>
+
+  <div class="foot">
+    コメディ 拡張 で あって、 飼育 助言 で は あり ません。
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

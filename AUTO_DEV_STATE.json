@@ -1,5 +1,5 @@
 {
-  "apps_completed": 115,
+  "apps_completed": 116,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -627,6 +627,12 @@
       "persona": 7,
       "platform": 10,
       "intent": 5
+    },
+    {
+      "source": 9,
+      "persona": 10,
+      "platform": 5,
+      "intent": 3
     }
   ],
   "history": [
@@ -1187,6 +1193,17 @@
         "platform": 10,
         "intent": 5,
         "note": "Edu tech × efficiency-min-maxer gamer × Rust+WASM × addictive — speedrun flashcards. Rust+WASM 11 cycles fresh; speedrun framing (PB / WR / frame data) hits 効率厨 directly"
+      }
+    },
+    {
+      "name": "inu-saiten",
+      "completed": "2026-05-17T13:15:00Z",
+      "discovery_roll": {
+        "source": 9,
+        "persona": 10,
+        "platform": 5,
+        "intent": 3,
+        "note": "Food/recipe × dog-obsessed owner × Chrome MV3 × comedy — overlay 'your dog's recipe review'. Comedy framing critical: extension explicitly disclaims feeding advice"
       }
     }
   ]

@@ -119,5 +119,6 @@
 | 113 | yofuke-news | 夜更けニュース — 夜型ゲーマー の 深夜 indie ニュース CLI | Node 22/chalk 5/Vitest | 48 |
 | 114 | tsukue-no-sumi | 机 の 隅 — ノマド の そっと いる 作業ログ Swift macOS CLI | Swift 5.9+/Foundation/XCTest | 65 |
 | 115 | sokkou-deck | 速攻デッキ — 効率厨 ゲーマー の フラッシュカード スピードラン | Rust + WASM/wasm-bindgen/vanilla JS | 48 |
+| 116 | inu-saiten | 犬採点 — レシピ サイト を 犬 が 採点 する Chrome MV3 拡張 | Chrome MV3/vanilla JS/Vitest | 69 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

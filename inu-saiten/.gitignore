@@ -1,0 +1,5 @@
+node_modules/
+.vitest-cache/
+coverage/
+.DS_Store
+extension.zip

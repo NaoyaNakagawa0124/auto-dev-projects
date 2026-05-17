@@ -1,0 +1,210 @@
+#inu-saiten-host {
+  all: initial;
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2147483646;
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif;
+  width: min(720px, calc(100vw - 32px));
+  pointer-events: auto;
+}
+
+.inu-saiten-card {
+  all: initial;
+  display: block;
+  font-family: inherit;
+  color: #1a1a1a;
+  background: rgba(255, 252, 247, 0.94);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border-radius: 18px;
+  border: 1px solid rgba(160, 130, 100, 0.25);
+  box-shadow: 0 18px 60px rgba(60, 30, 0, 0.18), 0 2px 10px rgba(60, 30, 0, 0.08);
+  padding: 18px 20px 16px;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.inu-saiten-card__head {
+  all: initial;
+  display: grid;
+  grid-template-columns: 1fr auto 28px;
+  gap: 14px;
+  align-items: start;
+  font-family: inherit;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed rgba(160, 130, 100, 0.4);
+}
+
+.inu-saiten-card__brand {
+  all: initial;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-family: inherit;
+  color: inherit;
+}
+
+.inu-saiten-card__mark {
+  font-size: 30px;
+  line-height: 1;
+}
+
+.inu-saiten-card__title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #5a3a1a;
+  letter-spacing: 0.3px;
+}
+
+.inu-saiten-card__sub {
+  font-size: 12px;
+  color: #8a7060;
+  margin-top: 2px;
+}
+
+.inu-saiten-card__score {
+  text-align: right;
+}
+
+.inu-saiten-card__stars {
+  font-size: 18px;
+  color: #d4a022;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.inu-saiten-card__points {
+  font-size: 12px;
+  font-weight: 700;
+  color: #5a3a1a;
+  margin-top: 4px;
+  letter-spacing: 0.5px;
+}
+
+.inu-saiten-card__close {
+  all: initial;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 28px;
+  height: 28px;
+  font-size: 18px;
+  line-height: 1;
+  color: #8a7060;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(160, 130, 100, 0.3);
+  border-radius: 50%;
+  cursor: pointer;
+  font-family: inherit;
+}
+.inu-saiten-card__close:hover {
+  color: #1a1a1a;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.inu-saiten-card__body {
+  all: initial;
+  display: block;
+  font-family: inherit;
+  font-size: 13.5px;
+  color: #2a2018;
+}
+
+.inu-saiten-card__quote {
+  all: initial;
+  display: block;
+  padding: 10px 14px 10px 18px;
+  background: rgba(255, 230, 200, 0.45);
+  border-left: 3px solid #d4a022;
+  border-radius: 6px;
+  margin: 0 0 14px;
+  font-style: italic;
+  font-family: inherit;
+  color: inherit;
+  font-size: inherit;
+  line-height: 1.6;
+}
+
+.inu-saiten-row {
+  all: initial;
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 12px;
+  align-items: center;
+  font-family: inherit;
+  margin-bottom: 6px;
+}
+
+.inu-saiten-row__label {
+  font-size: 12px;
+  color: #5a3a1a;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.inu-saiten-row__chips {
+  all: initial;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-family: inherit;
+}
+
+.inu-saiten-chip {
+  all: initial;
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+}
+
+.inu-saiten-chip em {
+  font-style: normal;
+  opacity: 0.65;
+  margin-left: 4px;
+}
+
+.inu-saiten-chip--love {
+  background: #fff1a8;
+  color: #6a4500;
+}
+.inu-saiten-chip--danger {
+  background: #ffd4d4;
+  color: #7a2020;
+}
+.inu-saiten-chip--meh {
+  background: #e8e8e8;
+  color: #555;
+}
+
+.inu-saiten-card__foot {
+  font-size: 11px;
+  color: #8a7060;
+  margin-top: 12px;
+  text-align: right;
+  letter-spacing: 0.2px;
+}
+
+@media (max-width: 640px) {
+  #inu-saiten-host {
+    top: 8px;
+    width: calc(100vw - 16px);
+  }
+  .inu-saiten-card__head {
+    grid-template-columns: 1fr 28px;
+  }
+  .inu-saiten-card__score {
+    grid-column: 1 / -1;
+    text-align: left;
+    margin-top: 8px;
+  }
+  .inu-saiten-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}

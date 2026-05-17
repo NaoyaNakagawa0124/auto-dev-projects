@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "犬採点 (inu-saiten)",
+  "version": "0.1.0",
+  "description": "もし あなた の 犬 が レシピ 評論家 だったら こう 言う だろう、 を ページ 上部 に 自動 で 表示 する コメディ 拡張",
+  "default_locale": "ja",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "犬採点",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://cookpad.com/*",
+        "https://www.cookpad.com/*",
+        "https://kurashiru.com/*",
+        "https://www.kurashiru.com/*",
+        "https://delishkitchen.tv/*",
+        "https://cooking.nytimes.com/*",
+        "https://www.allrecipes.com/*",
+        "https://recipe.rakuten.co.jp/*",
+        "https://www.orangepage.net/*"
+      ],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": ["storage"]
+}

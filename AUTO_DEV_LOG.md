@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 12:45 | Total apps: 115 | Total tests: 14,537
+> Last updated: 2026-05-17 13:15 | Total apps: 116 | Total tests: 14,606
 
 ## Quick Overview
 
@@ -121,6 +121,7 @@
 | 113 | [yofuke-news](#yofuke-news) | 夜更けニュース — 夜型ゲーマー の 深夜 indie ニュース CLI | Node 22/chalk 5/Vitest | 48 | complete | `npm i && node src/cli.js` |
 | 114 | [tsukue-no-sumi](#tsukue-no-sumi) | 机 の 隅 — ノマド の そっと いる 作業ログ Swift CLI | Swift 5.9+/Foundation/XCTest | 65 | complete | `swift build -c release && .build/release/tsukue` |
 | 115 | [sokkou-deck](#sokkou-deck) | 速攻デッキ — 効率厨 ゲーマー の フラッシュカード スピードラン | Rust + WASM/wasm-bindgen/vanilla JS | 48 | complete | `wasm-pack build --target web --out-dir www/pkg && python3 -m http.server` |
+| 116 | [inu-saiten](#inu-saiten) | 犬採点 — レシピ サイト を 犬 が 採点 する Chrome MV3 拡張 | Chrome MV3/vanilla JS/Vitest | 69 | complete | Load `inu-saiten/extension/` unpacked in `chrome://extensions` |
 
 ---
 
@@ -6014,4 +6015,78 @@ cd www && python3 -m http.server 8000
 - シェア URL: 結果 を hash に encode、 「俺 の PB 抜いて み」
 - タイピング モード: 1 文字 タイプ ミス で 再 タイプ 必須 の シビア 版
 - ハイ コントラスト + reduced-motion アクセシビリティ オプション
+
+---
+
+### <a id="inu-saiten"></a>116. inu-saiten - 2026-05-17 13:15
+
+**What is this?**
+レシピ サイト (cookpad / クラシル / DELISH KITCHEN / NYT Cooking / AllRecipes / 楽天レシピ / オレンジページ) を 開く と、 ページ 上部 に 「もし あなた の 犬 が この レシピ を 採点 したら」 と いう glassmorphism オーバーレイ が 自動 で 出る Chrome MV3 拡張。 100+ 種類 の 食材 辞書 から 犬 視点 の スコア を 計算 し、 4 つ の 犬 キャラ (お利口 ポチ / シニア マロ / ヤンチャ タロウ / 哲学者 ジョン) が それぞれ 違う 文体 で 1 段落 の レビュー を 書く。 危険 食材 (ネギ 属 / チョコ / ぶどう / アボカド 等) は ⚠️ で 「部屋 の 隅 に 退避」、 「これ は コメディ 拡張 で あって、 飼育 助言 で は あり ません」 と 各 オーバーレイ + README に 明記 する 笑い 軸 の 作品。
+
+**Discovery Roll**
+Source: 9 (Trending food / recipe / restaurant culture) | Persona: 10 (犬に夢中すぎる飼い主) | Platform: 5 (Browser extension - Chrome MV3) | Intent: 3 (「こんなのアリ?」 と 笑わせる — コンセプチュアル / 一発ネタ)
+
+**Features Built**
+- 7 サイト 自動 検出 + 材料 抽出 (Schema.org `itemprop` 優先、 fallback で 単位 入り `<li>`、 最終 fallback で body text)
+- 4 つ の 犬 キャラ × 4 voice (polite / wise / excited / philosophical)、 各 voice は 18 句 の フレーズ プール
+- 100+ 食材 辞書 (love 50 / meh 35 / danger 16)、 全 alias は 偽陽性 防止 で 精査
+- 採点: 3 段 cap (1/2/3 danger で 80/60/50)、 love avg 90+ で +10 ボーナス、 meh のみ で 40-60 範囲
+- deterministic レビュー (xorshift32 + URL+dog seed)、 同 URL × 同 dog で 同 文
+- popup: キャラ 切替 + ON/OFF + 直近 20 件 履歴
+- glassmorphism オーバーレイ、 all:initial で ホスト CSS 隔離、 close ボタン + sessionStorage 抑止
+- アクセシビリティ: role="dialog" / aria-label / モバイル 幅 対応
+- BANNED_WORDS 監査 (「殺す」 「死ぬ」 「致命」 「劇毒」 「クソ」 「無能」 「飼い主 失格」 「お前」) を 全 phrase × dog 名 × 食材 warning で 走査
+
+**Tech Stack**
+Chrome Extension Manifest V3 / vanilla JS / chrome.storage.local / PIL 生成 icon / Vitest 2 / 純ロジック は ES module で 分離 (src/) + MV3 content script 用 に classic script 版 を 同梱 (extension/content.js)、 依存 ゼロ (vitest 以外)
+
+**Key Files**
+```
+inu-saiten/
+├── package.json
+├── README.md / PLAN.md / CLAUDE.md / SUMMARY.md
+├── src/                          # ES module (Vitest target)
+│   ├── ingredients.js            # 100+ 食材 辞書
+│   ├── characters.js             # 4 犬 + voice phrase pool
+│   ├── detector.js               # サイト 判定 + 材料 抽出
+│   ├── scorer.js                 # 採点 + 星
+│   ├── reviewer.js               # 1 段落 レビュー
+│   ├── formatter.js              # overlay HTML (DOM-free)
+│   ├── rand.js / banned.js
+├── tests/                        # 7 files / 69 tests
+└── extension/                    # Chrome MV3
+    ├── manifest.json
+    ├── content.js                # classic script、 純ロジック を 自己 完結
+    ├── content.css               # glassmorphism + all:initial
+    ├── popup.html / popup.css / popup.js
+    ├── background.js
+    └── icons/                    # 16/48/128 PNG (PIL)
+```
+
+**How to Run**
+```bash
+cd inu-saiten
+npm install
+npm test                                       # 69 tests
+# Chrome で chrome://extensions/ → デベロッパー モード → 「読み込み」
+# inu-saiten/extension/ を 選択
+# 対応 レシピ サイト を 開く と 上部 に カード が 出る
+```
+
+**Tests**: 69 passing (ingredients 10 / detector 12 / scorer 12 / reviewer 14 / banned 7 / formatter 7 / rand 7) | **Files**: 8 src + 7 test + 7 extension assets | **LOC**: ~1,400 | **Build time**: ~30 min
+
+**Challenges & Fixes**
+- **短すぎ alias で 偽陽性**: `油` が `ごま油` 内 に、 `ねぎ` が `玉ねぎ` 内 に 含まれて 1 つ の 材料 が 2 重 検出。 全 alias を 監査、 衝突 する 短 alias (`油`/`ねぎ`/`酒`/`卵黄`/`卵白`/`米`/`鶏がら`) を 削除 か 「白ご飯」 「食塩」 等 へ 具体 化。 結果 同 テスト 文 で score 47 (誤 cap) → 57 (正しい cap)
+- **MV3 で ES module content script 不可**: 純ロジック を ES module で `src/` に 書き Vitest で カバー、 同 ロジック を classic script の `extension/content.js` で 自己 完結 で 再 実装 (関数 シグネチャ 一致、 ingredients / phrases は 同 構造)
+- **ホスト CSS と の 干渉**: レシピ サイト の グローバル CSS が overlay に 漏れ。 `.inu-saiten-*` を 全部 `all:initial` で リセット し、 必要 な プロパティ だけ 明示 的 に 再 設定
+- **disclaimer 配置**: 「これ は コメディ 拡張 で あって 飼育 助言 で は ない」 を README / CLAUDE / manifest / 各 overlay foot の 4 箇所 で 明示
+
+**Potential Next Steps**
+- custom 食材 辞書 (popup で 「うち の 犬 は アレルギー」 を 上書き)
+- より 精密 な DOM-based 材料 抽出 (heuristic で `g/ml/個` 単位 を 直前 名詞 と セット)
+- 「犬 の 1 日 サマリー」 — 1 日 採点 集計 を popup で 一望
+- SNS シェア カード PNG export (Canvas で render)
+- 多 言語 (中 / 韓 レシピ サイト + 各国 食材)
+- love brag 時 に 「ワン!」 SFX (Web Audio)
+- 拡張 内 ページ で 過去 全 採点 を 検索 / フィルタ
 
