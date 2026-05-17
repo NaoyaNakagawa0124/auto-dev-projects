@@ -1,5 +1,5 @@
 {
-  "apps_completed": 107,
+  "apps_completed": 108,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -1087,6 +1087,17 @@
         "platform": 13,
         "intent": 2,
         "note": "source/persona both rolled 19 — same number from different sides of the same coin"
+      }
+    },
+    {
+      "name": "yozora-tango",
+      "completed": "2026-05-17T09:10:00Z",
+      "discovery_roll": {
+        "source": 12,
+        "persona": 8,
+        "platform": 19,
+        "intent": 5,
+        "note": "Intent 5 (addictive) applied to the memorization act itself, not as a distraction from study"
       }
     }
   ]

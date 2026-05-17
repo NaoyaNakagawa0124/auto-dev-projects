@@ -111,5 +111,6 @@
 | 105 | sekai-wadaichou | 世界話題帳 — 就活生のための深夜の地球儀 Textual TUI | Python 3.10+/Textual 1.0/pytest-asyncio | 31 |
 | 106 | kyuufu | 休符 — 効率厨ゲーマーの「もう十分」 Discord bot | Python 3.10+/discord.py 2.7/pytest | 49 |
 | 107 | asu-no-eki | 明日の駅 — 1 時間通勤者の山手線 30 駅 dashboard FastAPI | Python 3.10+/FastAPI 0.136/Jinja2/Vanilla JS | 28 |
+| 108 | yozora-tango | 夜空単語 — 詰め込み暗記を星座完成にする p5.js | Vanilla HTML/CSS/p5.js/ES Module/Vitest | 36 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

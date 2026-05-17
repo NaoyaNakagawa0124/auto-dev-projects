@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 08:40 | Total apps: 107 | Total tests: 14,199
+> Last updated: 2026-05-17 09:10 | Total apps: 108 | Total tests: 14,235
 
 ## Quick Overview
 
@@ -113,6 +113,7 @@
 | 105 | [sekai-wadaichou](#sekai-wadaichou) | 世界話題帳 — 就活生のための深夜の地球儀 Textual TUI | Python 3.10+/Textual 1.0/pytest-asyncio | 31 | complete | `pip install -e ".[test]" && sekai-wadaichou` |
 | 106 | [kyuufu](#kyuufu) | 休符 — 効率厨ゲーマーの「もう十分」 Discord bot | Python 3.10+/discord.py 2.7/pytest | 49 | complete | `pip install -e ".[test]" && DISCORD_TOKEN=... kyuufu` |
 | 107 | [asu-no-eki](#asu-no-eki) | 明日の駅 — 1 時間通勤者の山手線 30 駅 dashboard FastAPI | Python 3.10+/FastAPI 0.136/Jinja2/Vanilla JS | 28 | complete | `pip install -e ".[test]" && asu-no-eki` |
+| 108 | [yozora-tango](#yozora-tango) | 夜空単語 — 詰め込み暗記を星座完成にする p5.js | Vanilla HTML/CSS/p5.js/ES Module/Vitest | 36 | complete | `npm i && python3 -m http.server` (open `/web/`) |
 
 ---
 
@@ -5473,3 +5474,69 @@ asu-no-eki                      # uvicorn で起動
 - マップ統合 (Leaflet で実際の駅座標と紐付け)
 - 駅周辺の現在の写真 (Google Street View deep link)
 - 「今週通る駅」 を 7 駅ピックアップする週ビュー
+
+---
+
+### <a id="yozora-tango"></a>108. yozora-tango - 2026-05-17 09:10
+
+**What is this?**
+深夜 2 時に詰め込み暗記している学生のための、 暗記行為そのものを星座完成ゲームに変える p5.js + Vanilla JS の web アプリ。 5 分のセッション中、 30 件の英単語カードが順に登場し、 「思い出せた」 を 1 タップするごとに、 現在埋めている星座 (オリオン / はくちょう / カシオペア / こぐま / ペガサスの大四辺形) の次の星が点灯し、 グラフのエッジに沿って光が広がる。 5 つの星座 (合計 28 個の星) を 30 カードで埋める設計。 完成した星座は「夜空コレクション」 に永続化、 streak も連勝も無し。
+
+**Discovery Roll**
+Source: 12 (Science breakthroughs / space news) | Persona: 8 (深夜 2 時に詰め込み勉強する学生) | Platform: 19 (p5.js / Three.js creative coding) | Intent: 5 (夢中にさせる — 時間を忘れるか)
+
+Intent 5 は、 「勉強から学生を引きはがして時間を忘れさせる」 という形で使うと害悪。 そこで本作では Intent 5 を「暗記行為そのものに適用する」 という決断をし、 暗記を「星座を完成させる」 小さな中毒に置き換えた。 5 分の hard timeout で「沼にハマらない夢中」 を作る。
+
+**Features Built**
+- 30 件の英単語カード (中・高校レベル、 abandon / acquire / candid / diminish / meticulous / scrutinize など)、 各カードに hint (品詞) 付き
+- 5 つの星座を graph (points + edges) として定義、 unit square 0..1 で配置 — 合計 28 stars
+- 5 分のセッションタイマー、 残り時間 + 完成星座数を HUD に表示
+- p5.js canvas: 60 個の twinkling 背景星 + 現在星座の点灯 / glow halo / 灯火色 edge 描画
+- 「思い出せた」 (Space / →) と「忘れた」 (← / J) のキーボード対応
+- セッション完了 → コレクション保存 → ねぎらい文 (CLOSERS 4 種) で締め
+- 禁止語監査 (「連勝」 「達成」 「完璧」 「神レベル」 「最強」 「革命的」) を Vitest で全 UI + jp 訳に対して audit
+- 「夜空コレクション」 が intro 画面の details で見られる、 各星座の完成回数を表示
+
+**Tech Stack**
+Vanilla HTML / CSS / ES Module / p5.js 1.10 (CDN) / Vitest 1.6 / 純ロジック (cards / constellations / game / rand) を src/ に分離、 web/app.js だけが DOM + p5.js を触る / xorshift32 + golden-ratio warmup / localStorage 永続化
+
+**Key Files**
+```
+yozora-tango/
+├── src/
+│   ├── rand.js            # xorshift32 + warmup
+│   ├── cards.js           # 30 vocab cards + BANNED_WORDS
+│   ├── constellations.js  # 5 constellations (28 stars total)
+│   └── game.js            # GameSession class + CLOSERS
+├── tests/                 # 4 files / 36 tests
+└── web/
+    ├── index.html         # intro / round / result 3 screens
+    ├── style.css          # 紙 backdrop + 紺夜空
+    └── app.js             # session orchestration + p5.js sketch
+```
+
+**How to Run**
+```bash
+cd yozora-tango
+npm install
+npm test                          # 36 tests
+python3 -m http.server 8080       # プロジェクトルートから
+# http://localhost:8080/web/
+```
+
+**Tests**: 36 passing (cards 9 / constellations 10 / game 13 / rand 4) | **Files**: 10 source | **LOC**: ~700 source + ~365 test | **Build time**: ~28 min
+
+**Challenges & Fixes**
+- **Intent 5 の使い方**: 詰め込み勉強生に「時間を忘れる」 ものを与えると勉強が止まる害悪。 「暗記行為そのものを addictive にする」 方向にひねり、 5 分の hard timeout で区切ることで「沼にハマらない夢中」 を作った
+- **p5.js とテストの分離**: p5.js は CDN + window.p5 でロード前提なので unit test できない。 純ロジックを src/ に完全分離し、 Vitest はそこだけ叩く。 web/app.js は DOM + p5 をつなぐ薄いラッパー
+- **xorshift32 の小さい seed バイアス**: aisaji / yozora 共通の予防適用。 golden-ratio XOR + 3 ラウンド warmup
+- **星座データの連結グラフ検証**: edge が全 points を連結する保証が必要 (孤立点は視覚的に意味不明)。 BFS 風の reachability テストを書いた
+
+**Potential Next Steps**
+- 暗記カードのデータパック切替 (歴史用語 / 数式記号 / 古文単語)
+- 星座を 5 → 12 に増やし、 月別星座コレクション (5 月 = ヘラクレス、 6 月 = からす)
+- 「今夜のお題」 を時刻別 (22 時 = 短文 / 2 時 = 単語のみ / 4 時 = 復習) に切り替え
+- 完成した星座を SVG エクスポート (Tumblr / X に貼れる)
+- 「友達と同じ星座」 を 2 人で完成させる協力モード (Intent 7 へスライド)
+- 学習履歴の週ビュー (streak ではなく単純な完成カウントの棒グラフ)
+- 暗記カードに Web Speech API で音声合成発音

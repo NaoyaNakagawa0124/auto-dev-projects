@@ -1,0 +1,14 @@
+{
+  "name": "yozora-tango",
+  "version": "0.1.0",
+  "description": "夜空単語 — 深夜 2 時の詰め込み暗記を 5 分の星座コレクションに変える p5.js",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "vitest": "^1.6.0"
+  }
+}
