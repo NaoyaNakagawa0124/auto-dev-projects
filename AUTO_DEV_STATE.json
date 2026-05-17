@@ -1,5 +1,5 @@
 {
-  "apps_completed": 111,
+  "apps_completed": 112,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -1131,6 +1131,17 @@
         "platform": 9,
         "intent": 1,
         "note": "Persona 23 reappears 6 cycles after sekai-wadaichou (TUI) — totally different form (Electron desktop newspaper)"
+      }
+    },
+    {
+      "name": "ashiato-nikki",
+      "completed": "2026-05-17T11:10:00Z",
+      "discovery_roll": {
+        "source": 29,
+        "persona": 31,
+        "platform": 5,
+        "intent": 2,
+        "note": "Browser ext repeats after cycle 23 but completely different character — utility for any URL vs HN-only absurdity"
       }
     }
   ]

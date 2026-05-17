@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 10:40 | Total apps: 111 | Total tests: 14,325
+> Last updated: 2026-05-17 11:10 | Total apps: 112 | Total tests: 14,376
 
 ## Quick Overview
 
@@ -117,6 +117,7 @@
 | 109 | [hakoake-banner](#hakoake-banner) | 箱開けバナー — HN に 架空 の 引っ越し進捗 を 出す Chrome MV3 | Browser Extension MV3/Vanilla JS/Vitest | 34 | complete | `npm i && load unpacked in chrome://extensions` |
 | 110 | [kyokuori](#kyokuori) | 曲織 — チャート曲を刺繍/編み物/モザイクに織る Jupyter | Python 3.10+/numpy/matplotlib/Jupyter | 28 | complete | `pip install -e ".[test,notebook]" && jupyter notebook notebooks/kyokuori.ipynb` |
 | 111 | [sekai-no-choukan](#sekai-no-choukan) | 世界の朝刊 — 就活生の朝 5 分の Electron デスクトップ 朝刊 | Electron 31/Vanilla JS/Vitest | 28 | complete | `npm i && npm start` |
+| 112 | [ashiato-nikki](#ashiato-nikki) | 足跡日記 — 続かない 日記 を 1 タップ で 残す Chrome MV3 | Browser Extension MV3/Vanilla JS/Vitest | 51 | complete | `npm i && load unpacked in chrome://extensions` |
 
 ---
 
@@ -5731,3 +5732,72 @@ npm start                            # electron .
 - 印刷 用 CSS で B4 出力 (朝食 と 一緒 に 読める)
 - 別 言語 版 (英語 / 中国語) を タブ なし で 切り替え
 - PDF エクスポート で 折り紙 風 に 印刷
+
+---
+
+### <a id="ashiato-nikki"></a>112. ashiato-nikki - 2026-05-17 11:10
+
+**What is this?**
+日記 が 続かない 人 の 9 割 が Quora / 知恵袋 に 投稿 する 古典 的 愚痴 (毎日 書く 内容 が 思いつかない、 streak が プレッシャー、 過去 が 散逸 して 探せない) を 3 つ とも 同時 に 解決 する Chrome 拡張機能 (MV3)。 ツールバー の 足跡 アイコン を 1 タップ で 現在 ページ の URL + タイトル + 任意 メモ を 「今日 の 足跡」 として 保存。 streak / 連勝 / 「N 日 連続!」 / 「書いて ない 日 です よ」 — 全部 なし、 ただ 残す だけ。 オプション 画面 で 月 別 タイムライン + 検索、 JSON / Markdown エクスポート も。 既存 ソリューション (Day One / Bear / 紙 ノート) は 「日記 を 書く」 を 前提 と する が、 本作 は 「書かない 日記」 の 解釈。
+
+**Discovery Roll**
+Source: 29 (A problem you overheard someone complaining about / Quora 風 愚痴) | Persona: 31 (日記つけたいけど続かない人) | Platform: 5 (Browser extension - Chrome MV3) | Intent: 2 (困ってる人を助ける — 翌日 も 開きたく なるか)
+
+Browser extension は cycle 23 (hakoake-banner) でも 使った が、 そちら は HN 限定 / Intent 3 (絶妙にバカっぽい) で、 本作 は 任意 URL / Intent 2 (実用) — 全く 別 性格 の 拡張機能。
+
+**Features Built**
+- 1 タップ で 残す: 現在 タブ の URL + title を 自動 取得、 メモ は 空 で OK、 ⌘/Ctrl+Enter で 即 保存
+- 今日 の 足跡 リスト (popup) — 最新 8 件、 各 entry に 時刻 + タイトル + メモ + 削除
+- 月別 タイムライン (options) — YYYY-MM / 日付 H3 / リンク 付き bullet
+- 検索: タイトル / URL / メモ の 部分 一致
+- エクスポート: JSON (version: 1) + Markdown (h1/h2/h3 + link bullet)
+- 「全部 を 消去」 — 確認 ダイアログ 付き
+- 検証: URL 必須 / 長さ上限 (URL 2048 / title 300 / note 200)、 不正 entry は silent drop
+- BANNED_WORDS audit (「がんばれ」 「努力」 「連勝」 「達成」 「神」 「最強」 「失敗」 「ダメ」 「続けて ない」 「続かない 人」)
+- 最小権限 — storage + activeTab のみ、 host_permissions なし、 background script なし
+- 罪悪感 ゼロ 設計: streak / 「今日 まだ です ね」 / ピンク 警告 — 一切 なし
+
+**Tech Stack**
+Manifest V3 Chrome 拡張 (Firefox 互換) / Vanilla JS、 ビルド 不要 / 純ロジック (storage / dates / entry / diary / exporter) を src/ に 分離 / storage adapter pattern で memoryStorage を test に / chrome.storage.local 実装 を 拡張機能 に / icons は Python PIL で 16/48/128 px の 足跡 silhouette / Vitest で 51 ユニット テスト
+
+**Key Files**
+```
+ashiato-nikki/
+├── manifest.json            # MV3, min permissions
+├── icons/                   # 16/48/128 PNG (足跡 silhouette)
+├── src/
+│   ├── storage.js           # memoryStorage + chromeStorage adapters
+│   ├── dates.js             # todayIso / groupByDay / groupByMonth / search
+│   ├── entry.js             # makeEntry + isValidEntry + 長さ上限
+│   ├── diary.js             # addEntry / listEntries / entriesForDay / removeEntry
+│   ├── exporter.js          # toJson + toMarkdown + BANNED_WORDS
+│   ├── popup.html/.css/.js  # capture + today's footprints
+│   └── options.html/.css/.js # full timeline + search + export
+└── tests/                   # 6 files / 51 tests
+```
+
+**How to Run**
+```bash
+cd ashiato-nikki
+npm install
+npm test                            # 51 tests, Chrome 不要
+# chrome://extensions -> デベロッパーモード -> 「パッケージ化されていない拡張機能を読み込む」
+```
+
+**Tests**: 51 passing (storage 5 / dates 10 / entry 11 / diary 7 / exporter 12 / manifest 6) | **Files**: 13 source + 6 test + 3 PNG | **LOC**: ~3216 | **Build time**: ~30 min
+
+**Challenges & Fixes**
+- **chrome.storage は test で 使えない**: storage adapter パターン を 採用、 メモリ 実装 で 単体 検証 と Chrome 実機 動作 の 両方 を カバー
+- **MV3 popup で ES module を 使えない**: src/popup.js と src/options.js では `import` を 諦め、 src/ の 純ロジック を ファイル に インライン化 (cycle 23 で 確立 した pattern)
+- **clone protection in memoryStorage**: structuredClone を 使って set/get で reference を 切り離し、 「set 後 に 元 オブジェクト を 変えても store の 値 が 変わらない」 を 保証
+- **「invalid entry の silent drop」 設計**: localStorage が 拡張機能 アップデート / 手動編集 / 古い バージョン から の 移行 で 壊れた 場合、 listEntries は isValidEntry で フィルタ する だけ で throw しない
+- **罪悪感 ゼロ の トーン 維持**: BANNED_WORDS を 設定 + exporter の Markdown 出力 を Vitest で audit、 「Day N continuous!」 「あなた は 続けて いません」 など が 1 文字 も 入らない こと を 自動 担保
+
+**Potential Next Steps**
+- タグ 機能 (#仕事 / #読書) と タグ 別 タイムライン
+- Daily summary (オプトイン): 「今日 の 足跡 7 件、 一番 長く 滞在 した の は X」
+- 画像 / favicon の キャッシュ で カード プレビュー
+- 2 人 で 共有 (Firebase / 自前 サーバー)、 「2 人 の 共通 足跡」 ビュー
+- 音声 メモ (Web Speech API、 車 の 運転 後 など)
+- iOS Safari Web Extension 移植
+- 月次 PDF 自動 出力 (毎月 初め に 前月 を Markdown → PDF)

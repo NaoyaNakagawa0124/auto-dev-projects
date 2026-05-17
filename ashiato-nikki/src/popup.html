@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>足跡日記</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header>
+    <div class="brand">足跡日記</div>
+    <div class="sub dim" id="today-label">— 今日 —</div>
+  </header>
+
+  <section class="capture">
+    <div class="capture-page" id="capture-page">
+      <div class="capture-title" id="capture-title">— 読み込み 中 —</div>
+      <div class="capture-url dim"   id="capture-url"></div>
+    </div>
+    <textarea id="note-input"
+              maxlength="200"
+              placeholder="ひとこと  (任意、 200 字 まで)"></textarea>
+    <button id="add-btn" class="primary-btn">
+      この ページ を 足跡 に 残す
+    </button>
+    <div id="status" class="dim status" aria-live="polite"></div>
+  </section>
+
+  <section class="today-list">
+    <div class="section-head">
+      <span>今日 の 足跡</span>
+      <span class="dim" id="today-count">0</span>
+    </div>
+    <ul id="entries-list"></ul>
+  </section>
+
+  <footer>
+    <button id="open-options" class="ghost-btn">足跡 全部 を 見る</button>
+  </footer>
+
+  <script src="popup.js" defer></script>
+</body>
+</html>

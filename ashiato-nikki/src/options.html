@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>足跡日記 — 全部の足跡</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <main class="layout">
+    <header>
+      <div class="brand">足跡日記</div>
+      <div class="dim sub">これ まで の 全部 の 足跡</div>
+      <div class="toolbar">
+        <input type="search" id="search-box" placeholder="検索 (タイトル / URL / メモ)" />
+        <span class="dim count"><span id="total-count">0</span> 件</span>
+      </div>
+    </header>
+
+    <section id="timeline">
+      <p class="dim empty" id="empty-msg">まだ 足跡 が ありません。</p>
+    </section>
+
+    <footer>
+      <button id="export-json" class="ghost-btn">JSON で エクスポート</button>
+      <button id="export-md"   class="ghost-btn">Markdown で エクスポート</button>
+      <span class="dim sep">·</span>
+      <button id="clear-all"   class="ghost-btn danger">全部 を 消去</button>
+    </footer>
+  </main>
+  <script src="options.js" defer></script>
+</body>
+</html>

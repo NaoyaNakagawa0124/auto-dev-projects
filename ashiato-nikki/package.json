@@ -1,0 +1,14 @@
+{
+  "name": "ashiato-nikki",
+  "version": "0.1.0",
+  "description": "Tap-to-save browser journal extension for people who can't keep a daily diary.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "vitest": "^1.6.0"
+  }
+}
