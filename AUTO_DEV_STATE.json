@@ -1,5 +1,5 @@
 {
-  "apps_completed": 108,
+  "apps_completed": 109,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -1098,6 +1098,17 @@
         "platform": 19,
         "intent": 5,
         "note": "Intent 5 (addictive) applied to the memorization act itself, not as a distraction from study"
+      }
+    },
+    {
+      "name": "hakoake-banner",
+      "completed": "2026-05-17T09:40:00Z",
+      "discovery_roll": {
+        "source": 33,
+        "persona": 28,
+        "platform": 5,
+        "intent": 3,
+        "note": "original platform 19 (p5.js) rerolled to 5 — cycle 22 yozora-tango just used p5.js"
       }
     }
   ]

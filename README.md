@@ -112,5 +112,6 @@
 | 106 | kyuufu | 休符 — 効率厨ゲーマーの「もう十分」 Discord bot | Python 3.10+/discord.py 2.7/pytest | 49 |
 | 107 | asu-no-eki | 明日の駅 — 1 時間通勤者の山手線 30 駅 dashboard FastAPI | Python 3.10+/FastAPI 0.136/Jinja2/Vanilla JS | 28 |
 | 108 | yozora-tango | 夜空単語 — 詰め込み暗記を星座完成にする p5.js | Vanilla HTML/CSS/p5.js/ES Module/Vitest | 36 |
+| 109 | hakoake-banner | 箱開けバナー — HN に 架空 の 引っ越し進捗 を 出す Chrome MV3 | Browser Extension MV3/Vanilla JS/Vitest | 34 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.
