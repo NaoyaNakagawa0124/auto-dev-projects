@@ -1,5 +1,5 @@
 {
-  "apps_completed": 114,
+  "apps_completed": 115,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -621,6 +621,12 @@
       "persona": 30,
       "platform": 11,
       "intent": 4
+    },
+    {
+      "source": 38,
+      "persona": 7,
+      "platform": 10,
+      "intent": 5
     }
   ],
   "history": [
@@ -1170,6 +1176,17 @@
         "platform": 11,
         "intent": 4,
         "note": "Swift macOS native (Platform 11) — last used cycle 22 (starlog), fresh enough; Intent 4 (そっと寄り添う) for cafe-nomading freelancers"
+      }
+    },
+    {
+      "name": "sokkou-deck",
+      "completed": "2026-05-17T12:45:00Z",
+      "discovery_roll": {
+        "source": 38,
+        "persona": 7,
+        "platform": 10,
+        "intent": 5,
+        "note": "Edu tech × efficiency-min-maxer gamer × Rust+WASM × addictive — speedrun flashcards. Rust+WASM 11 cycles fresh; speedrun framing (PB / WR / frame data) hits 効率厨 directly"
       }
     }
   ]

@@ -118,5 +118,6 @@
 | 112 | ashiato-nikki | 足跡日記 — 続かない 日記 を 1 タップ で 残す Chrome MV3 | Browser Extension MV3/Vanilla JS/Vitest | 51 |
 | 113 | yofuke-news | 夜更けニュース — 夜型ゲーマー の 深夜 indie ニュース CLI | Node 22/chalk 5/Vitest | 48 |
 | 114 | tsukue-no-sumi | 机 の 隅 — ノマド の そっと いる 作業ログ Swift macOS CLI | Swift 5.9+/Foundation/XCTest | 65 |
+| 115 | sokkou-deck | 速攻デッキ — 効率厨 ゲーマー の フラッシュカード スピードラン | Rust + WASM/wasm-bindgen/vanilla JS | 48 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

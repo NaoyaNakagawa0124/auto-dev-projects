@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 12:15 | Total apps: 114 | Total tests: 14,489
+> Last updated: 2026-05-17 12:45 | Total apps: 115 | Total tests: 14,537
 
 ## Quick Overview
 
@@ -120,6 +120,7 @@
 | 112 | [ashiato-nikki](#ashiato-nikki) | 足跡日記 — 続かない 日記 を 1 タップ で 残す Chrome MV3 | Browser Extension MV3/Vanilla JS/Vitest | 51 | complete | `npm i && load unpacked in chrome://extensions` |
 | 113 | [yofuke-news](#yofuke-news) | 夜更けニュース — 夜型ゲーマー の 深夜 indie ニュース CLI | Node 22/chalk 5/Vitest | 48 | complete | `npm i && node src/cli.js` |
 | 114 | [tsukue-no-sumi](#tsukue-no-sumi) | 机 の 隅 — ノマド の そっと いる 作業ログ Swift CLI | Swift 5.9+/Foundation/XCTest | 65 | complete | `swift build -c release && .build/release/tsukue` |
+| 115 | [sokkou-deck](#sokkou-deck) | 速攻デッキ — 効率厨 ゲーマー の フラッシュカード スピードラン | Rust + WASM/wasm-bindgen/vanilla JS | 48 | complete | `wasm-pack build --target web --out-dir www/pkg && python3 -m http.server` |
 
 ---
 
@@ -5944,3 +5945,73 @@ cp .build/release/tsukue /usr/local/bin/
 - Markdown 出力 を CSV / Numbers 形式 に も
 - iCloud Drive 同期 で デバイス 間 共有
 - 時給 を client 別 に 設定 し 月次 で 概算 請求 額 を 出す (税抜 / 税込)
+
+---
+
+### <a id="sokkou-deck"></a>115. sokkou-deck - 2026-05-17 12:45
+
+**What is this?**
+効率厨 ゲーマー の ため の フラッシュカード スピードラン トレーナー。 デッキ × モード を 選び `ENTER` で run 開始、 ms 単位 で 計測 され、 過去 PB と の delta が run 中 も リアルタイム で 表示 (`-682 ms ahead` / `+412 ms behind`)。 終わる と 1 枚 ずつ の 答え / 区間 ms / vs PB を 並べた 「フレーム データ」 表 が 出る。 PB 更新 で `★★ NEW PB ★★`、 暗記 を スピードラン の 文化 で 詰める Rust + WASM。
+
+**Discovery Roll**
+Source: 38 (教育テック — 学習 / トレーニング / スキルアップ) | Persona: 7 (効率厨 ゲーマー) | Platform: 10 (Rust + WASM web app) | Intent: 5 (夢中にさせる — ゲーム性 / 中毒 / 競う)
+
+**Features Built**
+- 3 モード: `any%` (ミス OK 高速)、 `100%` (ミス で +5 秒 ペナルティ)、 `consistency` (10 連続 正解 で 終了、 1 ミス で 失敗)
+- 5 内蔵 デッキ (200 枚 計): TOEIC 600 単語 / IT パスポート 用語 / 元素 記号 / JLPT N1 慣用句 / 歴代 総理大臣
+- リアルタイム PB delta 表示 (赤/緑 で 即 反映)
+- splits パネル — 右側 に 1 行 ずつ の 区間 タイム が 流れる
+- フレーム データ 表 — run 後 に 全 区間 を 表 で
+- NEW PB アニメ + バナー
+- 入力 正規化 — 半角/全角、 カタカナ ⇔ ひらがな、 句読点、 ASCII 大小
+- 1 カード 複数 答え + 「/」 区切り の alternatives 解釈
+- localStorage で PB / 設定 永続化、 PB リセット ボタン
+- BANNED_WORDS 監査 (「失格」 「クソ」 「無能」 「諦めろ」 「ダメ人間」 「お前」) を cargo test に 組み込み
+
+**Tech Stack**
+Rust 2021 / wasm-bindgen 0.2 / serde-wasm-bindgen 0.6 / wasm-pack (target web) / vanilla ES module JS / 自前 CSS / localStorage — ビルド ツール (Vite 等) 一切 なし、 静的 配信 で 動く
+
+**Key Files**
+```
+sokkou-deck/
+├── Cargo.toml
+├── README.md / PLAN.md / CLAUDE.md / SUMMARY.md
+├── src/
+│   ├── lib.rs               # WASM bindings (8 exports)
+│   ├── deck.rs              # 5 built-in decks
+│   ├── run.rs               # Run state machine (3 modes)
+│   ├── stats.rs             # PersonalBest, annotate, formatters
+│   ├── normalize.rs         # 入力 正規化
+│   └── banned.rs            # BANNED_WORDS
+├── tests/                   # 5 test files / 48 tests
+└── www/
+    ├── index.html / style.css / main.js
+    └── pkg/                 # wasm-pack 出力
+```
+
+**How to Run**
+```bash
+cd sokkou-deck
+cargo test                                    # 48 tests
+wasm-pack build --target web --out-dir www/pkg
+cd www && python3 -m http.server 8000
+# → http://localhost:8000
+```
+
+**Tests**: 48 passing (normalize 11 / deck 8 / run 13 / stats 12 / banned 4) | **Files**: 5 Rust src + 5 tests + 3 frontend | **LOC**: ~1,650 | **Build time**: ~28 min
+
+**Challenges & Fixes**
+- **mode 文字列 ⇔ enum 表現 の ズレ**: JS 側 で `state.selectedMode = "any%"` と 保持 し、 Rust の `RunMode::AnyPercent` は serde で `"AnyPercent"` と なる。 PB を JS → Rust へ 戻す とき に mode 比較 が 失敗 する 可能性。 `MODE_CANONICAL` 辞書 で `"any%" → "AnyPercent"` を 変換 する レイヤー を main.js に
+- **clippy `manual_clamp`**: `deck_size.min(10).max(1)` → `clamp(1, 10)` に。 deck_size=0 で も `1` を 返す (テスト pass)
+- **clippy `manual_pattern_char_comparison`**: `a.split(|c| c == '/' || c == '、' || c == ',')` → `a.split(['/', '、', ','])` に
+- **wasm-pack の init export**: `--target web` 出力 は `__wbg_init as default` で エクスポート、 `import init from "./pkg/...js"` で 取れる ハマる ポイント
+
+**Potential Next Steps**
+- カスタム デッキ (JSON 貼り付け / CSV import) を localStorage で 保存
+- ゴースト カーソル: PB の splits を リアルタイム 比較 表示 (現状 は 数字 だけ)
+- Sound Pack: 正解 / ミス / PB 更新 の SFX (Web Audio)
+- デイリー チャレンジ: 日付 seed で 10 枚 を pick、 同日 内 PB だけ 比較
+- シェア URL: 結果 を hash に encode、 「俺 の PB 抜いて み」
+- タイピング モード: 1 文字 タイプ ミス で 再 タイプ 必須 の シビア 版
+- ハイ コントラスト + reduced-motion アクセシビリティ オプション
+

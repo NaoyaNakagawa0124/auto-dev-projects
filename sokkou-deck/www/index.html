@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>速攻デッキ — sokkou-deck</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- HOME SCREEN -->
+    <section class="screen" data-screen="home" data-active="true">
+      <header class="hero">
+        <div class="brand">
+          <span class="brand-mark">▶▶</span>
+          <span class="brand-name">速攻デッキ</span>
+        </div>
+        <div class="brand-tag">sokkou-deck — フラッシュカード スピードラン</div>
+      </header>
+
+      <div class="panel">
+        <h2 class="panel-title">デッキ を 選ぶ</h2>
+        <div id="deck-list" class="deck-list"></div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel-title">モード</h2>
+        <div class="mode-list">
+          <label class="mode-card" data-mode="any%">
+            <input type="radio" name="mode" value="any%" checked>
+            <span class="mode-label">any%</span>
+            <span class="mode-desc">全カード を できる だけ 速く。 ミス OK</span>
+          </label>
+          <label class="mode-card" data-mode="100%">
+            <input type="radio" name="mode" value="100%">
+            <span class="mode-label">100%</span>
+            <span class="mode-desc">全カード を 正解 で。 ミス は +5 秒</span>
+          </label>
+          <label class="mode-card" data-mode="consistency">
+            <input type="radio" name="mode" value="consistency">
+            <span class="mode-label">consistency</span>
+            <span class="mode-desc">10 問 連続 正解 を 最速 で</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <button id="start-btn" class="primary-btn" disabled>
+          <span class="key-hint">ENTER</span> ラン 開始
+        </button>
+        <button id="reset-pb-btn" class="ghost-btn">PB を リセット</button>
+      </div>
+    </section>
+
+    <!-- RUN SCREEN -->
+    <section class="screen" data-screen="run">
+      <header class="run-header">
+        <div class="run-meta">
+          <div class="meta-row">
+            <span class="meta-label">DECK</span>
+            <span id="run-deck-name" class="meta-value"></span>
+            <span class="meta-divider">·</span>
+            <span class="meta-label">MODE</span>
+            <span id="run-mode" class="meta-value"></span>
+          </div>
+        </div>
+        <div class="run-stats">
+          <div class="stat-block">
+            <div class="stat-label">TIMER</div>
+            <div id="timer" class="stat-value timer">00:00.000</div>
+          </div>
+          <div class="stat-block stat-pb">
+            <div class="stat-label">PB</div>
+            <div id="pb-display" class="stat-value pb">--:--.---</div>
+            <div id="pb-delta" class="stat-delta"></div>
+          </div>
+        </div>
+      </header>
+
+      <div class="card-area">
+        <div class="card-frame">
+          <div id="card-counter" class="card-counter">01 / --</div>
+          <div id="card-prompt" class="card-prompt"></div>
+          <form id="answer-form" class="answer-form" autocomplete="off">
+            <span class="caret">&gt;</span>
+            <input
+              id="answer-input"
+              class="answer-input"
+              type="text"
+              placeholder="答え を 入力 …"
+              autocapitalize="none"
+              autocomplete="off"
+              autocorrect="off"
+              spellcheck="false"
+            >
+          </form>
+          <div id="card-feedback" class="card-feedback"></div>
+        </div>
+      </div>
+
+      <aside class="splits-panel">
+        <div class="splits-header">SPLITS</div>
+        <ol id="splits-list" class="splits-list"></ol>
+      </aside>
+
+      <div class="run-footer">
+        <button id="abort-btn" class="ghost-btn">ホーム へ 戻る</button>
+      </div>
+    </section>
+
+    <!-- RESULT SCREEN -->
+    <section class="screen" data-screen="result">
+      <header class="result-header">
+        <div id="result-pb-banner" class="pb-banner"></div>
+        <h2 class="result-title">RUN COMPLETE</h2>
+        <div class="result-times">
+          <div class="time-block">
+            <div class="time-label">TOTAL</div>
+            <div id="result-total" class="time-value">--:--.---</div>
+          </div>
+          <div class="time-block">
+            <div class="time-label">vs PB</div>
+            <div id="result-delta" class="time-value delta">--</div>
+          </div>
+          <div class="time-block">
+            <div class="time-label">正解 率</div>
+            <div id="result-accuracy" class="time-value">--</div>
+          </div>
+        </div>
+      </header>
+
+      <div class="frame-data-panel">
+        <div class="frame-data-header">FRAME DATA</div>
+        <table class="frame-data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>カード</th>
+              <th>あなた の 答え</th>
+              <th>判定</th>
+              <th class="num">区間 ms</th>
+              <th class="num">vs PB</th>
+            </tr>
+          </thead>
+          <tbody id="frame-data-body"></tbody>
+        </table>
+      </div>
+
+      <div class="cta-row">
+        <button id="retry-btn" class="primary-btn">もう 1 回</button>
+        <button id="back-home-btn" class="ghost-btn">ホーム へ 戻る</button>
+      </div>
+    </section>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
