@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 13:40 | Total apps: 117 | Total tests: 14,643
+> Last updated: 2026-05-17 14:10 | Total apps: 118 | Total tests: 14,682
 
 ## Quick Overview
 
@@ -123,6 +123,7 @@
 | 115 | [sokkou-deck](#sokkou-deck) | 速攻デッキ — 効率厨 ゲーマー の フラッシュカード スピードラン | Rust + WASM/wasm-bindgen/vanilla JS | 48 | complete | `wasm-pack build --target web --out-dir www/pkg && python3 -m http.server` |
 | 116 | [inu-saiten](#inu-saiten) | 犬採点 — レシピ サイト を 犬 が 採点 する Chrome MV3 拡張 | Chrome MV3/vanilla JS/Vitest | 69 | complete | Load `inu-saiten/extension/` unpacked in `chrome://extensions` |
 | 117 | [hachi-kenshi](#hachi-kenshi) | 鉢検視 — 観葉 植物 の 死因 を 推理 する Rust+WASM ノワール 法医 ゲーム | Rust + WASM/wasm-bindgen/vanilla JS | 37 | complete | `wasm-pack build --target web --out-dir www/pkg && python3 -m http.server` |
+| 118 | [futari-koyomi](#futari-koyomi) | ふたり暦 — 共働き 夫婦 の 「今宵 5 分 一緒 に」 FastAPI ダッシュボード | FastAPI 0.115/Jinja2/pytest | 39 | complete | `pip install -e .[dev] && uvicorn app.main:app --port 8765` |
 
 ---
 
@@ -6160,4 +6161,71 @@ cd www && python3 -m http.server 8000
 - 共有 リプレイ (得点 + タイム hash で 比較)
 - 起訴 / 判決 の SFX (ハンコ 押す 音)
 - ハイ コントラスト + reduced-motion アクセシビリティ
+
+---
+
+### <a id="futari-koyomi"></a>118. futari-koyomi - 2026-05-17 14:10
+
+**What is this?**
+共働き 夫婦 の ため の 「今宵 暦」 FastAPI ダッシュボード。 366 日 分 の 「今日 は 〇〇 の 日」 を 1 枚 の カード で 出し、 各 日 に 「5 分 で 終わる 一緒 の 何か」 を 3 つ 提案、 タップ で 「今夜 の 約束」 を 確定。 「やった ね」 ボタン (任意 で 一 言 メモ) で 完了、 翌日 自動 で ふたり の 暦 に 1 行 残る。 同 LAN の 2 端末 で 同じ サーバー を 開けば 10 秒 ポーリング で 状態 が 共有 さ れる。 競争 / streak / 数字 採点 を 一切 出さ ない、 静か に 揃う 道具。
+
+**Discovery Roll**
+Source: 27 (Random holiday / cultural event happening today) | Persona: 26 (共働き 夫婦) | Platform: 13 (API service + dashboard — FastAPI) | Intent: 7 (誰かと一緒に やる — 関係 性 / 共有)
+
+**Features Built**
+- 366 件 の micro-holiday (うるう年 2/29 含む) — 80 件 の 手書き curated (七草 / 七夕 / こども の 日 / クリスマス 等) + 月 名 × 曜日 修飾 の 決定 的 生成 で 残り 286 日 を 埋める
+- 8 タグ (food / nature / culture / work / love / rest / play / memory) + milestone、 タグ ごと 6 句 の ritual テンプレート で 各 日 3 つ pick (deterministic hash)
+- 「今夜 の 約束」 lifecycle: タップ で set → 「やった ね」 で done → 翌日 ロール オーバー で timeline へ
+- 任意 メモ (80 字 まで)、 約束 解除 ボタン
+- 直近 7 日 の タイム ライン を ホーム 下部 に
+- 10 秒 ポーリング で 2 端末 同期、 WebSocket なし
+- pull モデル ロール オーバー (起動 し て いない 日 は 載ら ない)
+- JSON 永続 化 (atomic write + threading.Lock)、 `FUTARI_DATA` で 上書き 可
+- BANNED_WORDS 監査 (streak / 連勝 / 達成 度 / 効率 / 義務 / ふたり 度 / 夫婦 力 等)
+- モバイル 幅 (375px) で 崩れ ない 紙 風 デザイン
+
+**Tech Stack**
+FastAPI 0.115+ (TemplateResponse 新 シグネチャ) / Jinja2 / uvicorn / dataclass / JSON ファイル 永続 化 / vanilla JS ポーリング / pytest + httpx TestClient
+
+**Key Files**
+```
+futari-koyomi/
+├── pyproject.toml
+├── README.md / PLAN.md / CLAUDE.md / SUMMARY.md
+├── app/
+│   ├── main.py                # FastAPI app, 6 routes
+│   ├── holidays.py            # 80 curated + filler + 54 ritual templates
+│   ├── store.py               # Promise/Timeline/State, rollover
+│   ├── banned.py
+│   ├── templates/index.html
+│   └── static/style.css + app.js
+└── tests/                     # 4 files / 39 tests
+```
+
+**How to Run**
+```bash
+cd futari-koyomi
+pip install -e ".[dev]"
+pytest                                       # 39 tests
+uvicorn app.main:app --reload --port 8765
+# → http://localhost:8765
+# 同 LAN の 別 端末: http://<your-ip>:8765
+```
+
+**Tests**: 39 passing (holidays 14 / store 11 / routes 9 / banned 4) | **Files**: 5 src + 4 test + 3 frontend | **LOC**: ~1,500 | **Build time**: ~30 min
+
+**Challenges & Fixes**
+- **366 日 全部 を 手書き する コスト**: 80 件 を curated 化、 残り 286 日 を 月 名 (睦月 / 如月 …) + 曜日 修飾 (整える / 試す / 並ぶ …) の 決定 的 生成 で 埋める ハイブリッド。 ritual も タグ ベース の 54 句 プール から deterministic hash で 3 つ pick、 同 日 同じ 3 つ
+- **2 端末 同期 を どう 軽量 に やる か**: WebSocket は 入れず ポーリング 10 秒 に 妥協。 共働き が 朝 〜 夜 で 数 回 開く 利用 想定 なら リアルタイム は 過剰
+- **日付 ロール オーバー**: cron に 頼らず pull モデル — 「次 に 誰か が ページ を 開いた とき」 に rollover を 実行。 サーバー が 寝て いて も OK、 「使う 2 人 の リズム に 委ね る」 設計 思想 と 一致
+- **FastAPI 0.115+ の TemplateResponse**: 新 API は `(request, "name", ctx)` の 順 (cycle 25 sekai-no-choukan で 学んだ)。 古い 順 で は "unhashable type: 'dict'" で 落ちる
+
+**Potential Next Steps**
+- カスタム holiday の 追加 (結婚 記念 日、 家族 誕生 日 等 を POST)
+- ritual の 「気分 で 別 案」 シャッフル
+- 1 年 完走 後 の カレンダー ビュー
+- ペア の 「お互い 別 端末 で だけ 見える」 ノート
+- LINE / Slack 連携 (リマインド は 出さ ない、 朝 の 暦 1 件 だけ push)
+- 旅行 中 用 の クラウド 同期
+- タイム ライン から 1 年 分 PDF export
 

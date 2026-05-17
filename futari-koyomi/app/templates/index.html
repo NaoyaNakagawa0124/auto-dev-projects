@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ふたり暦 — {{ state.today }}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <main class="paper">
+    <header class="hero">
+      <div class="hero-date">{{ state.today }}  {{ state.weekday }}</div>
+      <h1 class="hero-title">ふたり暦</h1>
+      <div class="hero-tag">共働き 夫婦 の 今宵 暦</div>
+    </header>
+
+    <section class="holiday-card" id="holiday-card">
+      <div class="holiday-head">
+        <span class="holiday-icon">✦</span>
+        <div class="holiday-body">
+          <div class="holiday-label">今日 は</div>
+          <div class="holiday-name" id="holiday-name">{{ state.holiday.name }}</div>
+          <div class="holiday-meta">
+            <span id="holiday-source">{{ state.holiday.source }}</span>
+            <span class="dot">・</span>
+            <span id="holiday-tag">#{{ state.holiday.tag }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ritual-section">
+      <div class="section-head">今宵 5 分 で 一緒 に できる こと</div>
+      <ol class="ritual-list" id="ritual-list">
+        {% for r in state.holiday.rituals %}
+        <li class="ritual-card" data-idx="{{ loop.index0 }}">
+          <span class="ritual-idx">{{ loop.index }}</span>
+          <span class="ritual-text">{{ r }}</span>
+          <button class="ritual-pick" data-idx="{{ loop.index0 }}">今夜 の 約束 に</button>
+        </li>
+        {% endfor %}
+      </ol>
+    </section>
+
+    <section class="promise-section" id="promise-section">
+      {% if state.promise %}
+      <div class="promise-card promise-{{ state.promise.status }}">
+        <div class="promise-head">
+          <span class="promise-tag">今夜 の 約束</span>
+          {% if state.promise.status == "done" %}
+          <span class="promise-stamp">やった ね</span>
+          {% endif %}
+        </div>
+        <div class="promise-text" id="promise-text">{{ state.promise.ritual_text }}</div>
+        {% if state.promise.note %}
+        <div class="promise-note" id="promise-note">{{ state.promise.note }}</div>
+        {% endif %}
+        <div class="promise-actions">
+          {% if state.promise.status != "done" %}
+          <input id="note-input" class="note-input" placeholder="ひと こと (任意)" maxlength="80">
+          <button id="done-btn" class="primary-btn">やった ね</button>
+          {% endif %}
+          <button id="clear-btn" class="ghost-btn">約束 を 解除</button>
+        </div>
+      </div>
+      {% else %}
+      <div class="promise-card promise-empty">
+        <div class="promise-tag">今夜 の 約束</div>
+        <div class="promise-text">まだ 何 も 約束 して い ません。 上 の 候補 から 1 つ 選んで ください。</div>
+      </div>
+      {% endif %}
+    </section>
+
+    <section class="timeline-section">
+      <div class="section-head">ふたり の 暦 (直近 7 日)</div>
+      <ul class="timeline-list" id="timeline-list">
+        {% for t in state.timeline %}
+        <li class="timeline-item timeline-{{ t.status }}">
+          <span class="timeline-date">{{ t.date[5:] }}</span>
+          <span class="timeline-ritual">{{ t.ritual_text }}</span>
+          <span class="timeline-status">{% if t.status == "done" %}✓{% else %}—{% endif %}</span>
+        </li>
+        {% endfor %}
+        {% if not state.timeline %}
+        <li class="timeline-empty">まだ 記録 が ありません。 1 つ 終える と ここ に 残り ます。</li>
+        {% endif %}
+      </ul>
+    </section>
+
+    <footer class="foot">
+      <span>{{ state.today }}</span>
+      <span class="dot">・</span>
+      <span>ふたり暦 v0.1.0</span>
+    </footer>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

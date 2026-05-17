@@ -1,0 +1,381 @@
+:root {
+  --paper: #fbf7ee;
+  --paper-shade: #f3ead7;
+  --ink: #3a2e22;
+  --ink-light: #6b594a;
+  --ink-faint: #a6927a;
+  --rule: #d4c7ac;
+  --accent: #c46a55;
+  --accent-soft: rgba(196, 106, 85, 0.12);
+  --ok: #4d8b5a;
+  --ok-soft: rgba(77, 139, 90, 0.14);
+  --serif: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", Georgia, serif;
+  --sans: "Hiragino Kaku Gothic ProN", "Noto Sans JP", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #2f261d;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  padding: 22px 14px 60px;
+  background:
+    radial-gradient(ellipse at top, rgba(251, 247, 238, 0.08), transparent 70%),
+    #2a2118;
+  display: flex;
+  justify-content: center;
+}
+
+.paper {
+  width: 100%;
+  max-width: 680px;
+  padding: 34px 32px 32px;
+  background:
+    repeating-linear-gradient(0deg, transparent 0, transparent 28px, rgba(196, 168, 122, 0.06) 28px, rgba(196, 168, 122, 0.06) 29px),
+    var(--paper);
+  border: 1px solid rgba(160, 128, 86, 0.3);
+  border-radius: 6px;
+  box-shadow:
+    0 26px 60px rgba(0, 0, 0, 0.42),
+    inset 0 0 80px rgba(180, 142, 92, 0.1);
+}
+
+.hero {
+  text-align: center;
+  padding-bottom: 22px;
+  margin-bottom: 26px;
+  border-bottom: 1px dashed var(--rule);
+}
+.hero-date {
+  font-family: var(--serif);
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: var(--ink-faint);
+  margin-bottom: 4px;
+}
+.hero-title {
+  margin: 4px 0 2px;
+  font-family: var(--serif);
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: 6px;
+  color: var(--ink);
+}
+.hero-tag {
+  font-size: 12.5px;
+  color: var(--ink-light);
+  letter-spacing: 1.5px;
+}
+
+.holiday-card {
+  background: rgba(255, 250, 235, 0.55);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 18px 20px 16px;
+  margin-bottom: 26px;
+  box-shadow: 0 2px 0 rgba(160, 128, 86, 0.05);
+}
+
+.holiday-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.holiday-icon {
+  font-size: 22px;
+  color: var(--accent);
+  margin-top: 4px;
+}
+.holiday-body {
+  flex: 1;
+}
+.holiday-label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--ink-faint);
+  margin-bottom: 4px;
+}
+.holiday-name {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 1.5px;
+  margin-bottom: 6px;
+}
+.holiday-meta {
+  font-size: 12px;
+  color: var(--ink-light);
+  letter-spacing: 0.4px;
+}
+.holiday-meta .dot {
+  margin: 0 6px;
+  color: var(--ink-faint);
+}
+
+.section-head {
+  font-family: var(--serif);
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: var(--accent);
+  margin-bottom: 10px;
+  font-weight: 700;
+  text-align: center;
+  padding: 6px 0;
+  border-top: 1px dashed var(--rule);
+  border-bottom: 1px dashed var(--rule);
+}
+
+.ritual-section {
+  margin-bottom: 26px;
+}
+
+.ritual-list {
+  list-style: none;
+  padding: 0;
+  margin: 14px 0 0;
+}
+
+.ritual-card {
+  position: relative;
+  padding: 14px 16px 14px 50px;
+  background: rgba(255, 250, 235, 0.6);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color 0.12s, background 0.12s;
+}
+.ritual-card:hover { background: var(--accent-soft); border-color: var(--accent); }
+
+.ritual-idx {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--paper);
+  font-family: var(--serif);
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ritual-text {
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--ink);
+}
+
+.ritual-pick {
+  align-self: flex-end;
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 1.2px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.1s;
+}
+.ritual-pick:hover { background: var(--accent); color: var(--paper); }
+.ritual-card.is-active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+  background: var(--accent-soft);
+}
+
+.promise-section {
+  margin-bottom: 26px;
+}
+
+.promise-card {
+  padding: 18px 20px;
+  border: 1.5px solid var(--accent);
+  border-radius: 8px;
+  background: var(--accent-soft);
+}
+.promise-card.promise-done {
+  border-color: var(--ok);
+  background: var(--ok-soft);
+}
+.promise-card.promise-empty {
+  border-color: var(--rule);
+  border-style: dashed;
+  background: rgba(255, 250, 235, 0.45);
+}
+
+.promise-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.promise-tag {
+  font-family: var(--serif);
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: var(--accent);
+  font-weight: 700;
+}
+.promise-done .promise-tag { color: var(--ok); }
+
+.promise-stamp {
+  display: inline-block;
+  padding: 3px 10px;
+  background: var(--ok);
+  color: var(--paper);
+  font-size: 11.5px;
+  letter-spacing: 2px;
+  border-radius: 3px;
+  font-weight: 700;
+}
+
+.promise-text {
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.promise-note {
+  padding: 8px 12px;
+  background: rgba(255, 250, 235, 0.55);
+  border-left: 3px solid var(--ok);
+  border-radius: 3px;
+  font-size: 13.5px;
+  color: var(--ink-light);
+  margin-bottom: 10px;
+}
+
+.promise-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.note-input {
+  flex: 1;
+  min-width: 160px;
+  padding: 8px 12px;
+  border: 1px solid var(--rule);
+  background: rgba(255, 250, 235, 0.6);
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--ink);
+}
+.note-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.primary-btn {
+  padding: 9px 18px;
+  background: var(--accent);
+  color: var(--paper);
+  border: none;
+  font-family: inherit;
+  font-size: 13.5px;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: filter 0.1s;
+}
+.primary-btn:hover { filter: brightness(1.1); }
+
+.ghost-btn {
+  padding: 9px 14px;
+  background: transparent;
+  color: var(--ink-light);
+  border: 1px solid var(--rule);
+  font-family: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.ghost-btn:hover { color: var(--ink); border-color: var(--ink); }
+
+.timeline-section { margin-bottom: 18px; }
+
+.timeline-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 50px 1fr 28px;
+  gap: 12px;
+  align-items: center;
+  padding: 9px 12px;
+  border-bottom: 1px dashed rgba(180, 142, 92, 0.4);
+  font-size: 13.5px;
+}
+.timeline-item:last-child { border-bottom: none; }
+.timeline-date {
+  font-family: var(--serif);
+  font-size: 12px;
+  color: var(--ink-faint);
+  letter-spacing: 1px;
+}
+.timeline-ritual {
+  font-size: 13px;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.timeline-status { font-size: 14px; color: var(--ink-faint); text-align: right; }
+.timeline-done .timeline-status { color: var(--ok); font-weight: 700; }
+
+.timeline-empty {
+  padding: 14px;
+  text-align: center;
+  color: var(--ink-faint);
+  font-size: 12.5px;
+  border: 1px dashed var(--rule);
+  border-radius: 4px;
+}
+
+.foot {
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--rule);
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--ink-faint);
+  letter-spacing: 1.2px;
+}
+.foot .dot { margin: 0 6px; }
+
+@media (max-width: 480px) {
+  .paper { padding: 22px 18px 26px; }
+  .hero-title { font-size: 28px; }
+  .holiday-name { font-size: 21px; }
+  .promise-text { font-size: 15px; }
+  .timeline-item { grid-template-columns: 44px 1fr 22px; }
+}

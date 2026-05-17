@@ -1,5 +1,5 @@
 {
-  "apps_completed": 117,
+  "apps_completed": 118,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -640,6 +640,12 @@
       "platform": 10,
       "intent": 5,
       "note": "Platform 5 (browser ext) rerolled to 10 (Rust+WASM) — Chrome ext used last cycle"
+    },
+    {
+      "source": 27,
+      "persona": 26,
+      "platform": 13,
+      "intent": 7
     }
   ],
   "history": [
@@ -1222,6 +1228,17 @@
         "platform": 10,
         "intent": 5,
         "note": "True crime × plant killer × Rust+WASM (rerolled from 5) × addictive — noir houseplant homicide forensic puzzle. Teaches plant care via mystery framing"
+      }
+    },
+    {
+      "name": "futari-koyomi",
+      "completed": "2026-05-17T14:10:00Z",
+      "discovery_roll": {
+        "source": 27,
+        "persona": 26,
+        "platform": 13,
+        "intent": 7,
+        "note": "Random holiday × working couple × FastAPI dashboard × together — '今日 は 何 の 日' + 5-min tonight's ritual, LAN-shared, no streak/score/notifications"
       }
     }
   ]
