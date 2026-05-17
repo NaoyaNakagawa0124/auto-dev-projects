@@ -114,5 +114,6 @@
 | 108 | yozora-tango | 夜空単語 — 詰め込み暗記を星座完成にする p5.js | Vanilla HTML/CSS/p5.js/ES Module/Vitest | 36 |
 | 109 | hakoake-banner | 箱開けバナー — HN に 架空 の 引っ越し進捗 を 出す Chrome MV3 | Browser Extension MV3/Vanilla JS/Vitest | 34 |
 | 110 | kyokuori | 曲織 — チャート曲を刺繍/編み物/モザイクに織る Jupyter | Python 3.10+/numpy/matplotlib/Jupyter | 28 |
+| 111 | sekai-no-choukan | 世界の朝刊 — 就活生の朝 5 分の Electron デスクトップ 朝刊 | Electron 31/Vanilla JS/Vitest | 28 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.

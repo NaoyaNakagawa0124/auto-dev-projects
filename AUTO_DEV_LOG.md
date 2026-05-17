@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 10:10 | Total apps: 110 | Total tests: 14,297
+> Last updated: 2026-05-17 10:40 | Total apps: 111 | Total tests: 14,325
 
 ## Quick Overview
 
@@ -116,6 +116,7 @@
 | 108 | [yozora-tango](#yozora-tango) | 夜空単語 — 詰め込み暗記を星座完成にする p5.js | Vanilla HTML/CSS/p5.js/ES Module/Vitest | 36 | complete | `npm i && python3 -m http.server` (open `/web/`) |
 | 109 | [hakoake-banner](#hakoake-banner) | 箱開けバナー — HN に 架空 の 引っ越し進捗 を 出す Chrome MV3 | Browser Extension MV3/Vanilla JS/Vitest | 34 | complete | `npm i && load unpacked in chrome://extensions` |
 | 110 | [kyokuori](#kyokuori) | 曲織 — チャート曲を刺繍/編み物/モザイクに織る Jupyter | Python 3.10+/numpy/matplotlib/Jupyter | 28 | complete | `pip install -e ".[test,notebook]" && jupyter notebook notebooks/kyokuori.ipynb` |
+| 111 | [sekai-no-choukan](#sekai-no-choukan) | 世界の朝刊 — 就活生の朝 5 分の Electron デスクトップ 朝刊 | Electron 31/Vanilla JS/Vitest | 28 | complete | `npm i && npm start` |
 
 ---
 
@@ -5666,3 +5667,67 @@ jupyter notebook notebooks/kyokuori.ipynb
 - Plotly でインタラクティブ版 (hover で曲名 + 特徴量)
 - ユーザー Spotify プレイリスト を CSV 投入できる input mode
 - BPM だけでなく duration を「段数」 に追加マッピング
+
+---
+
+### <a id="sekai-no-choukan"></a>111. sekai-no-choukan - 2026-05-17 10:40
+
+**What is this?**
+就活生 が 朝、 コーヒー を 淹れた 5 分 だけ 開く、 美しい デスクトップ 朝刊 を Electron 31 で 起動 する。 12 本 の 世界 ニュース (北米 / 欧州 / 東アジア / 東南アジア / 南米 / アフリカ × 政治 / 経済 / 文化 / 科学 で バランス) を 3 段組 に 自動 配置、 主見出し は ドロップキャップ 付き で 左 列 に 大きく、 他 11 本 は round-robin で 中 列 と 右 列 に。 同じ日 開けば 同じ レイアウト (date-seeded)、 ←/→ で 前後 を 行き来 できる。 SNS シェア / 通知 / 履歴 / 検索 / ブックマーク、 全部 無し — 5 分 で 閉じる 朝 の 儀式 として 完結 する 1 枚 の 紙。
+
+**Discovery Roll**
+Source: 1 (Today's top world news headlines / CNN / BBC / NHK / Reuters) | Persona: 23 (就活中の大学生) | Platform: 9 (Electron desktop app) | Intent: 1 (美しさで殴る — スクショ撮りたくなるか)
+
+Persona 23 は cycle 19 (sekai-wadaichou) で TUI 版 「世界話題帳」 を 既に やった が、 今回 は Electron 製 の デスクトップ 朝刊 という 全く 違う 形 と トーン。 Intent 1 は cycle 24 (kyokuori) に 続く 2 回目 だが、 編み物 と 朝刊 タイポ という 全く 異なる 美 ドメイン。
+
+**Features Built**
+- 12 本 の 世界 ニュース、 6 地域 × 4 カテゴリ で バランス (curated + 創作、 「2026 年 5 月 中旬 を 想定」 と 明記)
+- 主見出し は 米 FRB 5 月 据え置き (政治 × 経済 の 国際 関心)、 他 11 本 は EU AI 法 / 春闘 後 の 最賃 / シンガポール 港 / ナイジェリア 映像 産業 / アマゾン 監視 衛星 / カンヌ 映画 祭 中盤 / 韓国 半導体 / インドネシア 新首都 移転 / ケニア モバイル 送金 19 年 / リオ「明日の美術館」 拡張 / カナダ 軌道 デブリ 観測
+- セリフ系 タイポ (ヒラギノ明朝 / Noto Serif JP / Georgia)、 紙色 #faf6ee、 列罫線、 主見出し に ドロップキャップ
+- 5 つの 操作 だけ: 前日 / 翌日 / 今日 / クリック / 閉じる (キーボード ←/→/t も)
+- BANNED_WORDS 監査 (「絶対」 「必ず」 「ヤバい」 「衝撃」 「驚愕」 「神」 「最強」 「炎上」) を headline + subhead + body 全件 に対して Vitest で audit
+- レスポンシブ: 720px 以下 で 3 段 → 1 段 切り替え
+- macOS では vibrancy: "under-window" + titleBarStyle: "hiddenInset" で 信号機 の み の 美しい ウィンドウ
+- セキュア な Electron 設定: contextIsolation + sandbox + nodeIntegration:false + preload で contextBridge のみ + CSP `default-src 'self'; script-src 'self'`
+
+**Tech Stack**
+Electron 31.7 (CommonJS) / Vanilla HTML+CSS+JS renderer / 純ロジック (headlines / layout) を src/ に 分離して Vitest で 直接 test 可能 / src/main.js の payloadForDate は vi.mock("electron") で stub すれば test 可能 / xorshift32 + golden-ratio warmup の date-seeded RNG / IPC は paper:today + paper:forDate の 2 件 のみ / Vitest で 28 ユニットテスト
+
+**Key Files**
+```
+sekai-no-choukan/
+├── src/
+│   ├── headlines.js        # 12 stories + BANNED_WORDS
+│   ├── layout.js           # date-seeded round-robin + formatHeaderDate
+│   ├── main.js             # Electron main process + payloadForDate (export for tests)
+│   └── preload.js          # contextBridge IPC bridge
+├── renderer/
+│   ├── index.html          # masthead + 3 段組 grid + footer
+│   ├── style.css           # 紙色 + 明朝 + drop cap + column rules
+│   └── app.js              # IPC fetch + DOM 描画 + キーボード
+└── tests/                  # 3 files / 28 tests
+```
+
+**How to Run**
+```bash
+cd sekai-no-choukan
+npm install                          # electron ~200MB + vitest
+npm test                             # 28 tests, Electron 不要
+npm start                            # electron .
+```
+
+**Tests**: 28 passing (headlines 13 / layout 13 / main 2) | **Files**: 12 source | **LOC**: ~1041 | **Build time**: ~30 min
+
+**Challenges & Fixes**
+- **`vi.mock('electron')` で main.js を テスト**: src/main.js は require("electron") を トップ で 呼ぶ ので、 Vitest で 普通 に import すると Electron native binding が 失敗。 `vi.mock` で stub し、 `await import("../src/main.js")` の 動的 import で 後で 取得
+- **`require.main === module` で 実行 コンテキスト 分岐**: Electron が main.js を 直接 起動 した 時 だけ BrowserWindow / IPC を 立ち上げ、 test 時 は payloadForDate だけ 取得 — モジュール の 単体 検証 を 維持
+- **CSP の `script-src 'self'`**: 厳しめ の CSP で inline / eval / 外部 CDN を 全部 塞ぐ、 renderer から の 任意 コード 実行 を 最初 から 防止
+- **macOS 専用 の vibrancy を 他 OS で 無害化**: Electron は vibrancy を サポート しない OS で 自動 無視、 backgroundColor を 紙色 で fallback 指定
+
+**Potential Next Steps**
+- 「今日 の 単語」 — 12 本 から 拾う 重要 ボキャブラリー 3 つ (面接 で 使える 言い回し)
+- 12 → 30 本 拡張、 月 ごと の 朝刊 アーカイブ
+- 「読了 マーク」 を localStorage に 静か に (streak ではなく、 単純 な 読了 記録)
+- 印刷 用 CSS で B4 出力 (朝食 と 一緒 に 読める)
+- 別 言語 版 (英語 / 中国語) を タブ なし で 切り替え
+- PDF エクスポート で 折り紙 風 に 印刷

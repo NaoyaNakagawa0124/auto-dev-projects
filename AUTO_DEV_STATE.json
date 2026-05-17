@@ -1,5 +1,5 @@
 {
-  "apps_completed": 110,
+  "apps_completed": 111,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -1120,6 +1120,17 @@
         "platform": 12,
         "intent": 1,
         "note": "Intent 1 (beauty) — first appearance since cycle 102, the long Intent 4/5/7 streak finally broken"
+      }
+    },
+    {
+      "name": "sekai-no-choukan",
+      "completed": "2026-05-17T10:40:00Z",
+      "discovery_roll": {
+        "source": 1,
+        "persona": 23,
+        "platform": 9,
+        "intent": 1,
+        "note": "Persona 23 reappears 6 cycles after sekai-wadaichou (TUI) — totally different form (Electron desktop newspaper)"
       }
     }
   ]

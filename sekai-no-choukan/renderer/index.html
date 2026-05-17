@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self';">
+  <title>世界の朝刊</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="paper">
+    <header class="masthead">
+      <div class="rule top"></div>
+      <h1 class="title">世界 の 朝刊</h1>
+      <div class="rule bottom"></div>
+      <div class="date" id="header-date">— 読み込み 中 —</div>
+      <div class="byline dim">編集: 静かな 朝刊 編集部 / 5 分 で 読む 12 本</div>
+    </header>
+
+    <section class="grid">
+      <article class="lead" id="lead-story">
+        <div class="ph">主見出し を 読み込み 中…</div>
+      </article>
+
+      <div class="columns">
+        <section class="col col-mid"   id="col-mid"></section>
+        <section class="col col-right" id="col-right"></section>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <button id="prev" class="quiet">← 前日</button>
+      <span id="iso-date" class="dim">—</span>
+      <button id="next" class="quiet">翌日 →</button>
+      <span class="dim sep">·</span>
+      <button id="today" class="quiet">今日 に 戻る</button>
+    </footer>
+  </main>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

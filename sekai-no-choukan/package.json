@@ -1,0 +1,21 @@
+{
+  "name": "sekai-no-choukan",
+  "version": "0.1.0",
+  "description": "世界の朝刊 — 就活生のための、5 分で読む 12 本の世界ニュース、Electron 製の美しい朝刊",
+  "main": "src/main.js",
+  "type": "commonjs",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "vitest": "^1.6.0"
+  },
+  "build": {
+    "appId": "com.autodev.sekai-no-choukan",
+    "productName": "世界の朝刊"
+  }
+}
