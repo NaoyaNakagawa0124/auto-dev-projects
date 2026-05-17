@@ -1,0 +1,25 @@
+{
+  "name": "yofuke-news",
+  "version": "0.1.0",
+  "description": "夜更けニュース — 深夜 3 時に夜型ゲーマーが叩く、 indie ゲームニュース 5 件を ASCII カードで出す CLI",
+  "type": "module",
+  "bin": {
+    "yofuke-news": "./src/cli.js"
+  },
+  "main": "./src/cli.js",
+  "scripts": {
+    "start": "node src/cli.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "private": true,
+  "dependencies": {
+    "chalk": "^5.3.0"
+  },
+  "devDependencies": {
+    "vitest": "^1.6.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "apps_completed": 112,
+  "apps_completed": 113,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -1142,6 +1142,17 @@
         "platform": 5,
         "intent": 2,
         "note": "Browser ext repeats after cycle 23 but completely different character — utility for any URL vs HN-only absurdity"
+      }
+    },
+    {
+      "name": "yofuke-news",
+      "completed": "2026-05-17T11:40:00Z",
+      "discovery_roll": {
+        "source": 10,
+        "persona": 20,
+        "platform": 2,
+        "intent": 3,
+        "note": "original platform 7 (Unreal) rerolled to 2 (CLI) — no Unreal SDK; Source/Persona/Intent original combo"
       }
     }
   ]

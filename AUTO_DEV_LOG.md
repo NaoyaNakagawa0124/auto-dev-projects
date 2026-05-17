@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 11:10 | Total apps: 112 | Total tests: 14,376
+> Last updated: 2026-05-17 11:40 | Total apps: 113 | Total tests: 14,424
 
 ## Quick Overview
 
@@ -118,6 +118,7 @@
 | 110 | [kyokuori](#kyokuori) | 曲織 — チャート曲を刺繍/編み物/モザイクに織る Jupyter | Python 3.10+/numpy/matplotlib/Jupyter | 28 | complete | `pip install -e ".[test,notebook]" && jupyter notebook notebooks/kyokuori.ipynb` |
 | 111 | [sekai-no-choukan](#sekai-no-choukan) | 世界の朝刊 — 就活生の朝 5 分の Electron デスクトップ 朝刊 | Electron 31/Vanilla JS/Vitest | 28 | complete | `npm i && npm start` |
 | 112 | [ashiato-nikki](#ashiato-nikki) | 足跡日記 — 続かない 日記 を 1 タップ で 残す Chrome MV3 | Browser Extension MV3/Vanilla JS/Vitest | 51 | complete | `npm i && load unpacked in chrome://extensions` |
+| 113 | [yofuke-news](#yofuke-news) | 夜更けニュース — 夜型ゲーマー の 深夜 indie ニュース CLI | Node 22/chalk 5/Vitest | 48 | complete | `npm i && node src/cli.js` |
 
 ---
 
@@ -5801,3 +5802,69 @@ npm test                            # 51 tests, Chrome 不要
 - 音声 メモ (Web Speech API、 車 の 運転 後 など)
 - iOS Safari Web Extension 移植
 - 月次 PDF 自動 出力 (毎月 初め に 前月 を Markdown → PDF)
+
+---
+
+### <a id="yofuke-news"></a>113. yofuke-news - 2026-05-17 11:40
+
+**What is this?**
+深夜 3 時 に ターミナル で `node src/cli.js` (or `npx yofuke-news`) と 叩く と、 今夜 の indie ゲーム ニュース 5 件 が ASCII カード で 流れる Node CLI。 各 カード は タイトル + ジャンル + 価格 + プレイ 時間 目安 + 「あなた の 睡眠 と 引き換え に N 時間」 「クリア まで に 失う 朝食 N 回」 「○ 朝、 同僚 に 〇〇 と 言える 1 本」 の ような 絶妙 に バカっぽい 換算 つき。 「睡眠 係数」 は 時刻 で 変化 (22-0 時 1.2 / 1-2 時 1.0 / 3 時 0.7 / 4-5 時 0.4) ので、 同じ ゲーム でも 4 AM に 開く と 「失う 睡眠」 が ぐっと 少なく — それ も 笑い。 夜型 ゲーマー が 深夜 に ターミナル を 開く 文化 と、 indie ニュース と、 睡眠 換算 の 完全 な 非接続 が Intent 3 の 核。
+
+**Discovery Roll**
+Source: 10 (Latest gaming news / new releases / indie hits / speedrunning) | Persona: 20 (深夜 3 時 が 一番 集中 できる 夜型人間) | Platform: 2 (CLI / terminal tool — Node) | Intent: 3 (こんなのアリ? と 笑わせる — 人 に 話したく なるか)
+
+Original Platform 7 (Unreal Engine) を Platform 2 (CLI/Node) に reroll、 ローカル Unreal SDK 無い ため。 Source × Persona × Intent は 完全 オリジナル。
+
+**Features Built**
+- 12 件 の indie ゲーム ニュース (2026-05 想定、 創作 タイトル + 日本語 サブタイトル + ジャンル + 価格 + 時間 + 状態 + 1 行 blurb)
+- 1 タップ = 5 件 (デフォルト) or 12 件 (`--all`)、 30 秒 で 読了
+- 「睡眠 係数」 の 時刻 連動 (sleepFactor) で 同じ ゲーム でも 違う 表情
+- commentsToTell で 「朝 の 雑談 に 使える 1 行」 を 静か に 添える
+- 引数: `-a/--all`、 `--no-color`、 `-h/--help`、 `-v/--version`
+- ヘッダー に 時間帯 ラベル (夜の入口 / 深夜 / 未明 / 日中) を 添えて、 「あなた が 今 どこ に いる か」 を 静か に 示す
+- BANNED_WORDS 監査 (「夜更かし 注意」 「廃人」 「ダメ人間」 「もう 寝なさい」 「絶対」 「神レベル」 「最強」 「神ゲー」 「クソゲー」 「失敗」) を 12 ニュース 全件 に 対して vitest で audit
+- visualWidth で CJK を 2 字幅 として 計算 して ASCII カード の 罫線 を 揃える
+- 長い テキスト は 「…」 で 切り詰めて 右罫線 を ズラさない
+
+**Tech Stack**
+Node 22 / ES modules / package.json の `bin` で 全システム コマンド に / chalk 5 (ESM 専用) で 色付け、 FORCE_COLOR=0 で 無効化 / 純ロジック (news / jokes / clock / rand) と renderer / cli を 完全 分離 / xorshift32 + golden-ratio warmup の date-seeded RNG / 引数 parse は yargs 不使用 (process.argv の 簡易 parse、 依存 軽く) / vitest で 48 ユニット テスト
+
+**Key Files**
+```
+yofuke-news/
+├── src/
+│   ├── rand.js             # xorshift32 + warmup
+│   ├── news.js             # 12 indie news + BANNED_WORDS
+│   ├── jokes.js            # sleepHoursTraded / breakfastsLost / commentsToTell
+│   ├── clock.js            # tierFor / pickNewsForNow / formatStamp
+│   ├── render.js           # CJK-aware visualWidth + chalk cards
+│   └── cli.js              # entry + argv parse
+└── tests/                  # 4 files / 48 tests
+```
+
+**How to Run**
+```bash
+cd yofuke-news
+npm install
+npm test                           # 48 tests
+node src/cli.js                    # 5 件 (デフォルト)
+node src/cli.js --all              # 12 件
+node src/cli.js --no-color         # plain text
+npm install -g .                   # `yofuke-news` を どこ から でも
+```
+
+**Tests**: 48 passing (news 10 / jokes 12 / clock 10 / render 12 + 4 padding) | **Files**: 10 source | **LOC**: ~919 | **Build time**: ~28 min
+
+**Challenges & Fixes**
+- **「神」 が 「神社」 で 偽陽性**: 当初 BANNED_WORDS に 「神」 単体 が あった (「神ゲー」 を 弾く 意図) が、 ニュース 「embers-of-okutama」 の jp に「神社」 が 含まれて テスト fail。 BANNED_WORDS を 「神レベル」 「神ゲー」 に 具体化、 一般語 を 拾わない 設計 に。 CLAUDE.md にも 注釈 追記
+- **CJK 文字幅 で 罫線 が 揃わない**: ターミナル で CJK は 2 字幅、 ASCII は 1 字幅。 visualWidth ヘルパー を 自前 実装、 U+3000-U+9FFF / U+FF00-U+FFEF を 2 と カウント
+- **長い テンプレート が カード を 突き破る**: commentsToTell の 長文 が 60+ 字 を 越え、 右罫線 が ズレた。 padToVisualWidth を 切り詰め 対応 に 改修、 「…」 で 終わる ように
+- **chalk 5 は ESM 必須**: package.json に `type: "module"` を 設定、 FORCE_COLOR=0 を 設定 してから 動的 import で chalk を 引っ張る (--no-color 対応)
+
+**Potential Next Steps**
+- 実在 Steam API / itch.io API を `.env` の API key 経由で 動的 取得
+- `--genre パズル` で ジャンル フィルタ
+- 過去 N 日 分 を カバー する `--days 7` モード
+- 各 ニュース に 起動 コマンド を 1 行 (Steam app id の deep link)
+- fish / zsh の greeting に 組み込んで ターミナル 起動 時 に 1 件 だけ 出る mode
+- 季節 イベント (大型 セール、 GOTY、 indie fest) を 検知 して banner を 出す
