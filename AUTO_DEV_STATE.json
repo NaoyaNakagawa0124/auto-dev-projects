@@ -1,5 +1,5 @@
 {
-  "apps_completed": 118,
+  "apps_completed": 119,
   "max_apps": 0,
   "current_app": null,
   "domain": null,
@@ -646,6 +646,12 @@
       "persona": 26,
       "platform": 13,
       "intent": 7
+    },
+    {
+      "source": 21,
+      "persona": 16,
+      "platform": 12,
+      "intent": 1
     }
   ],
   "history": [
@@ -1239,6 +1245,17 @@
         "platform": 13,
         "intent": 7,
         "note": "Random holiday × working couple × FastAPI dashboard × together — '今日 は 何 の 日' + 5-min tonight's ritual, LAN-shared, no streak/score/notifications"
+      }
+    },
+    {
+      "name": "kisanae-chou",
+      "completed": "2026-05-18T00:40:00Z",
+      "discovery_roll": {
+        "source": 21,
+        "persona": 16,
+        "platform": 12,
+        "intent": 1,
+        "note": "Agriculture/seasonal × anime watcher × Jupyter × beautiful — overlay 1 year of anime watching on Japan's seasonal calendar (旬/節気/花) as 15 PNGs, no rankings/ratings"
       }
     }
   ]

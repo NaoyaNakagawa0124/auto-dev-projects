@@ -1,6 +1,6 @@
 # Auto Dev Dashboard
 
-> Last updated: 2026-05-17 14:10 | Total apps: 118 | Total tests: 14,682
+> Last updated: 2026-05-18 00:40 | Total apps: 119 | Total tests: 14,723
 
 ## Quick Overview
 
@@ -124,6 +124,7 @@
 | 116 | [inu-saiten](#inu-saiten) | 犬採点 — レシピ サイト を 犬 が 採点 する Chrome MV3 拡張 | Chrome MV3/vanilla JS/Vitest | 69 | complete | Load `inu-saiten/extension/` unpacked in `chrome://extensions` |
 | 117 | [hachi-kenshi](#hachi-kenshi) | 鉢検視 — 観葉 植物 の 死因 を 推理 する Rust+WASM ノワール 法医 ゲーム | Rust + WASM/wasm-bindgen/vanilla JS | 37 | complete | `wasm-pack build --target web --out-dir www/pkg && python3 -m http.server` |
 | 118 | [futari-koyomi](#futari-koyomi) | ふたり暦 — 共働き 夫婦 の 「今宵 5 分 一緒 に」 FastAPI ダッシュボード | FastAPI 0.115/Jinja2/pytest | 39 | complete | `pip install -e .[dev] && uvicorn app.main:app --port 8765` |
+| 119 | [kisanae-chou](#kisanae-chou) | 季重ね帖 — アニメ視聴 × 季節 を 重ねる 美 Jupyter ノート (15 PNG) | Python 3.10+/matplotlib 3.10/Pillow/pytest | 41 | complete | `pip install -e .[dev] && python -m kisanae_chou.run` |
 
 ---
 
@@ -6228,4 +6229,72 @@ uvicorn app.main:app --reload --port 8765
 - LINE / Slack 連携 (リマインド は 出さ ない、 朝 の 暦 1 件 だけ push)
 - 旅行 中 用 の クラウド 同期
 - タイム ライン から 1 年 分 PDF export
+
+---
+
+### <a id="kisanae-chou"></a>119. kisanae-chou - 2026-05-18 00:40
+
+**What is this?**
+1 年 分 の アニメ 視聴 履歴 を、 日本 の 季節 カレンダー (24 節気 / 旬 の 野菜 / 桜 前線 / 花) に 「重ねる」 美 Jupyter ノート。 `python -m kisanae_chou.run` で 15 枚 の PNG が `out/` に 並ぶ — 年 表 (1800×900)、 12 ヶ月 別 カード (1200×1200 ずつ)、 春夏秋冬 縦 巻物 (1200×4800)、 月 別 12 色 パレット 帯 (1200×400)。 アニメ オタク が 「2026 春 に 観た 7 本」 を タイトル の リスト で なく 「4 月 は タケノコ と 桜 と あの 作品 が 一緒 だった」 と いう 季節 の 厚み で 振り返れる。 採点 / ランキング を 一切 出さ ない、 ただ 重なり の 美 し さ だけ を 並べる Intent 1 設計。
+
+**Discovery Roll**
+Source: 21 (Agriculture / farming / sustainability news) | Persona: 16 (アニメ / 漫画 視聴 管理 が 必要 な オタク) | Platform: 12 (Jupyter notebook / data visualization) | Intent: 1 (美しさ で 殴る — アート / 表現 / 見惚れる 体験)
+
+**Features Built**
+- 5 種 / 計 15 枚 の PNG 出力 (year_timeline、 12 月別 カード、 season_scroll、 palette_year)
+- 40 本 の サンプル アニメ × 4 クール (winter/spring/summer/autumn) + 通年 4 本 + 短編 4 本 + 7 ジャンル
+- 30 件 の 季節 event — 24 節気 (12)、 花 (8)、 野菜 (10)、 魚介 (6)、 果物 (4)
+- 月 別 12 色 パレット (睦月 雪 グレー → 卯月 桜 → 葉月 向日葵 → 霜月 紅葉 → 師走 雪 白)
+- ジャンル 色 7 種 (action 朱 / drama 青 / slice_of_life 抹茶 / mystery 紫紺 / fantasy 桜紫 / comedy 山吹 / horror 鉛)
+- `bucket_anime_by_month` で 月跨 ぎ の 放映 を 日割 り 配分
+- CLI (`python -m kisanae_chou.run --out out --year 2026`) + Jupyter ノート の 両方
+- Hiragino Sans フォール バック で 日本語 描画 (matplotlib)
+- BANNED_WORDS 監査 (「神 アニメ」 「クソ アニメ」 「神 回」 「ランキング」 「TOP」 「最強」 「ダメ」 「お前」)
+- 著作 権 リスク ゼロ — 全 アニメ タイトル は 創作
+
+**Tech Stack**
+Python 3.10+ / matplotlib 3.10 / numpy 2.2 / Pillow 12 / pytest / 純ロジック (data / palette / layout / banned) と 描画 (plots) を 完全 分離
+
+**Key Files**
+```
+kisanae-chou/
+├── pyproject.toml
+├── README.md / PLAN.md / CLAUDE.md / SUMMARY.md
+├── notebook.ipynb
+├── kisanae_chou/
+│   ├── data.py                 # 40 アニメ + 30 季節 event
+│   ├── palette.py              # 月 12 色 + ジャンル 7 色
+│   ├── layout.py               # 月跨 ぎ 配分 / 重なり 判定
+│   ├── plots.py                # matplotlib (4 種 の 図)
+│   ├── run.py                  # CLI エントリ
+│   └── banned.py
+├── tests/                      # 5 files / 41 tests
+└── out/                        # 15 PNG が ここ に
+```
+
+**How to Run**
+```bash
+cd kisanae-chou
+pip install -e ".[dev]"
+pytest                                  # 41 tests
+python -m kisanae_chou.run              # 15 PNG を out/ に
+jupyter notebook notebook.ipynb         # セル 単位 で 実行
+```
+
+**Tests**: 41 passing (data 9 / layout 12 / palette 8 / plots 6 / banned 5) | **Files**: 6 src + 5 test + 1 notebook | **LOC**: ~1,700 | **Build time**: ~30 min
+
+**Challenges & Fixes**
+- **Figure リーク**: render_all で 15 枚 順 に 生成 する とき matplotlib 「20 figure 開いた まま」 警告。 `save_fig` 内 で `plt.close(fig)` を 追加 し て 解決
+- **「▣」 が Hiragino Sans に 無 グリフ 警告**: 装飾 文字 を 「●」 に 差し替え、 警告 ゼロ に
+- **アニメ の 月 跨 ぎ**: 1 月 開始 → 3 月 終了 の 12 話 を どう 配分 する か。 `bucket_anime_by_month` で 放映 日数 を 月 ご と に 計算、 エピソード を 日割 り で 整数 化
+- **著作 権 リスク 回避**: 実在 タイトル は 一切 使わ ず 季節 を 反映 し た 創作 名 (「夜 桜 食堂」 「枝豆 と 銀河」 等) 40 本 を 用意。 ユーザー は data.py を 上書き
+
+**Potential Next Steps**
+- 視聴 履歴 を CSV / JSON で 取り込む `--anime-csv` フラグ
+- AniList / Anikore API 連携
+- SNS 投稿 サイズ 自動 リサイズ (16:9 / 1:1 / 9:16 を 一括)
+- ジャンル × 旬 食材 の 共起 ヒート マップ
+- 過去 5 年 を 並べる 「アニメ × 季節 5 年 巻物」
+- ダーク モード (深 い 夜空 系 12 色)
+- 同 設計 で 映画 × 公開 月 / 音楽 × リリース 月 の バリアント
 

@@ -122,5 +122,6 @@
 | 116 | inu-saiten | 犬採点 — レシピ サイト を 犬 が 採点 する Chrome MV3 拡張 | Chrome MV3/vanilla JS/Vitest | 69 |
 | 117 | hachi-kenshi | 鉢検視 — 観葉 植物 の 死因 を 推理 する Rust+WASM ノワール 法医 ゲーム | Rust + WASM/wasm-bindgen/vanilla JS | 37 |
 | 118 | futari-koyomi | ふたり暦 — 共働き 夫婦 の 「今宵 5 分 一緒 に」 FastAPI ダッシュボード | FastAPI 0.115/Jinja2/pytest | 39 |
+| 119 | kisanae-chou | 季重ね帖 — アニメ視聴 × 季節 を 重ねる 美 Jupyter ノート (15 PNG) | Python 3.10+/matplotlib 3.10/Pillow/pytest | 41 |
 
 See [AUTO_DEV_LOG.md](AUTO_DEV_LOG.md) for detailed reports.
